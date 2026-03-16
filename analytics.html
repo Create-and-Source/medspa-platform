@@ -10,22 +10,22 @@
 .chart-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;}
 .chart-title{font-size:13px;font-weight:500;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;}
 .chart-sub{font-size:11px;color:var(--t3);font-weight:400;margin-top:2px;}
-.big-metric{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:500;line-height:1;}
+.big-metric{font-family:'Poppins',sans-serif;font-size:40px;font-weight:500;line-height:1;}
 .metric-change{font-size:12px;margin-top:4px;}
 .leaderboard-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
 .leaderboard-row:last-child{border-bottom:none;}
-.lb-rank{width:22px;height:22px;border-radius:50%;background:var(--gold-l);color:var(--gold-h);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.lb-rank{width:22px;height:22px;border-radius:50%;background:var(--pri-l);color:var(--pri-h);font-size:10px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .lb-bar-wrap{flex:1;background:var(--s2);border-radius:20px;height:6px;overflow:hidden;}
-.lb-bar{height:100%;background:var(--gold);border-radius:20px;transition:width .4s;}
+.lb-bar{height:100%;background:linear-gradient(90deg,#F00573,#722A82);border-radius:20px;transition:width .4s;}
 .funnel-step{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
 .funnel-step:last-child{border-bottom:none;}
-.funnel-n{font-size:22px;font-weight:300;font-family:'Cormorant Garamond',serif;min-width:60px;}
+.funnel-n{font-size:22px;font-weight:300;font-family:'Poppins',sans-serif;min-width:60px;}
 .funnel-bar-wrap{flex:1;background:var(--s2);border-radius:4px;height:8px;overflow:hidden;}
 .funnel-bar{height:100%;border-radius:4px;transition:width .4s;}
 .date-range{display:flex;gap:6px;margin-bottom:1.4rem;flex-wrap:wrap;}
 .dr{padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;color:var(--t2);background:var(--white);border:1px solid var(--border);transition:all .1s;}
-.dr:hover{border-color:var(--gold);}
-.dr.on{background:var(--gold);color:var(--white);border-color:var(--gold);font-weight:500;}
+.dr:hover{border-color:var(--pri);}
+.dr.on{background:linear-gradient(135deg,#F00573,#722A82);color:var(--white);border-color:var(--pri);font-weight:500;}
 </style>
 </head>
 <body>
@@ -35,7 +35,7 @@
     <div class="pg-hdr">
       <div><div class="pg-title">Analytics</div><div class="pg-sub">Revenue, retention, provider performance, and growth</div></div>
       <div class="btns">
-        <button class="btn-g">Export Report</button>
+        <button class="btn-g" onclick="exportCSV()">Export CSV</button>
       </div>
     </div>
 
@@ -127,6 +127,12 @@
       </div>
     </div>
 
+    <!-- Provider Commissions -->
+    <div class="chart-card">
+      <div class="chart-title">Provider Commission & Payroll Tracker<div class="chart-sub">Based on services rendered</div></div>
+      <div id="commission-table"></div>
+    </div>
+
   </div>
 </div>
 
@@ -136,26 +142,14 @@
 document.getElementById('sidebar-wrap').innerHTML = renderSidebar('analytics.html');
 document.querySelectorAll('.ni').forEach(n=>{ if(n.getAttribute('href')==='analytics.html') n.classList.add('active'); });
 
-const GOLD = '#C9A84C', GOLD2 = '#b8943e', GOLD3 = '#f5edda';
-const COLORS = ['#C9A84C','#b8943e','#9a7a2e','#7a5e20','#d4b86a','#e8d5a3'];
+const GOLD = '#F00573', GOLD2 = '#722A82', GOLD3 = '#fde8f3';
+const COLORS = ['#F00573','#722A82','#741450','#c41068','#9b3aad','#f9b0d4'];
 
-Chart.defaults.font.family = "'DM Sans', sans-serif";
+Chart.defaults.font.family = "'Montserrat', sans-serif";
 Chart.defaults.font.size = 11;
 Chart.defaults.color = '#a09890';
 
 function setRange(r,el){ document.querySelectorAll('.dr').forEach(d=>d.classList.remove('on')); el.classList.add('on'); renderAll(); }
-
-function renderAll() {
-  renderTopStats();
-  renderRevenueChart();
-  renderApptsChart();
-  renderServicesChart();
-  renderProviderLeaderboard();
-  renderSourcesChart();
-  renderFunnel();
-  renderTopPatients();
-  renderSpendByService();
-}
 
 function renderTopStats() {
   const txns = HOC.load(HOC.K.txns).filter(t=>t.status==='Paid');
@@ -197,7 +191,7 @@ function renderApptsChart() {
   appts.forEach(a=>{ if(counts[a.status]!==undefined) counts[a.status]++; });
   const ctx=document.getElementById('chart-appts');
   if(ctx._chart) ctx._chart.destroy();
-  ctx._chart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(counts),datasets:[{data:Object.values(counts),backgroundColor:['#C9A84C','#16a34a','#b45309','#dc2626'],borderWidth:0}]},options:{plugins:{legend:{position:'right'}},cutout:'65%'}});
+  ctx._chart=new Chart(ctx,{type:'doughnut',data:{labels:Object.keys(counts),datasets:[{data:Object.values(counts),backgroundColor:['#F00573','#16a34a','#b45309','#dc2626'],borderWidth:0}]},options:{plugins:{legend:{position:'right'}},cutout:'65%'}});
 }
 
 function renderServicesChart() {
@@ -219,9 +213,11 @@ function renderProviderLeaderboard() {
     if(t) byProvider[a.provider]=(byProvider[a.provider]||0)+Number(t.amount);
   });
   // demo data
-  byProvider['Dr. Sara Ameli']=(byProvider['Dr. Sara Ameli']||0)+6800;
+  byProvider['Sara Ameli']=(byProvider['Sara Ameli']||0)+6800;
   byProvider['Dr. Todd Malan']=(byProvider['Dr. Todd Malan']||0)+8200;
-  byProvider['Jacqueline']=(byProvider['Jacqueline']||0)+2100;
+  byProvider['Dr. Margaret Husami']=(byProvider['Dr. Margaret Husami']||0)+4500;
+  byProvider['Shay']=(byProvider['Shay']||0)+2100;
+  byProvider['Cierra']=(byProvider['Cierra']||0)+1800;
   const sorted=Object.entries(byProvider).sort((a,b)=>b[1]-a[1]);
   const max=sorted[0]?.[1]||1;
   document.getElementById('provider-leaderboard').innerHTML=sorted.map((p,i)=>`
@@ -248,9 +244,9 @@ function renderFunnel() {
   const returning=pts.filter(p=>appts.filter(a=>a.patientId===p.id).length>1).length;
   const members=HOC.load('hoc_members').filter(m=>m.status==='Active').length;
   const steps=[
-    {label:'New patients',n:pts.length,color:'#C9A84C'},
-    {label:'Had 2+ appointments',n:returning,color:'#b8943e'},
-    {label:'Active members',n:members,color:'#9a7a2e'},
+    {label:'New patients',n:pts.length,color:'#F00573'},
+    {label:'Had 2+ appointments',n:returning,color:'#722A82'},
+    {label:'Active members',n:members,color:'#741450'},
   ];
   const max=steps[0].n||1;
   document.getElementById('funnel').innerHTML=steps.map(s=>`
@@ -293,7 +289,81 @@ function renderSpendByService() {
     </div>`).join('');
 }
 
+function renderCommissions(){
+  const COMM_RATES={
+    'Sara Ameli':{rate:0.35,salary:0,role:'Founder & NP'},
+    'Dr. Todd Malan':{rate:0.45,salary:0,role:'Cosmetic Surgeon'},
+    'Dr. Margaret Husami':{rate:0.35,salary:0,role:'NMD'},
+    'Shay':{rate:0.25,salary:2800,role:'Aesthetician'},
+    'Cierra':{rate:0.25,salary:2800,role:'Aesthetician'},
+  };
+  const txns=HOC.load(HOC.K.txns).filter(t=>t.status==='Paid');
+  const appts=HOC.load(HOC.K.appts);
+  const byProv={};
+  // Match transactions to providers via appointments
+  appts.forEach(a=>{
+    const t=txns.find(tx=>tx.patientId===a.patientId&&tx.date===a.date&&tx.service===a.service);
+    if(t&&a.provider){
+      if(!byProv[a.provider])byProv[a.provider]={revenue:0,count:0};
+      byProv[a.provider].revenue+=Number(t.amount);
+      byProv[a.provider].count++;
+    }
+  });
+  // Add demo data to ensure all providers show
+  Object.keys(COMM_RATES).forEach(p=>{
+    if(!byProv[p])byProv[p]={revenue:0,count:0};
+  });
+  byProv['Sara Ameli'].revenue+=6800;byProv['Sara Ameli'].count+=12;
+  byProv['Dr. Todd Malan'].revenue+=8200;byProv['Dr. Todd Malan'].count+=6;
+  byProv['Dr. Margaret Husami'].revenue+=4500;byProv['Dr. Margaret Husami'].count+=8;
+  byProv['Shay'].revenue+=2100;byProv['Shay'].count+=7;
+  byProv['Cierra'].revenue+=1800;byProv['Cierra'].count+=6;
+
+  const rows=Object.entries(byProv).sort((a,b)=>b[1].revenue-a[1].revenue).map(([name,d])=>{
+    const cr=COMM_RATES[name]||{rate:0.3,salary:0,role:'Provider'};
+    const commission=Math.round(d.revenue*cr.rate);
+    const total=commission+cr.salary;
+    return`<tr>
+      <td><div style="font-size:13px;font-weight:500;">${name}</div><div style="font-size:10px;color:var(--t3);">${cr.role}</div></td>
+      <td style="font-weight:500;">${HOC.fa(d.revenue)}</td>
+      <td>${d.count}</td>
+      <td style="color:var(--t3);">${Math.round(cr.rate*100)}%</td>
+      <td style="font-weight:500;color:var(--pri);">${HOC.fa(commission)}</td>
+      <td style="color:var(--t3);">${cr.salary?HOC.fa(cr.salary):'—'}</td>
+      <td style="font-weight:500;">${HOC.fa(total)}</td>
+    </tr>`;
+  });
+  document.getElementById('commission-table').innerHTML=`<table class="dt"><thead><tr><th>Provider</th><th>Revenue</th><th>Services</th><th>Rate</th><th>Commission</th><th>Base Salary</th><th>Total Pay</th></tr></thead><tbody>${rows.join('')}</tbody></table>`;
+}
+
+function renderAll() {
+  renderTopStats();
+  renderRevenueChart();
+  renderApptsChart();
+  renderServicesChart();
+  renderProviderLeaderboard();
+  renderSourcesChart();
+  renderFunnel();
+  renderTopPatients();
+  renderSpendByService();
+  renderCommissions();
+}
+function exportCSV(){
+  const txns=HOC.load(HOC.K.txns);
+  const pts=HOC.load(HOC.K.pts);
+  let csv='Date,Patient,Service,Amount,Method,Status\n';
+  txns.forEach(t=>{
+    const p=HOC.gp(t.patientId);
+    csv+=`${t.date},"${HOC.pn(p)}","${t.service}",${t.amount},"${t.method}",${t.status}\n`;
+  });
+  const blob=new Blob([csv],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='hoc-revenue-report-'+HOC.today()+'.csv';
+  a.click();URL.revokeObjectURL(url);
+}
 renderAll();
 </script>
+<script src="hoc-chat.js"></script>
 </body>
 </html>

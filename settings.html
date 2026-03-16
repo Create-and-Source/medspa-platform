@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings — Haus of Confidence</title>
+<link rel="stylesheet" href="hoc-style.css">
+</head>
+<body>
+<div class="app-shell">
+  <div id="sidebar-wrap"></div>
+  <div class="main">
+    <div class="pg-hdr">
+      <div><div class="pg-title">Settings</div><div class="pg-sub">Business hours, notifications, integrations, and preferences</div></div>
+      <div class="btns">
+        <button class="btn-p" onclick="saveSettings()">Save All Changes</button>
+      </div>
+    </div>
+
+    <div class="g2">
+      <!-- Business Info -->
+      <div class="panel">
+        <div class="panel-hdr">Business Information</div>
+        <div class="panel-body">
+          <div class="fr"><label class="fl">Practice Name</label><input class="fi" id="s-name" value="Haus of Confidence"></div>
+          <div class="fr"><label class="fl">Phone</label><input class="fi" id="s-phone" value="(480) 493-5921"></div>
+          <div class="fr"><label class="fl">Email</label><input class="fi" id="s-email" value="info@hausofconfidence.com"></div>
+          <div class="fr"><label class="fl">Website</label><input class="fi" id="s-web" value="hausofconfidence.com"></div>
+          <div class="fr"><label class="fl">Tax Rate (%)</label><input class="fi" id="s-tax" type="number" step="0.1" value="8.05"></div>
+        </div>
+      </div>
+
+      <!-- Business Hours -->
+      <div class="panel">
+        <div class="panel-hdr">Business Hours</div>
+        <div class="panel-body" id="s-hours">
+        </div>
+      </div>
+    </div>
+
+    <div class="g2" style="margin-top:1.25rem;">
+      <!-- Notifications -->
+      <div class="panel">
+        <div class="panel-hdr">Notification Preferences</div>
+        <div class="panel-body">
+          <div style="display:flex;flex-direction:column;gap:10px;" id="s-notifs">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-remind48" checked> Send 48-hour appointment reminders (SMS)</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-remind24" checked> Send day-of appointment reminders (SMS)</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-confirm"> Send booking confirmation emails</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-review" checked> Send post-visit review requests</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-rebook" checked> Send rebooking reminders for overdue patients</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-birthday"> Send birthday messages</label>
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;"><input type="checkbox" id="n-lowstock" checked> Low inventory alerts</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Integrations -->
+      <div class="panel">
+        <div class="panel-hdr">Integrations</div>
+        <div class="panel-body">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+              <div><div style="font-size:13px;font-weight:500;">Stripe</div><div style="font-size:11px;color:var(--t3);">Live card processing</div></div>
+              <div id="int-stripe" style="font-size:12px;color:var(--t3);">Not connected</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+              <div><div style="font-size:13px;font-weight:500;">Twilio</div><div style="font-size:11px;color:var(--t3);">SMS messaging</div></div>
+              <div style="font-size:12px;color:var(--t3);">Not connected</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+              <div><div style="font-size:13px;font-weight:500;">EmailJS</div><div style="font-size:11px;color:var(--t3);">Email sending</div></div>
+              <div style="font-size:12px;color:var(--t3);">Not connected</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);">
+              <div><div style="font-size:13px;font-weight:500;">Google Business</div><div style="font-size:11px;color:var(--t3);">Review management</div></div>
+              <div style="font-size:12px;color:var(--t3);">Not connected</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;">
+              <div><div style="font-size:13px;font-weight:500;">Boulevard</div><div style="font-size:11px;color:var(--t3);">Online booking sync</div></div>
+              <div style="font-size:12px;color:var(--t3);">Not connected</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loyalty & Points -->
+    <div class="panel" style="margin-top:1.25rem;">
+      <div class="panel-hdr">Loyalty Program</div>
+      <div class="panel-body">
+        <div class="fr2">
+          <div class="fr"><label class="fl">Points per $1 spent</label><input class="fi" id="s-pts-rate" type="number" value="1" min="0" step="0.5"></div>
+          <div class="fr"><label class="fl">Points needed for $10 reward</label><input class="fi" id="s-pts-redeem" type="number" value="100" min="10"></div>
+        </div>
+        <div style="font-size:12px;color:var(--t3);margin-top:.5rem;">Patients earn points on every paid transaction. Points can be redeemed from the patient detail view.</div>
+      </div>
+    </div>
+
+    <!-- Data Management -->
+    <div class="panel" style="margin-top:1.25rem;">
+      <div class="panel-hdr">Data Management</div>
+      <div class="panel-body">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-g" onclick="exportAllData()">Export All Data (JSON)</button>
+          <button class="btn-d" onclick="clearAllData()">Reset Demo Data</button>
+        </div>
+        <div style="font-size:11px;color:var(--t3);margin-top:.75rem;">Export saves all localStorage data as a JSON file. Reset clears all data and reloads seed data.</div>
+      </div>
+    </div>
+
+    <div id="settings-toast" style="position:fixed;bottom:24px;right:24px;background:#1a1418;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:999;display:none;box-shadow:0 4px 20px rgba(0,0,0,.2);">✓ Settings saved</div>
+  </div>
+</div>
+
+<script src="hoc.js"></script><script src="hoc-sidebar.js"></script>
+<script>
+document.getElementById('sidebar-wrap').innerHTML = renderSidebar('settings.html');
+document.querySelectorAll('.ni').forEach(n=>{ if(n.getAttribute('href')==='settings.html') n.classList.add('active'); });
+
+// Business hours
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const DEFAULT_HOURS={Monday:'9:00-17:00',Tuesday:'9:00-17:00',Wednesday:'9:00-17:00',Thursday:'9:00-17:00',Friday:'9:00-17:00',Saturday:'10:00-15:00',Sunday:'Closed'};
+function renderHours(){
+  const saved=JSON.parse(localStorage.getItem('hoc_hours')||'null')||DEFAULT_HOURS;
+  document.getElementById('s-hours').innerHTML=DAYS.map(d=>{
+    const val=saved[d]||'Closed';
+    const isClosed=val==='Closed';
+    return`<div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--border);">
+      <div style="width:90px;font-size:13px;font-weight:500;">${d}</div>
+      <input class="fi" style="width:auto;padding:6px 10px;font-size:12px;margin:0;" id="hrs-${d}" value="${isClosed?'':val}" placeholder="9:00-17:00">
+      <label style="font-size:11px;display:flex;align-items:center;gap:4px;color:var(--t3);cursor:pointer;"><input type="checkbox" ${isClosed?'checked':''} onchange="document.getElementById('hrs-${d}').disabled=this.checked;document.getElementById('hrs-${d}').value=this.checked?'':'9:00-17:00';"> Closed</label>
+    </div>`;
+  }).join('');
+}
+renderHours();
+
+// Load saved settings
+function loadSettings(){
+  const s=JSON.parse(localStorage.getItem('hoc_settings')||'{}');
+  if(s.name)document.getElementById('s-name').value=s.name;
+  if(s.phone)document.getElementById('s-phone').value=s.phone;
+  if(s.email)document.getElementById('s-email').value=s.email;
+  if(s.web)document.getElementById('s-web').value=s.web;
+  if(s.tax!==undefined)document.getElementById('s-tax').value=s.tax;
+  if(s.ptsRate!==undefined)document.getElementById('s-pts-rate').value=s.ptsRate;
+  if(s.ptsRedeem!==undefined)document.getElementById('s-pts-redeem').value=s.ptsRedeem;
+  if(s.notifs){
+    Object.entries(s.notifs).forEach(([k,v])=>{const el=document.getElementById('n-'+k);if(el)el.checked=v;});
+  }
+}
+loadSettings();
+
+function saveSettings(){
+  const hours={};
+  DAYS.forEach(d=>{
+    const el=document.getElementById('hrs-'+d);
+    hours[d]=el.disabled||!el.value?'Closed':el.value;
+  });
+  localStorage.setItem('hoc_hours',JSON.stringify(hours));
+  const notifs={};
+  ['remind48','remind24','confirm','review','rebook','birthday','lowstock'].forEach(k=>{
+    const el=document.getElementById('n-'+k);if(el)notifs[k]=el.checked;
+  });
+  const s={
+    name:document.getElementById('s-name').value,
+    phone:document.getElementById('s-phone').value,
+    email:document.getElementById('s-email').value,
+    web:document.getElementById('s-web').value,
+    tax:parseFloat(document.getElementById('s-tax').value)||0,
+    ptsRate:parseFloat(document.getElementById('s-pts-rate').value)||1,
+    ptsRedeem:parseInt(document.getElementById('s-pts-redeem').value)||100,
+    notifs
+  };
+  localStorage.setItem('hoc_settings',JSON.stringify(s));
+  const toast=document.getElementById('settings-toast');
+  toast.style.display='block';
+  setTimeout(()=>toast.style.display='none',2500);
+}
+
+function exportAllData(){
+  const data={};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k.startsWith('hoc'))data[k]=localStorage.getItem(k);
+  }
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download='hoc-backup-'+HOC.today()+'.json';
+  a.click();URL.revokeObjectURL(url);
+}
+
+function clearAllData(){
+  if(!confirm('This will delete ALL demo data and reset everything. Are you sure?'))return;
+  const keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k.startsWith('hoc'))keys.push(k);
+  }
+  keys.forEach(k=>localStorage.removeItem(k));
+  alert('✓ All data cleared. Reloading...');
+  location.href='app.html';
+}
+</script>
+<script src="hoc-chat.js"></script>
+</body>
+</html>

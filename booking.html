@@ -4,13 +4,13 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Book an Appointment — Haus of Confidence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--gold:#C9A84C;--gold-h:#b8943e;--gold-l:#f5edda;--gold-p:#fdf9f0;--gold-b:#e8d5a3;--white:#fff;--bg:#fafaf8;--border:#e8e4dc;--border2:#d4cfc4;--text:#1a1814;--t2:#6b6459;--t3:#a09890;--green:#16a34a;--gbg:#f0fdf4;--gbd:#bbf7d0;}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;}
+:root{--pri:#F00573;--pri-h:#d00565;--pri-l:#fde8f3;--pri-p:#fef5fa;--pri-b:#f9b0d4;--sec:#722A82;--gold:#F00573;--gold-h:#d00565;--gold-l:#fde8f3;--gold-p:#fef5fa;--gold-b:#f9b0d4;--white:#fff;--bg:#fafafa;--border:#e5e1e8;--border2:#d1cdd6;--text:#1a1418;--t2:#5c5460;--t3:#9890a0;--green:#16a34a;--gbg:#f0fdf4;--gbd:#bbf7d0;}
+body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh;}
 .booking-header{background:var(--white);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
-.booking-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;}
+.booking-logo{font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;}
 .booking-tag{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;}
 .booking-wrap{max-width:760px;margin:0 auto;padding:2.5rem 1.5rem;}
 .step-indicator{display:flex;justify-content:center;gap:8px;margin-bottom:2.5rem;}
@@ -19,10 +19,10 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .si-dot.active{background:var(--gold);transform:scale(1.3);}
 .bk-step{display:none;}
 .bk-step.active{display:block;}
-.bk-title{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:500;text-align:center;margin-bottom:.4rem;}
+.bk-title{font-family:'Poppins',sans-serif;font-size:30px;font-weight:500;text-align:center;margin-bottom:.4rem;}
 .bk-sub{font-size:14px;color:var(--t2);text-align:center;margin-bottom:2rem;line-height:1.6;}
 .service-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.5rem;}
-.svc-btn{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:1.1rem 1rem;cursor:pointer;text-align:left;transition:all .15s;font-family:'DM Sans',sans-serif;}
+.svc-btn{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:1.1rem 1rem;cursor:pointer;text-align:left;transition:all .15s;font-family:'Montserrat',sans-serif;}
 .svc-btn:hover,.svc-btn.sel{border-color:var(--gold);background:var(--gold-p);}
 .svc-name{font-size:13px;font-weight:500;margin-bottom:3px;}
 .svc-desc{font-size:11px;color:var(--t3);}
@@ -41,13 +41,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .cal-day.disabled{color:var(--border2);cursor:default;}
 .cal-day.today{border-color:var(--gold-b);}
 .time-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.5rem;}
-.time-btn{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:12.5px;cursor:pointer;text-align:center;transition:all .12s;font-family:'DM Sans',sans-serif;}
+.time-btn{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:9px;font-size:12.5px;cursor:pointer;text-align:center;transition:all .12s;font-family:'Montserrat',sans-serif;}
 .time-btn:hover,.time-btn.sel{border-color:var(--gold);background:var(--gold-p);}
-.fi{width:100%;padding:11px 14px;border:1.5px solid var(--border2);border-radius:10px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;background:var(--white);outline:none;transition:border .12s;margin-bottom:1rem;}
+.fi{width:100%;padding:11px 14px;border:1.5px solid var(--border2);border-radius:10px;font-size:14px;color:var(--text);font-family:'Montserrat',sans-serif;background:var(--white);outline:none;transition:border .12s;margin-bottom:1rem;}
 .fi:focus{border-color:var(--gold);}
-.bk-btn{background:var(--gold);color:var(--white);border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;width:100%;}
-.bk-btn:hover{background:var(--gold-h);}
-.bk-btn-ghost{background:var(--white);color:var(--t2);border:1px solid var(--border2);border-radius:10px;padding:11px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;width:100%;margin-bottom:8px;}
+.bk-btn{background:linear-gradient(135deg,#F00573,#722A82);color:var(--white);border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;transition:opacity .15s;width:100%;}
+.bk-btn:hover{opacity:.9;}
+.bk-btn-ghost{background:var(--white);color:var(--t2);border:1px solid var(--border2);border-radius:10px;padding:11px;font-size:14px;cursor:pointer;font-family:'Montserrat',sans-serif;width:100%;margin-bottom:8px;}
 .confirm-card{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-bottom:1.25rem;}
 .confirm-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;}
 .confirm-row:last-child{border-bottom:none;}
@@ -142,19 +142,33 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 <script src="hoc.js"></script>
 <script>
 const SERVICES=[
-  {name:'LipoAway Consultation',desc:'Learn about our awake liposuction',price:'$150',provider:'malan',dur:60},
-  {name:'Dermal Fillers',desc:'Lips, cheeks, jawline & more',price:'From $720',provider:'sara',dur:45},
+  {name:'LipoAway Consultation',desc:'Learn about our awake liposuction — remove 2-5 inches',price:'$150',provider:'malan',dur:60},
+  {name:'LipoAway Procedure',desc:'Awake liposuction. No general anesthesia.',price:'From $4,800',provider:'malan',dur:180},
+  {name:'Fat Transfer',desc:'Natural augmentation with your own fat',price:'From $2,400',provider:'malan',dur:120},
+  {name:'BodyTite',desc:'Minimally invasive body contouring',price:'From $3,500',provider:'malan',dur:120},
   {name:'Botox',desc:'Natural wrinkle relaxation',price:'From $350',provider:'sara',dur:30},
-  {name:'RF Microneedling',desc:'Collagen induction therapy',price:'$1,200',provider:'jacq',dur:90},
-  {name:'Medical Weight Loss',desc:'Semaglutide & weight management',price:'$350/mo',provider:'sara',dur:30},
-  {name:'Fat Transfer',desc:'Natural augmentation with your fat',price:'From $2,400',provider:'malan',dur:120},
+  {name:'Dermal Fillers',desc:'Lips, cheeks, jawline & more',price:'From $720',provider:'sara',dur:45},
+  {name:'Sculptra & Radiesse',desc:'Collagen stimulators for volume',price:'From $800',provider:'sara',dur:45},
+  {name:'PDO Thread Lift',desc:'Non-surgical lift and tightening',price:'From $1,500',provider:'sara',dur:60},
+  {name:'Kybella / Liquid Lipo',desc:'Injectable fat dissolving for chin',price:'From $600',provider:'sara',dur:30},
+  {name:'RF Microneedling',desc:'Collagen induction therapy',price:'$1,200',provider:'shay',dur:90},
+  {name:'IPL Photofacial',desc:'Light therapy for skin clarity',price:'From $350',provider:'shay',dur:45},
+  {name:'Chemical Peel',desc:'Exfoliation for skin renewal',price:'From $150',provider:'cierra',dur:45},
+  {name:'Laser Hair Removal',desc:'Permanent hair reduction',price:'From $200',provider:'shay',dur:30},
+  {name:'Facial / Unicorn Facial',desc:'Signature facials and PRX-T33',price:'From $180',provider:'cierra',dur:60},
+  {name:'Stem Cell Therapy',desc:'Cutting-edge regenerative medicine',price:'From $3,500',provider:'malan',dur:90},
+  {name:'Medical Weight Loss',desc:'Semaglutide & weight management',price:'$350/mo',provider:'husami',dur:30},
+  {name:'Hormone Replacement',desc:'Optimize hormones and wellness',price:'From $250/mo',provider:'husami',dur:30},
   {name:'IV Therapy',desc:'Hydration, immunity, energy drips',price:'From $199',provider:'any',dur:60},
+  {name:'Hair Restoration',desc:'Natural growth factor hair regrowth',price:'From $1,200',provider:'sara',dur:60},
   {name:'Consultation',desc:"Not sure? Let's talk about your goals",price:'Complimentary',provider:'any',dur:30},
 ];
 const PROVIDERS=[
-  {id:'sara',name:'Dr. Sara Ameli',title:'DNP, FNP-C · Injectables & Wellness'},
-  {id:'malan',name:'Dr. Todd Malan',title:'MD · LipoAway & Fat Transfer'},
-  {id:'jacq',name:'Jacqueline',title:'CLT, LE · Laser & Aesthetics'},
+  {id:'sara',name:'Sara Ameli',title:'DNP, FNP-C · Founder · Injectables & Wellness'},
+  {id:'malan',name:'Dr. Todd Malan',title:'Cosmetic Surgeon · LipoAway & Stem Cells'},
+  {id:'husami',name:'Dr. Margaret Husami',title:'NMD · Regenerative & Integrative'},
+  {id:'shay',name:'Shay',title:'Aesthetician · Botox & Fillers'},
+  {id:'cierra',name:'Cierra',title:'Aesthetician · Facials & Skin'},
 ];
 const TIMES=['9:00 AM','9:30 AM','10:00 AM','10:30 AM','11:00 AM','11:30 AM','1:00 PM','1:30 PM','2:00 PM','2:30 PM','3:00 PM','3:30 PM','4:00 PM','4:30 PM','5:00 PM','5:30 PM'];
 
@@ -243,5 +257,6 @@ function confirmBooking(){
 function resetBooking(){booking={};curStep=1;nextStep(1);document.querySelectorAll('.svc-btn,.prov-btn,.cal-day,.time-btn').forEach(el=>el.classList.remove('sel'));}
 renderSteps();
 </script>
+<script src="hoc-chat.js"></script>
 </body>
 </html>

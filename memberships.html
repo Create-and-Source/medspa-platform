@@ -6,10 +6,10 @@
 <link rel="stylesheet" href="hoc-style.css">
 <style>
 .mem-plan-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow .15s;}
-.mem-plan-card:hover{box-shadow:0 4px 20px rgba(201,168,76,.15);}
+.mem-plan-card:hover{box-shadow:0 4px 20px rgba(240,5,115,.12);}
 .mem-plan-top{padding:1.25rem;border-bottom:1px solid var(--border);}
 .mem-price-row{display:flex;align-items:baseline;gap:6px;margin:8px 0;}
-.mem-price{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:500;}
+.mem-price{font-family:'Poppins',sans-serif;font-size:36px;font-weight:500;}
 .mem-per{font-size:12px;color:var(--t3);}
 .mem-feature-list{list-style:none;padding:1rem 1.25rem;display:flex;flex-direction:column;gap:8px;}
 .mem-feature-list li{font-size:13px;color:var(--t2);display:flex;align-items:center;gap:8px;}
@@ -19,16 +19,16 @@
 .pkg-name{font-size:14px;font-weight:500;margin-bottom:4px;}
 .pkg-desc{font-size:12px;color:var(--t2);margin-bottom:.75rem;}
 .pkg-price-row{display:flex;align-items:center;justify-content:space-between;margin-top:.75rem;}
-.pkg-price{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;color:var(--gold-h);}
-.cherry-card{background:var(--gold-p);border:2px solid var(--gold-b);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;}
-.cherry-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;margin-bottom:.5rem;}
+.pkg-price{font-family:'Poppins',sans-serif;font-size:24px;font-weight:500;color:var(--pri);}
+.cherry-card{background:var(--pri-p);border:2px solid var(--pri-b);border-radius:14px;padding:1.5rem;margin-bottom:1.25rem;}
+.cherry-title{font-family:'Poppins',sans-serif;font-size:22px;font-weight:500;margin-bottom:.5rem;}
 .cherry-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:1.25rem;}
-.cherry-step{background:var(--white);border-radius:10px;padding:1rem;border:1px solid var(--gold-b);}
-.cherry-step-n{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold-h);margin-bottom:4px;}
+.cherry-step{background:var(--white);border-radius:10px;padding:1rem;border:1px solid var(--pri-b);}
+.cherry-step-n{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--pri);margin-bottom:4px;}
 .cherry-step-t{font-size:13px;font-weight:500;margin-bottom:3px;}
 .cherry-step-s{font-size:11px;color:var(--t2);}
 .sub-stat{background:var(--bg);border-radius:8px;padding:.75rem 1rem;text-align:center;}
-.sub-stat-val{font-size:22px;font-weight:300;font-family:'Cormorant Garamond',serif;}
+.sub-stat-val{font-size:22px;font-weight:300;font-family:'Poppins',sans-serif;}
 .sub-stat-lbl{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-top:2px;}
 </style>
 </head>
@@ -86,7 +86,7 @@
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             <button class="btn-p" onclick="showFinancingDemo()">Simulate Patient Application</button>
-            <button class="btn-g">Connect Cherry Account</button>
+            <button class="btn-g" onclick="connectFinancing('Cherry')">Connect Cherry Account</button>
           </div>
         </div>
         <div class="cherry-steps">
@@ -101,19 +101,19 @@
           <div style="font-size:13px;font-weight:500;margin-bottom:12px;">Cherry</div>
           <div style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:12px;">Healthcare-specific. True 0% APR. Up to $25,000. 80%+ approval.</div>
           <div style="font-size:12px;color:var(--t3);">Best for: LipoAway, Fat Transfer, large procedure bundles</div>
-          <button class="btn-p" style="width:100%;margin-top:1rem;padding:10px;" onclick="alert('Paste your Cherry API key in settings to activate')">Connect Cherry</button>
+          <button class="btn-p" style="width:100%;margin-top:1rem;padding:10px;" onclick="connectFinancing('Cherry')">Connect Cherry</button>
         </div>
         <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
           <div style="font-size:13px;font-weight:500;margin-bottom:12px;">CareCredit</div>
           <div style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:12px;">Widely recognized. 6–24 month deferred interest options.</div>
           <div style="font-size:12px;color:var(--t3);">Best for: patients who already have a CareCredit card</div>
-          <button class="btn-g" style="width:100%;margin-top:1rem;justify-content:center;">Connect CareCredit</button>
+          <button class="btn-g" style="width:100%;margin-top:1rem;justify-content:center;" onclick="connectFinancing('CareCredit')">Connect CareCredit</button>
         </div>
         <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
           <div style="font-size:13px;font-weight:500;margin-bottom:12px;">Affirm</div>
           <div style="font-size:12px;color:var(--t2);line-height:1.6;margin-bottom:12px;">BNPL. Simple 3 or 6-month plans. Patients already know the brand.</div>
           <div style="font-size:12px;color:var(--t3);">Best for: $500–2,500 treatments</div>
-          <button class="btn-g" style="width:100%;margin-top:1rem;justify-content:center;">Connect Affirm</button>
+          <button class="btn-g" style="width:100%;margin-top:1rem;justify-content:center;" onclick="connectFinancing('Affirm')">Connect Affirm</button>
         </div>
       </div>
 
@@ -150,6 +150,36 @@
       <div class="fr" style="margin-bottom:0"><label class="fl">Status</label><select class="fs" id="mem-status"><option>Active</option><option>Paused</option></select></div>
     </div>
     <div class="modal-acts"><button class="btn-g" onclick="closeMemberModal()">Cancel</button><button class="btn-p" onclick="saveMember()">Add Subscriber</button></div>
+  </div>
+</div>
+
+<!-- Manage Member Modal -->
+<div id="manage-modal" class="overlay" style="display:none;" onclick="if(event.target===this)closeManageModal()">
+  <div class="modal">
+    <div class="modal-title">Manage Subscriber</div>
+    <div id="manage-info" style="margin-bottom:1rem;"></div>
+    <div class="fr"><label class="fl">Status</label><select class="fs" id="manage-status"><option>Active</option><option>Paused</option><option>Cancelled</option></select></div>
+    <div class="fr"><label class="fl">Change Plan</label><select class="fs" id="manage-plan"></select></div>
+    <div class="modal-acts">
+      <button class="btn-g" onclick="closeManageModal()">Cancel</button>
+      <button class="btn-d" onclick="deleteMember()">Remove</button>
+      <button class="btn-p" onclick="saveManage()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- Package Modal -->
+<div id="pkg-modal" class="overlay" style="display:none;" onclick="if(event.target===this)closePkgModal()">
+  <div class="modal">
+    <div class="modal-title">Create Package</div>
+    <div class="fr"><label class="fl">Package Name</label><input class="fi" id="pkg-name" placeholder="e.g. Botox Maintenance"></div>
+    <div class="fr"><label class="fl">Description</label><input class="fi" id="pkg-desc" placeholder="What's included and why it's a great deal"></div>
+    <div class="fr2">
+      <div class="fr" style="margin-bottom:0"><label class="fl">Price</label><input class="fi" id="pkg-price" type="number" placeholder="1200"></div>
+      <div class="fr" style="margin-bottom:0"><label class="fl">Savings vs Individual</label><input class="fi" id="pkg-savings" type="number" placeholder="200"></div>
+    </div>
+    <div class="fr" style="margin-top:1rem;"><label class="fl">Services (one per line)</label><textarea class="fi" id="pkg-services" rows="3" placeholder="Botox x4&#10;1 Free Facial"></textarea></div>
+    <div class="modal-acts"><button class="btn-g" onclick="closePkgModal()">Cancel</button><button class="btn-p" onclick="savePkg()">Create Package</button></div>
   </div>
 </div>
 
@@ -193,7 +223,7 @@ function renderPlans(){
       </div>
       <ul class="mem-feature-list">${features.map(f=>`<li>${f}</li>`).join('')}</ul>
       <div class="mem-card-footer" style="display:flex;gap:8px;">
-        <button class="btn-g" style="flex:1;justify-content:center;">Edit</button>
+        <button class="btn-g" style="flex:1;justify-content:center;" onclick="editPlan('${p.id}')">Edit</button>
         <button class="btn-p" style="flex:1;" onclick="openAddMember('${p.id}')">+ Subscribe Patient</button>
       </div>
     </div>`;
@@ -215,7 +245,7 @@ function renderMembers(){
     <td style="color:var(--t3);font-size:12px;">${HOC.fd(m.startDate)}</td>
     <td style="font-size:12px;">${HOC.fd(m.nextBilling)}</td>
     <td style="font-weight:500;">${HOC.fa(m.totalPaid)}</td>
-    <td><button class="btn-g" style="font-size:11px;padding:3px 10px;">Manage</button></td></tr>`;
+    <td><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="manageMember('${m.id}')">Manage</button></td></tr>`;
   }).join('')+'</tbody></table>';
 }
 
@@ -236,7 +266,7 @@ function renderPackages(){
       <div style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:.5rem;">${p.services.map(s=>`<span class="chip">${s}</span>`).join('')}</div>
       <div class="pkg-price-row">
         <div><div class="pkg-price">${HOC.fa(p.price)}</div><div style="font-size:11px;color:var(--green);">Save ${HOC.fa(p.savings)}</div></div>
-        <button class="btn-sm" style="font-size:11px;padding:6px 14px;">Sell Package</button>
+        <button class="btn-sm" style="font-size:11px;padding:6px 14px;" onclick="sellPackage('${p.id}','${p.name}',${p.price})">Sell Package</button>
       </div>
     </div>`).join('');
 }
@@ -253,8 +283,8 @@ function showFinancingDemo(){
 const FIN_STEPS=[
   {title:'Patient Info',content:`<div class="fr2"><div class="fr"><label class="fl">First Name</label><input class="fi" value="Maria"></div><div class="fr"><label class="fl">Last Name</label><input class="fi" value="G."></div></div><div class="fr2"><div class="fr"><label class="fl">Date of Birth</label><input class="fi" type="date" value="1988-04-12"></div><div class="fr"><label class="fl">Last 4 SSN</label><input class="fi" placeholder="••••" maxlength="4"></div></div><div class="fr"><label class="fl">Treatment Amount</label><select class="fs"><option>LipoAway Procedure — $4,800</option><option>Fat Transfer — $2,400</option><option>Custom amount...</option></select></div>`},
   {title:'Soft Credit Check',content:`<div style="text-align:center;padding:2rem;"><div style="font-size:40px;margin-bottom:1rem;">🔍</div><div style="font-size:15px;font-weight:500;margin-bottom:.5rem;">Running soft credit check...</div><div style="font-size:13px;color:var(--t3);">This will NOT affect the patient's credit score</div><div id="fin-progress" style="background:var(--s2);border-radius:20px;height:6px;overflow:hidden;margin:1.5rem auto;max-width:300px;"><div id="fin-bar" style="background:var(--gold);height:100%;width:0%;transition:width .8s;"></div></div></div>`},
-  {title:'Approved! Choose a Plan',content:`<div style="background:var(--gbg);border:1px solid var(--gbd);border-radius:10px;padding:1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;"><span style="font-size:24px;">✓</span><div><div style="font-size:14px;font-weight:500;color:var(--green);">Maria is approved for up to $10,000</div><div style="font-size:12px;color:var(--t2);">Select a payment plan for $4,800 LipoAway Procedure</div></div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${[{m:3,p:1600,apr:0},{m:6,p:800,apr:0},{m:12,p:434,apr:9.9},{m:24,p:237,apr:14.9}].map(o=>`<div style="border:1px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;transition:all .12s;" onclick="this.style.borderColor='var(--gold)';this.style.background='var(--gold-p)'"><div style="font-size:13px;font-weight:500;">${o.m} months</div><div style="font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;margin:.3rem 0;">$${o.p}<span style="font-size:14px;font-weight:400;">/mo</span></div><div style="font-size:11px;color:var(--t3);">${o.apr===0?'0% APR':o.apr+'% APR'}</div></div>`).join('')}</div>`},
-  {title:'Complete',content:`<div style="text-align:center;padding:2rem;"><div style="font-size:48px;margin-bottom:1rem;">🎉</div><div style="font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;margin-bottom:.5rem;">Payment plan activated</div><div style="font-size:13px;color:var(--t2);margin-bottom:1.5rem;">$4,800 authorized · 6-month plan · $800/month</div><div style="background:var(--gold-p);border:1px solid var(--gold-b);border-radius:10px;padding:1rem;font-size:13px;color:var(--t2);">Funds will be deposited to your account within 2 business days. The patient's first payment of $800 is due on Apr 17, 2026.</div></div>`}
+  {title:'Approved! Choose a Plan',content:`<div style="background:var(--gbg);border:1px solid var(--gbd);border-radius:10px;padding:1rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:12px;"><span style="font-size:24px;">✓</span><div><div style="font-size:14px;font-weight:500;color:var(--green);">Maria is approved for up to $10,000</div><div style="font-size:12px;color:var(--t2);">Select a payment plan for $4,800 LipoAway Procedure</div></div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">${[{m:3,p:1600,apr:0},{m:6,p:800,apr:0},{m:12,p:434,apr:9.9},{m:24,p:237,apr:14.9}].map(o=>`<div style="border:1px solid var(--border);border-radius:10px;padding:1rem;cursor:pointer;transition:all .12s;" onclick="this.style.borderColor='var(--gold)';this.style.background='var(--gold-p)'"><div style="font-size:13px;font-weight:500;">${o.m} months</div><div style="font-family:'Poppins',sans-serif;font-size:28px;font-weight:500;margin:.3rem 0;">$${o.p}<span style="font-size:14px;font-weight:400;">/mo</span></div><div style="font-size:11px;color:var(--t3);">${o.apr===0?'0% APR':o.apr+'% APR'}</div></div>`).join('')}</div>`},
+  {title:'Complete',content:`<div style="text-align:center;padding:2rem;"><div style="font-size:48px;margin-bottom:1rem;">🎉</div><div style="font-family:'Poppins',sans-serif;font-size:26px;font-weight:500;margin-bottom:.5rem;">Payment plan activated</div><div style="font-size:13px;color:var(--t2);margin-bottom:1.5rem;">$4,800 authorized · 6-month plan · $800/month</div><div style="background:var(--gold-p);border:1px solid var(--gold-b);border-radius:10px;padding:1rem;font-size:13px;color:var(--t2);">Funds will be deposited to your account within 2 business days. The patient's first payment of $800 is due on Apr 17, 2026.</div></div>`}
 ];
 function renderFinStep(){
   const s=FIN_STEPS[finStep];
@@ -263,7 +293,7 @@ function renderFinStep(){
   if(finStep===1) setTimeout(()=>{ const b=document.getElementById('fin-bar'); if(b) b.style.width='100%'; },100);
 }
 
-function openNewPlan(){ document.getElementById('plan-modal').style.display='flex'; }
+function openNewPlan(){ document.getElementById('plan-modal-title').textContent='New Membership Plan';document.getElementById('plan-name').value='';document.getElementById('plan-price').value='';document.getElementById('plan-features').value='';document.getElementById('plan-modal').removeAttribute('data-edit-id');document.getElementById('plan-modal').style.display='flex'; }
 function closePlanModal(){ document.getElementById('plan-modal').style.display='none'; }
 function savePlan(){
   const name=document.getElementById('plan-name').value.trim();
@@ -271,9 +301,27 @@ function savePlan(){
   if(!name||!price){alert('Name and price required.');return;}
   const features=document.getElementById('plan-features').value.split('\n').filter(Boolean);
   const plans=HOC.load(HOC.K.memberships);
-  plans.push({id:HOC.uid(),name,price,interval:document.getElementById('plan-interval').value,services:features,active:true,color:'#C9A84C'});
+  const editId=document.getElementById('plan-modal').getAttribute('data-edit-id');
+  if(editId){
+    const idx=plans.findIndex(p=>p.id===editId);
+    if(idx>=0){plans[idx].name=name;plans[idx].price=price;plans[idx].interval=document.getElementById('plan-interval').value;plans[idx].services=features;}
+    document.getElementById('plan-modal').removeAttribute('data-edit-id');
+  } else {
+    plans.push({id:HOC.uid(),name,price,interval:document.getElementById('plan-interval').value,services:features,active:true,color:'#F00573'});
+  }
   HOC.save(HOC.K.memberships,plans);
   closePlanModal();renderPlans();
+}
+function editPlan(id){
+  const plans=HOC.load(HOC.K.memberships);
+  const p=plans.find(x=>x.id===id);if(!p)return;
+  document.getElementById('plan-modal-title').textContent='Edit Plan';
+  document.getElementById('plan-name').value=p.name;
+  document.getElementById('plan-price').value=p.price;
+  document.getElementById('plan-interval').value=p.interval||'monthly';
+  document.getElementById('plan-features').value=(p.services||[]).join('\n');
+  document.getElementById('plan-modal').setAttribute('data-edit-id',id);
+  document.getElementById('plan-modal').style.display='flex';
 }
 function openAddMember(planId){
   const pts=HOC.load(HOC.K.pts);
@@ -295,7 +343,72 @@ function saveMember(){
   HOC.save('hoc_members',members);
   closeMemberModal();renderMembers();
 }
-function openNewPackage(){alert('Package builder coming soon — tell us which packages matter most!');}
+function openNewPackage(){
+  document.getElementById('pkg-modal').style.display='flex';
+  document.getElementById('pkg-name').value='';
+  document.getElementById('pkg-desc').value='';
+  document.getElementById('pkg-price').value='';
+  document.getElementById('pkg-savings').value='';
+  document.getElementById('pkg-services').value='';
+}
+function closePkgModal(){document.getElementById('pkg-modal').style.display='none';}
+function savePkg(){
+  const name=document.getElementById('pkg-name').value.trim();
+  const price=parseFloat(document.getElementById('pkg-price').value);
+  if(!name||!price){alert('Name and price required.');return;}
+  DEFAULT_PACKAGES.push({id:HOC.uid(),name,description:document.getElementById('pkg-desc').value,services:document.getElementById('pkg-services').value.split('\n').filter(Boolean),price,savings:parseFloat(document.getElementById('pkg-savings').value)||0});
+  closePkgModal();renderPackages();
+}
+function sellPackage(id,name,price){
+  const pts=HOC.load(HOC.K.pts);
+  const ptName=prompt('Sell "'+name+'" ('+HOC.fa(price)+') to which patient?\n\n'+pts.map((p,i)=>(i+1)+'. '+HOC.pn(p)).join('\n')+'\n\nEnter number:');
+  if(!ptName)return;
+  const idx=parseInt(ptName)-1;
+  if(isNaN(idx)||idx<0||idx>=pts.length){alert('Invalid selection.');return;}
+  const pt=pts[idx];
+  const txns=HOC.load(HOC.K.txns);
+  txns.push({id:HOC.uid(),patientId:pt.id,service:'Package: '+name,amount:price,method:'Package sale',status:'Paid',date:HOC.today()});
+  HOC.save(HOC.K.txns,txns);
+  alert('✓ Sold "'+name+'" to '+HOC.pn(pt)+' for '+HOC.fa(price));
+}
+let managingMemberId=null;
+function manageMember(id){
+  const members=HOC.load('hoc_members');
+  const m=members.find(x=>x.id===id);if(!m)return;
+  managingMemberId=id;
+  const p=HOC.gp(m.patientId);
+  const plan=HOC.load(HOC.K.memberships).find(x=>x.id===m.membershipId);
+  document.getElementById('manage-info').innerHTML=`<div class="prow" style="margin-bottom:.75rem;"><div class="av">${HOC.pi(p)}</div><div><div class="pname">${HOC.pn(p)}</div><div style="font-size:11px;color:var(--t3);">${plan?.name||'—'} · Started ${HOC.fd(m.startDate)}</div></div></div>`;
+  document.getElementById('manage-status').value=m.status;
+  const plans=HOC.load(HOC.K.memberships);
+  document.getElementById('manage-plan').innerHTML=plans.map(pl=>`<option value="${pl.id}"${pl.id===m.membershipId?' selected':''}>${pl.name} — ${HOC.fa(pl.price)}/mo</option>`).join('');
+  document.getElementById('manage-modal').style.display='flex';
+}
+function closeManageModal(){document.getElementById('manage-modal').style.display='none';managingMemberId=null;}
+function saveManage(){
+  if(!managingMemberId)return;
+  const members=HOC.load('hoc_members');
+  const m=members.find(x=>x.id===managingMemberId);if(!m)return;
+  m.status=document.getElementById('manage-status').value;
+  m.membershipId=document.getElementById('manage-plan').value;
+  HOC.save('hoc_members',members);
+  closeManageModal();renderMembers();renderPlans();
+}
+function deleteMember(){
+  if(!managingMemberId||!confirm('Remove this subscriber?'))return;
+  HOC.save('hoc_members',HOC.load('hoc_members').filter(m=>m.id!==managingMemberId));
+  closeManageModal();renderMembers();renderPlans();
+}
+function connectFinancing(name){
+  const key=prompt(name+' API Key:\n\nPaste your '+name+' merchant API key to activate financing.\n(For demo, enter any text and click OK)');
+  if(!key)return;
+  localStorage.setItem('hoc_fin_'+name.toLowerCase(),key);
+  const el=event.target;
+  el.textContent='✓ '+name+' Connected';
+  el.style.background='var(--gbg)';el.style.color='var(--green)';el.style.borderColor='var(--gbd)';
+  el.disabled=true;
+}
 </script>
+<script src="hoc-chat.js"></script>
 </body>
 </html>

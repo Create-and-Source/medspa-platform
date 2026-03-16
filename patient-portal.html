@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Patient Portal — Haus of Confidence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--pri:#F00573;--border:#e5e1e8;--text:#1a1418;--t2:#5c5460;--t3:#9890a0;--green:#16a34a;--gbg:#f0fdf4;--gbd:#bbf7d0;}
+body{background:#fafafa;color:var(--text);font-family:'Montserrat',sans-serif;min-height:100vh;}
+
+/* Header */
+.pp-header{background:#fff;border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;}
+.pp-logo{font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;}
+.pp-tag{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;}
+.pp-header-right{font-size:12px;color:var(--t3);}
+
+/* Layout */
+.pp-wrap{max-width:860px;margin:0 auto;padding:2.5rem 1.5rem;}
+
+/* Login */
+.pp-login{max-width:440px;margin:0 auto;text-align:center;}
+.pp-title{font-family:'Poppins',sans-serif;font-size:28px;font-weight:500;margin-bottom:.4rem;}
+.pp-sub{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:2rem;}
+.pp-input{width:100%;padding:13px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;color:var(--text);font-family:'Montserrat',sans-serif;background:#fff;outline:none;transition:border .12s;margin-bottom:1rem;}
+.pp-input:focus{border-color:var(--pri);}
+.pp-btn{background:linear-gradient(135deg,#F00573,#722A82);color:#fff;border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;transition:opacity .15s;width:100%;}
+.pp-btn:hover{opacity:.9;}
+.pp-err{color:var(--pri);font-size:13px;margin-top:.5rem;display:none;}
+
+/* Dashboard */
+.pp-dashboard{display:none;}
+.pp-welcome{font-family:'Poppins',sans-serif;font-size:24px;font-weight:500;margin-bottom:.25rem;}
+.pp-welcome-sub{font-size:13px;color:var(--t2);margin-bottom:1.5rem;}
+.pp-logout{background:none;border:1px solid var(--border);border-radius:8px;padding:7px 16px;font-size:12px;color:var(--t2);cursor:pointer;font-family:'Montserrat',sans-serif;transition:border-color .12s;}
+.pp-logout:hover{border-color:var(--pri);color:var(--pri);}
+.pp-top-bar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;}
+
+/* Info Card */
+.pp-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.pp-card-title{font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:8px;}
+.pp-card-title .icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+
+/* Profile row */
+.pp-profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem 2rem;}
+.pp-profile-label{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.04em;}
+.pp-profile-val{font-size:14px;font-weight:500;margin-bottom:.5rem;}
+
+/* Stats row */
+.pp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem;}
+.pp-stat{background:#fff;border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;text-align:center;}
+.pp-stat-num{font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:var(--pri);}
+.pp-stat-label{font-size:11px;color:var(--t3);margin-top:2px;}
+
+/* Table */
+.pp-table{width:100%;border-collapse:collapse;font-size:13px;}
+.pp-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);padding:8px 0;border-bottom:1px solid var(--border);font-weight:500;}
+.pp-table td{padding:10px 0;border-bottom:1px solid #f0eff2;vertical-align:middle;}
+.pp-table tr:last-child td{border-bottom:none;}
+
+/* Status pills */
+.st{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:500;}
+.st-ok{background:var(--gbg);color:var(--green);border:1px solid var(--gbd);}
+.st-pend{background:#fffbeb;color:#d97706;border:1px solid #fde68a;}
+.st-done{background:#f0f4ff;color:#4f46e5;border:1px solid #c7d2fe;}
+.st-paid{background:var(--gbg);color:var(--green);border:1px solid var(--gbd);}
+.st-due{background:#fef2f2;color:#dc2626;border:1px solid #fecaca;}
+
+/* Empty */
+.pp-empty{text-align:center;padding:1.5rem;color:var(--t3);font-size:13px;}
+
+/* Book link */
+.pp-book-link{display:inline-block;margin-top:.75rem;color:var(--pri);font-size:13px;font-weight:500;text-decoration:none;}
+.pp-book-link:hover{text-decoration:underline;}
+
+@media(max-width:600px){
+  .pp-stats{grid-template-columns:1fr;}
+  .pp-profile-grid{grid-template-columns:1fr;}
+  .pp-header{padding:.75rem 1rem;flex-direction:column;gap:4px;text-align:center;}
+  .pp-wrap{padding:1.5rem 1rem;}
+  .pp-table{font-size:12px;}
+}
+</style>
+</head>
+<body>
+
+<div class="pp-header">
+  <div><div class="pp-logo">Haus of Confidence</div><div class="pp-tag">Patient Portal</div></div>
+  <div class="pp-header-right">4205 N Winfield Scott Plaza, Scottsdale &middot; (480) 493-5921</div>
+</div>
+
+<div class="pp-wrap">
+
+  <!-- Login Screen -->
+  <div class="pp-login" id="pp-login">
+    <div class="pp-title">My Portal</div>
+    <div class="pp-sub">View your appointments, visit history, membership, and payments.</div>
+    <button class="pp-btn" onclick="enterDemo()">View My Portal</button>
+    <div style="font-size:12px;color:var(--t3);margin-top:.75rem;">Demo — click to enter as Maria G.</div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="pp-dashboard" id="pp-dashboard">
+
+    <div class="pp-top-bar">
+      <div>
+        <div class="pp-welcome" id="pp-welcome-name">Welcome back</div>
+        <div class="pp-welcome-sub" id="pp-welcome-sub">Here's your portal overview</div>
+      </div>
+      <button class="pp-logout" onclick="logout()">Sign Out</button>
+    </div>
+
+    <!-- Stats -->
+    <div class="pp-stats">
+      <div class="pp-stat"><div class="pp-stat-num" id="st-upcoming">0</div><div class="pp-stat-label">Upcoming Appointments</div></div>
+      <div class="pp-stat"><div class="pp-stat-num" id="st-visits">0</div><div class="pp-stat-label">Total Visits</div></div>
+      <div class="pp-stat"><div class="pp-stat-num" id="st-ltv">$0</div><div class="pp-stat-label">Lifetime Value</div></div>
+    </div>
+
+    <!-- Profile -->
+    <div class="pp-card">
+      <div class="pp-card-title"><span class="icon" style="background:#fef5fa;color:var(--pri);">&#9819;</span> Your Information</div>
+      <div class="pp-profile-grid" id="pp-profile"></div>
+    </div>
+
+    <!-- Membership -->
+    <div id="pp-membership"></div>
+
+    <!-- Upcoming Appointments -->
+    <div class="pp-card">
+      <div class="pp-card-title"><span class="icon" style="background:#f0f4ff;color:#4f46e5;">&#9737;</span> Upcoming Appointments</div>
+      <div id="pp-upcoming"></div>
+      <a href="booking.html" class="pp-book-link">+ Book a new appointment</a>
+    </div>
+
+    <!-- Past Visits -->
+    <div class="pp-card">
+      <div class="pp-card-title"><span class="icon" style="background:var(--gbg);color:var(--green);">&#10003;</span> Past Visits</div>
+      <div id="pp-past"></div>
+    </div>
+
+    <!-- Payment History -->
+    <div class="pp-card">
+      <div class="pp-card-title"><span class="icon" style="background:#fffbeb;color:#d97706;">&#9733;</span> Payment History</div>
+      <div id="pp-payments"></div>
+    </div>
+
+  </div>
+</div>
+
+<script src="hoc.js"></script>
+<script>
+function load(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[];}}
+function today(){return new Date().toISOString().slice(0,10);}
+
+let currentPatient = null;
+
+function enterDemo(){
+  const patients = load('hoc_p');
+  currentPatient = patients.find(p => p.id === 'p1') || patients[0];
+  if(!currentPatient){ alert('No patient data found. Visit the main app first to seed demo data.'); return; }
+  renderDashboard();
+}
+
+function logout(){
+  currentPatient = null;
+  document.getElementById('pp-login').style.display = 'block';
+  document.getElementById('pp-dashboard').style.display = 'none';
+}
+
+function renderDashboard(){
+  document.getElementById('pp-login').style.display = 'none';
+  document.getElementById('pp-dashboard').style.display = 'block';
+
+  const p = currentPatient;
+  const pid = p.id;
+  const t = today();
+
+  // Welcome
+  const name = (p.first||'') + (p.last ? ' '+p.last : '');
+  document.getElementById('pp-welcome-name').textContent = 'Welcome, ' + (p.first||'Patient');
+  document.getElementById('pp-welcome-sub').textContent = 'Here\'s your portal overview as of ' + HOC.fd(t);
+
+  // Profile
+  const dob = p.dob ? HOC.fd(p.dob) : 'Not provided';
+  document.getElementById('pp-profile').innerHTML =
+    '<div><div class="pp-profile-label">Name</div><div class="pp-profile-val">' + name + '</div></div>' +
+    '<div><div class="pp-profile-label">Phone</div><div class="pp-profile-val">' + (p.phone||'Not provided') + '</div></div>' +
+    '<div><div class="pp-profile-label">Email</div><div class="pp-profile-val">' + (p.email||'Not provided') + '</div></div>' +
+    '<div><div class="pp-profile-label">Date of Birth</div><div class="pp-profile-val">' + dob + '</div></div>';
+
+  // Membership
+  const members = load('hoc_members');
+  const memberships = load('hoc_memberships');
+  const myMem = members.find(m => m.patientId === pid && m.status === 'Active');
+  const myPlan = myMem ? memberships.find(pl => pl.id === myMem.membershipId) : null;
+  const memEl = document.getElementById('pp-membership');
+  if(myPlan){
+    memEl.innerHTML = '<div style="background:linear-gradient(135deg,#F00573,#722A82);border-radius:12px;padding:1.25rem 1.5rem;color:#fff;margin-bottom:1.25rem;">' +
+      '<div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:4px;">Your Membership</div>' +
+      '<div style="font-family:Poppins,sans-serif;font-size:20px;font-weight:600;">' + myPlan.name + '</div>' +
+      '<div style="font-size:13px;opacity:.85;margin-top:4px;">$' + myPlan.price + '/month · Next billing ' + HOC.fd(myMem.nextBilling) + '</div>' +
+      '<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">' + (myPlan.services||[]).map(function(s){return '<span style="background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;font-size:11px;">' + s + '</span>';}).join('') + '</div>' +
+    '</div>';
+  } else {
+    memEl.innerHTML = '';
+  }
+
+  // Appointments
+  const allAppts = load('hoc_a').filter(a => a.patientId === pid);
+  const upcoming = allAppts.filter(a => a.date >= t && (a.status==='Confirmed'||a.status==='Pending'));
+  const past = allAppts.filter(a => a.status === 'Completed');
+
+  // Payments
+  const txns = load('hoc_t').filter(tx => tx.patientId === pid);
+  const ltv = txns.filter(tx => tx.status==='Paid').reduce((s,tx) => s + Number(tx.amount||0), 0);
+
+  // Stats
+  document.getElementById('st-upcoming').textContent = upcoming.length;
+  document.getElementById('st-visits').textContent = past.length;
+  document.getElementById('st-ltv').textContent = '$' + ltv.toLocaleString();
+
+  // Upcoming table
+  if(upcoming.length === 0){
+    document.getElementById('pp-upcoming').innerHTML = '<div class="pp-empty">No upcoming appointments scheduled.</div>';
+  } else {
+    upcoming.sort((a,b) => a.date.localeCompare(b.date) || (a.time||'').localeCompare(b.time||''));
+    let html = '<table class="pp-table"><thead><tr><th>Date</th><th>Time</th><th>Service</th><th>Provider</th><th>Status</th></tr></thead><tbody>';
+    upcoming.forEach(a => {
+      const stCls = a.status==='Confirmed' ? 'st-ok' : 'st-pend';
+      html += '<tr><td>' + HOC.fd(a.date) + '</td><td>' + HOC.ft(a.time) + '</td><td>' + (a.service||'') + '</td><td>' + (a.provider||'') + '</td><td><span class="st '+stCls+'">' + a.status + '</span></td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('pp-upcoming').innerHTML = html;
+  }
+
+  // Past visits table
+  if(past.length === 0){
+    document.getElementById('pp-past').innerHTML = '<div class="pp-empty">No past visits on record.</div>';
+  } else {
+    past.sort((a,b) => b.date.localeCompare(a.date));
+    let html = '<table class="pp-table"><thead><tr><th>Date</th><th>Service</th><th>Provider</th></tr></thead><tbody>';
+    past.forEach(a => {
+      html += '<tr><td>' + HOC.fd(a.date) + '</td><td>' + (a.service||'') + '</td><td>' + (a.provider||'') + '</td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('pp-past').innerHTML = html;
+  }
+
+  // Payment history table
+  if(txns.length === 0){
+    document.getElementById('pp-payments').innerHTML = '<div class="pp-empty">No payment history on file.</div>';
+  } else {
+    txns.sort((a,b) => (b.date||'').localeCompare(a.date||''));
+    let html = '<table class="pp-table"><thead><tr><th>Date</th><th>Service</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody>';
+    txns.forEach(tx => {
+      const stCls = tx.status==='Paid' ? 'st-paid' : 'st-due';
+      html += '<tr><td>' + HOC.fd(tx.date) + '</td><td>' + (tx.service||'') + '</td><td>$' + Number(tx.amount||0).toLocaleString() + '</td><td>' + (tx.method||'') + '</td><td><span class="st '+stCls+'">' + tx.status + '</span></td></tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('pp-payments').innerHTML = html;
+  }
+}
+
+</script>
+<script src="hoc-chat.js"></script>
+</body>
+</html>

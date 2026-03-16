@@ -17,18 +17,18 @@
 .inj-table th{text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);padding:6px 10px;background:var(--bg);font-weight:400;}
 .inj-table td{padding:8px 10px;border-top:1px solid var(--border);color:var(--text);}
 .soap-note-input{width:100%;padding:10px 13px;border:1px solid var(--border2);border-radius:8px;font-size:13px;font-family:'DM Sans',sans-serif;resize:vertical;min-height:80px;outline:none;color:var(--text);}
-.soap-note-input:focus{border-color:var(--gold);}
+.soap-note-input:focus{border-color:var(--pri);}
 .inj-row{display:grid;grid-template-columns:2fr 1fr 2fr 1fr 1fr;gap:8px;align-items:center;margin-bottom:8px;}
 .inj-row input,.inj-row select{padding:7px 10px;border:1px solid var(--border2);border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;color:var(--text);background:var(--white);outline:none;}
-.inj-row input:focus,.inj-row select:focus{border-color:var(--gold);}
+.inj-row input:focus,.inj-row select:focus{border-color:var(--pri);}
 .pt-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem;}
 .pt-pick-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .12s;display:flex;align-items:center;gap:10px;}
-.pt-pick-card:hover,.pt-pick-card.sel{border-color:var(--gold);background:var(--gold-p);}
+.pt-pick-card:hover,.pt-pick-card.sel{border-color:var(--pri);background:var(--pri-p);}
 .timeline{display:flex;flex-direction:column;gap:0;}
 .tl-item{display:flex;gap:14px;position:relative;}
 .tl-item::before{content:'';position:absolute;left:16px;top:32px;bottom:0;width:1px;background:var(--border);}
 .tl-item:last-child::before{display:none;}
-.tl-dot{width:32px;height:32px;border-radius:50%;background:var(--gold-l);border:2px solid var(--gold-b);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:500;color:var(--gold-h);margin-top:2px;}
+.tl-dot{width:32px;height:32px;border-radius:50%;background:var(--pri-l);border:2px solid var(--pri-b);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:10px;font-weight:500;color:var(--pri-h);margin-top:2px;}
 .tl-content{flex:1;padding-bottom:1.25rem;}
 .tl-date{font-size:11px;color:var(--t3);margin-bottom:4px;}
 .tl-title{font-size:13px;font-weight:500;margin-bottom:3px;}
@@ -52,6 +52,7 @@
       <div class="tab active" id="tab-new" onclick="showTab('new')">New Chart Note</div>
       <div class="tab" id="tab-history" onclick="showTab('history')">Treatment History</div>
       <div class="tab" id="tab-injectables" onclick="showTab('injectables')">Injectable Log</div>
+      <div class="tab" id="tab-consent" onclick="showTab('consent')">Consent Forms</div>
     </div>
 
     <!-- NEW CHART NOTE -->
@@ -67,9 +68,11 @@
             <div class="fr">
               <label class="fl">Provider</label>
               <select class="fs" id="chart-provider">
-                <option>Dr. Sara Ameli</option>
+                <option>Sara Ameli</option>
                 <option>Dr. Todd Malan</option>
-                <option>Jacqueline</option>
+                <option>Dr. Margaret Husami</option>
+                <option>Shay</option>
+                <option>Cierra</option>
               </select>
             </div>
           </div>
@@ -83,15 +86,29 @@
               <select class="fs" id="chart-service">
                 <option>LipoAway Procedure</option>
                 <option>Fat Transfer</option>
+                <option>BodyTite</option>
                 <option>Botox</option>
                 <option>Dermal Fillers</option>
+                <option>Lip Fillers</option>
                 <option>Sculptra & Radiesse</option>
-                <option>RF Microneedling</option>
                 <option>PDO Thread Lift</option>
-                <option>Medical Weight Loss</option>
-                <option>Hormone Replacement Therapy</option>
-                <option>IV Therapy</option>
+                <option>Kybella / Liquid Lipo</option>
+                <option>RF Microneedling</option>
+                <option>IPL Photofacial</option>
+                <option>Chemical Peel</option>
+                <option>Laser Skin Resurfacing</option>
+                <option>Laser Hair Removal</option>
+                <option>Unicorn Facial</option>
                 <option>Facial</option>
+                <option>Stem Cell Therapy</option>
+                <option>Natural Growth Factor Injections</option>
+                <option>Hormone Replacement Therapy</option>
+                <option>Medical Weight Loss</option>
+                <option>IV Therapy</option>
+                <option>Hair Restoration</option>
+                <option>FemiLift</option>
+                <option>BTL Emsella</option>
+                <option>Regenerative Joint Therapy</option>
                 <option>Consultation</option>
               </select>
             </div>
@@ -175,7 +192,8 @@
 
       <div style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:2rem;">
         <button class="btn-g" onclick="clearChart()">Clear</button>
-        <button class="btn-g">Save Draft</button>
+        <button class="btn-g" onclick="saveDraft()">Save Draft</button>
+        <button class="btn-g" onclick="assignConsent()">📋 Attach Consent Form</button>
         <button class="btn-p" onclick="saveChart()">Sign & Save Chart ✓</button>
       </div>
     </div>
@@ -200,6 +218,41 @@
       </div>
     </div>
   </div>
+
+    <!-- CONSENT FORMS -->
+    <div id="view-consent" style="display:none;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem;">
+        <div style="font-size:13px;color:var(--t2);">Create and manage consent forms per service. Forms are stored locally and can be assigned to patients.</div>
+        <button class="btn-sm" onclick="openConsentBuilder()">+ New Consent Form</button>
+      </div>
+      <div id="consent-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Consent Form Builder Modal -->
+<div id="consent-modal" class="overlay" style="display:none;" onclick="if(event.target===this)closeConsentModal()">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-title" id="consent-modal-title">New Consent Form</div>
+    <div class="fr"><label class="fl">Form Title</label><input class="fi" id="cf-title" placeholder="e.g. LipoAway Informed Consent"></div>
+    <div class="fr"><label class="fl">Service</label>
+      <select class="fs" id="cf-service"><option>LipoAway Procedure</option><option>Fat Transfer</option><option>BodyTite</option><option>Botox</option><option>Dermal Fillers</option><option>Lip Fillers</option><option>Sculptra & Radiesse</option><option>PDO Thread Lift</option><option>RF Microneedling</option><option>Stem Cell Therapy</option><option>Medical Weight Loss</option><option>General Treatment</option></select>
+    </div>
+    <div class="fr"><label class="fl">Consent Text</label>
+      <textarea class="fi" id="cf-body" rows="8" placeholder="I, the undersigned patient, hereby consent to...&#10;&#10;Risks include...&#10;&#10;I understand that..."></textarea>
+    </div>
+    <div class="fr"><label class="fl">Required Checkboxes (one per line)</label>
+      <textarea class="fi" id="cf-checks" rows="3" placeholder="I understand the risks and complications&#10;I confirm I am not pregnant or nursing&#10;I consent to before/after photography"></textarea>
+    </div>
+    <div class="fr"><label class="fl">Requires Signature</label>
+      <select class="fs" id="cf-sig"><option value="yes">Yes</option><option value="no">No</option></select>
+    </div>
+    <input type="hidden" id="cf-edit-id">
+    <div class="modal-acts">
+      <button class="btn-g" onclick="closeConsentModal()">Cancel</button>
+      <button class="btn-p" onclick="saveConsentForm()">Save Form</button>
+    </div>
+  </div>
 </div>
 
 <!-- Saved confirmation toast -->
@@ -222,12 +275,13 @@ populatePts();
 
 // Tabs
 function showTab(t) {
-  ['new','history','injectables'].forEach(v=>{
-    document.getElementById('view-'+v).style.display = v===t?'block':'none';
-    document.getElementById('tab-'+v).classList.toggle('active',v===t);
+  ['new','history','injectables','consent'].forEach(v=>{
+    const el=document.getElementById('view-'+v);if(el)el.style.display = v===t?'block':'none';
+    const tab=document.getElementById('tab-'+v);if(tab)tab.classList.toggle('active',v===t);
   });
   if(t==='history') renderHistory();
   if(t==='injectables') renderInjLog();
+  if(t==='consent') renderConsentForms();
 }
 
 // Injectable rows
@@ -296,6 +350,35 @@ function clearChart() {
   injRows = [];
   document.getElementById('inj-rows').innerHTML = '';
   document.getElementById('no-inj').style.display = 'block';
+}
+
+function saveDraft() {
+  const patientId = document.getElementById('chart-patient').value;
+  if(!patientId) { alert('Please select a patient.'); return; }
+  const chart = {
+    id: HOC.uid(),
+    patientId,
+    date: document.getElementById('chart-date').value,
+    provider: document.getElementById('chart-provider').value,
+    service: document.getElementById('chart-service').value,
+    type: document.getElementById('chart-type').value,
+    subjective: document.getElementById('soap-s').value,
+    objective: document.getElementById('soap-o').value,
+    assessment: document.getElementById('soap-a').value,
+    plan: document.getElementById('soap-p').value,
+    injectables: getInjData(),
+    carePost: document.getElementById('care-post').value,
+    carePre: document.getElementById('care-pre').value,
+    status: 'draft',
+    created: Date.now()
+  };
+  const charts = HOC.load(HOC.K.charts);
+  charts.push(chart);
+  HOC.save(HOC.K.charts, charts);
+  const toast = document.getElementById('toast');
+  toast.textContent = '✓ Draft saved';
+  toast.style.display = 'block';
+  setTimeout(()=>{toast.style.display='none';toast.textContent='✓ Chart signed and saved';}, 2500);
 }
 
 function saveChart() {
@@ -396,6 +479,105 @@ function renderInjLog() {
   }).join('')}
   </tbody></table>`;
 }
+
+// ── CONSENT FORMS ────────────────────────────────────────────────────
+const KCF='hoc_consent_forms';
+function seedConsentForms(){
+  if(HOC.load(KCF).length)return;
+  const seed=[
+    {id:'cf1',title:'LipoAway Informed Consent',service:'LipoAway Procedure',body:'I, the undersigned patient, hereby consent to undergo the LipoAway (awake liposuction) procedure.\n\nI understand that this procedure involves the removal of localized fat deposits using tumescent liposuction technique under local anesthesia. I have been informed of the expected results, as well as the risks and possible complications including but not limited to: bruising, swelling, asymmetry, numbness, infection, contour irregularities, and the need for revision.\n\nI have had the opportunity to ask questions and all my concerns have been addressed to my satisfaction.',checks:['I understand the risks, benefits, and alternatives to this procedure','I confirm I am not pregnant or nursing','I consent to before/after photography for my medical record','I agree to follow all pre- and post-operative instructions'],sig:'yes',created:Date.now()},
+    {id:'cf2',title:'Injectable Consent — Botox & Fillers',service:'Botox',body:'I consent to treatment with injectable neuromodulators (Botox/Dysport) and/or dermal fillers.\n\nI understand that results are temporary and may require maintenance treatments. Risks include bruising, swelling, redness, asymmetry, allergic reaction, and in rare cases, vascular occlusion.\n\nI have disclosed all medications, supplements, and medical conditions to my provider.',checks:['I understand the risks and expected outcomes','I have disclosed all medications and medical history','I consent to photography for my medical record'],sig:'yes',created:Date.now()},
+    {id:'cf3',title:'General Treatment Consent',service:'General Treatment',body:'I consent to the treatment(s) discussed with my provider today. I have been informed of the nature of the procedure, expected results, potential risks, and alternatives.\n\nI understand that results may vary and are not guaranteed.',checks:['I understand and accept the risks of treatment','I confirm all information provided is accurate'],sig:'yes',created:Date.now()},
+  ];
+  HOC.save(KCF,seed);
+}
+seedConsentForms();
+
+function renderConsentForms(){
+  const forms=HOC.load(KCF);
+  const el=document.getElementById('consent-list');
+  if(!forms.length){el.innerHTML='<div class="empty">No consent forms yet. Click "+ New Consent Form" to create one.</div>';return;}
+  el.innerHTML=forms.map(f=>`<div class="panel" style="margin-bottom:1rem;">
+    <div class="panel-hdr">
+      <div><div style="font-size:13px;font-weight:500;">${f.title}</div><div style="font-size:11px;color:var(--t3);">${f.service} · ${f.checks?.length||0} checkboxes · Signature ${f.sig==='yes'?'required':'optional'}</div></div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="editConsentForm('${f.id}')">Edit</button>
+        <button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="previewConsent('${f.id}')">Preview</button>
+        <button class="btn-d" style="font-size:11px;padding:3px 10px;" onclick="deleteConsentForm('${f.id}')">Delete</button>
+      </div>
+    </div>
+    <div style="padding:12px 16px;font-size:12px;color:var(--t2);white-space:pre-line;max-height:80px;overflow:hidden;">${f.body.slice(0,200)}${f.body.length>200?'...':''}</div>
+  </div>`).join('');
+}
+
+function openConsentBuilder(){
+  document.getElementById('consent-modal-title').textContent='New Consent Form';
+  document.getElementById('cf-edit-id').value='';
+  document.getElementById('cf-title').value='';
+  document.getElementById('cf-service').value='General Treatment';
+  document.getElementById('cf-body').value='';
+  document.getElementById('cf-checks').value='I understand the risks and expected outcomes\nI confirm all information provided is accurate\nI consent to before/after photography';
+  document.getElementById('cf-sig').value='yes';
+  document.getElementById('consent-modal').style.display='flex';
+}
+function closeConsentModal(){document.getElementById('consent-modal').style.display='none';}
+function editConsentForm(id){
+  const forms=HOC.load(KCF);const f=forms.find(x=>x.id===id);if(!f)return;
+  document.getElementById('consent-modal-title').textContent='Edit Consent Form';
+  document.getElementById('cf-edit-id').value=id;
+  document.getElementById('cf-title').value=f.title;
+  document.getElementById('cf-service').value=f.service;
+  document.getElementById('cf-body').value=f.body;
+  document.getElementById('cf-checks').value=(f.checks||[]).join('\n');
+  document.getElementById('cf-sig').value=f.sig||'yes';
+  document.getElementById('consent-modal').style.display='flex';
+}
+function saveConsentForm(){
+  const title=document.getElementById('cf-title').value.trim();
+  if(!title){alert('Title is required.');return;}
+  const editId=document.getElementById('cf-edit-id').value;
+  const form={
+    id:editId||HOC.uid(),
+    title,
+    service:document.getElementById('cf-service').value,
+    body:document.getElementById('cf-body').value,
+    checks:document.getElementById('cf-checks').value.split('\n').filter(Boolean),
+    sig:document.getElementById('cf-sig').value,
+    created:Date.now()
+  };
+  const forms=HOC.load(KCF);
+  if(editId){const idx=forms.findIndex(f=>f.id===editId);if(idx>=0)forms[idx]=form;}
+  else forms.push(form);
+  HOC.save(KCF,forms);
+  closeConsentModal();renderConsentForms();
+}
+function deleteConsentForm(id){
+  if(!confirm('Delete this consent form?'))return;
+  HOC.save(KCF,HOC.load(KCF).filter(f=>f.id!==id));
+  renderConsentForms();
+}
+function previewConsent(id){
+  const forms=HOC.load(KCF);const f=forms.find(x=>x.id===id);if(!f)return;
+  const w=window.open('','_blank','width=600,height=700');
+  w.document.write(`<html><head><title>${f.title}</title><style>body{font-family:Montserrat,sans-serif;padding:2rem;color:#1a1418;max-width:560px;margin:0 auto;}h1{font-family:Poppins,sans-serif;font-size:20px;margin-bottom:.5rem;}h2{font-size:12px;color:#9890a0;margin-bottom:1.5rem;font-weight:400;}.body{font-size:13px;line-height:1.8;margin-bottom:1.5rem;white-space:pre-line;}.check{display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;font-size:13px;}.sig{border-top:1px solid #e5e1e8;margin-top:2rem;padding-top:1.5rem;}.sig-line{border-bottom:1px solid #1a1418;width:280px;height:40px;margin-top:1rem;}</style></head><body><h1>${f.title}</h1><h2>${f.service} — Haus of Confidence</h2><div class="body">${f.body}</div>${(f.checks||[]).map(c=>'<div class="check"><input type="checkbox"> '+c+'</div>').join('')}${f.sig==='yes'?'<div class="sig"><strong>Patient Signature</strong><div class="sig-line"></div><div style="font-size:11px;color:#9890a0;margin-top:4px;">Date: _______________</div></div>':''}</body></html>`);
+}
+function assignConsent(){
+  const patientId=document.getElementById('chart-patient').value;
+  if(!patientId){alert('Select a patient first.');return;}
+  const forms=HOC.load('hoc_consent_forms');
+  if(!forms.length){alert('No consent forms created. Go to Consent Forms tab to create one.');return;}
+  const choice=prompt('Attach consent form to '+HOC.pn(HOC.gp(patientId))+':\n\n'+forms.map((f,i)=>(i+1)+'. '+f.title+' ('+f.service+')').join('\n')+'\n\nEnter number:');
+  if(!choice)return;
+  const f=forms[parseInt(choice)-1];
+  if(!f){alert('Invalid selection.');return;}
+  // Save assignment
+  const key='hoc_consent_assigned';
+  const assigned=HOC.load(key);
+  assigned.push({id:HOC.uid(),patientId,formId:f.id,formTitle:f.title,date:HOC.today(),status:'pending'});
+  HOC.save(key,assigned);
+  alert('✓ "'+f.title+'" attached to '+HOC.pn(HOC.gp(patientId))+'\'s chart.\n\nThe patient will be asked to review and sign at their next visit.');
+}
 </script>
+<script src="hoc-chat.js"></script>
 </body>
 </html>

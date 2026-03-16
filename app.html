@@ -5,71 +5,65 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Haus of Confidence · Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --gold:#C9A84C;--gold-h:#b8943e;--gold-light:#f5edda;--gold-pale:#fdf9f0;--gold-border:#e8d5a3;
-  --white:#ffffff;--bg:#fafaf8;--surface:#ffffff;--s2:#f5f4f1;
-  --border:#e8e4dc;--border2:#d4cfc4;
-  --text:#1a1814;--t2:#6b6459;--t3:#a09890;
+  --pri:#F00573;--pri-h:#d00565;--pri-l:#fde8f3;--pri-p:#fef5fa;--pri-b:#f9b0d4;
+  --sec:#722A82;--sec-h:#5f2270;--sec-l:#ece0f0;--sec-p:#f7f2f9;
+  --dark:#741450;
+  --gold:#F00573;--gold-h:#d00565;--gold-light:#fde8f3;--gold-pale:#fef5fa;--gold-border:#f9b0d4;
+  --white:#ffffff;--bg:#fafafa;--surface:#ffffff;--s2:#f4f3f5;
+  --border:#e5e1e8;--border2:#d1cdd6;
+  --text:#1a1418;--t2:#5c5460;--t3:#9890a0;
   --green:#16a34a;--green-bg:#f0fdf4;--green-bd:#bbf7d0;
   --amber:#b45309;--amber-bg:#fffbeb;--amber-bd:#fde68a;
   --red:#dc2626;--red-bg:#fef2f2;--red-bd:#fecaca;
   --blue:#1d4ed8;--blue-bg:#eff6ff;--blue-bd:#bfdbfe;
 }
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;}
 body{overflow:hidden;}
 
-/* ─── SPLASH ─────────────────────────────────────────────── */
-#splash{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;background:var(--bg);z-index:100;}
-.sp-eye{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:.9rem;}
-.sp-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(30px,5vw,52px);font-weight:500;line-height:1.1;margin-bottom:.5rem;}
-.sp-sub{font-size:14px;color:var(--t2);margin-bottom:2.2rem;max-width:420px;line-height:1.7;}
-.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:500px;width:100%;margin-bottom:1.4rem;}
-.sc{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;}
-.sc-n{font-size:12px;font-weight:500;color:var(--text);}
-.sc-t{font-size:11px;color:var(--t3);margin-top:3px;}
-.arr{display:flex;align-items:center;gap:12px;color:var(--t3);font-size:12px;max-width:500px;width:100%;margin-bottom:1.4rem;}
-.al{flex:1;height:1px;background:var(--border);}
-.ubox{background:var(--white);border:2px solid var(--gold);border-radius:12px;padding:14px 36px;margin-bottom:2rem;}
-.un{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;}
-.us{font-size:11px;color:var(--t3);margin-top:4px;letter-spacing:.03em;}
-.btn-p{background:var(--gold);color:var(--white);border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;}
-.btn-p:hover{background:var(--gold-h);}
+/* ─── BUTTONS ────────────────────────────────────────────── */
+.btn-p{background:linear-gradient(135deg,#F00573,#722A82);color:var(--white);border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;transition:opacity .15s;}
+.btn-p:hover{opacity:.9;}
 
 /* ─── APP SHELL ───────────────────────────────────────────── */
 #app{display:flex;height:100vh;flex-direction:row;}
 
 /* ─── SIDEBAR ─────────────────────────────────────────────── */
-.sb{width:210px;flex-shrink:0;background:var(--white);border-right:1px solid var(--border);display:flex;flex-direction:column;transition:width .25s;}
-.sb-brand{padding:1.1rem 1.25rem;border-bottom:1px solid var(--border);}
-.sb-logo{font-family:'Cormorant Garamond',serif;font-size:15px;font-weight:500;line-height:1.2;}
-.sb-tag{font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-top:1px;}
-.ns{font-size:9px;text-transform:uppercase;letter-spacing:.12em;color:var(--t3);padding:.85rem 1.25rem .3rem;}
-.ni{display:flex;align-items:center;gap:9px;padding:8px 1.25rem;font-size:13px;cursor:pointer;color:var(--t2);border-left:2px solid transparent;user-select:none;transition:all .12s;white-space:nowrap;}
-.ni:hover{color:var(--text);background:var(--gold-pale);}
-.ni.active{color:var(--text);border-left-color:var(--gold);background:var(--gold-pale);font-weight:500;}
-.nd{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0;}
-.nsq{width:6px;height:6px;border:1.5px solid var(--t3);flex-shrink:0;}
+.sidebar{width:220px;flex-shrink:0;background:#ffffff;border-right:1px solid var(--border);display:flex;flex-direction:column;color:#1a1814;}
+.sb-brand{padding:1.2rem 1.25rem;border-bottom:1px solid var(--border);}
+.sb-logo{font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;line-height:1.2;color:#1a1814;letter-spacing:.02em;}
+.sb-tag{font-size:8px;color:var(--pri);text-transform:uppercase;letter-spacing:.14em;margin-top:3px;font-weight:500;}
+.sb-loc{padding:.5rem 1.25rem;border-top:1px solid var(--border);}
+.sb-loc select{width:100%;padding:5px 8px;border-radius:6px;border:1px solid var(--border2);background:#ffffff;color:#1a1814;font-size:11px;font-family:'Montserrat',sans-serif;outline:none;cursor:pointer;}
+.sb-loc select:focus{border-color:var(--pri);}
+.sb-loc-label{font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#888888;margin-bottom:3px;font-weight:500;}
+.ns{font-size:8px;text-transform:uppercase;letter-spacing:.14em;color:#888888;padding:.85rem 1.25rem .3rem;font-weight:500;}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 1.25rem;font-size:14px;cursor:pointer;color:#1a1814;border-left:2px solid transparent;user-select:none;transition:all .12s;white-space:nowrap;text-decoration:none;font-weight:400;}
+.ni:hover{color:#F00573;background:var(--pri-p);}
+.ni.active{color:#F00573;border-left-color:#F00573;background:var(--pri-p);font-weight:500;}
+.nd{width:6px;height:6px;border-radius:50%;background:var(--pri);flex-shrink:0;}
+.nsq{width:6px;height:6px;border:1.5px solid #888888;flex-shrink:0;}
 .nbadge{margin-left:auto;background:var(--red-bg);color:var(--red);font-size:9px;font-weight:500;padding:1px 6px;border-radius:8px;border:1px solid var(--red-bd);}
-.sb-rep{font-size:9px;color:var(--t3);padding:.6rem 1.25rem;border-top:1px solid var(--border);}
+.sb-rep{font-size:8px;color:#888888;padding:.6rem 1.25rem;border-top:1px solid var(--border);}
 .sb-user{padding:1rem 1.25rem;border-top:1px solid var(--border);}
-.sb-uname{font-size:12px;font-weight:500;color:var(--t2);}
-.sb-ucred{font-size:10px;color:var(--t3);}
+.sb-uname{font-size:12px;font-weight:500;color:#1a1814;}
+.sb-ucred{font-size:10px;color:#888888;}
 
 /* ─── MAIN ────────────────────────────────────────────────── */
 .main{flex:1;overflow-y:auto;padding:1.5rem;background:var(--bg);min-width:0;}
 .view{display:none;}
 .view.active{display:block;}
 .pg-hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1.4rem;gap:10px;}
-.pg-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;}
+.pg-title{font-family:'Poppins',sans-serif;font-size:24px;font-weight:600;}
 .pg-sub{font-size:12px;color:var(--t3);margin-top:3px;}
-.btn-sm{background:var(--gold);color:var(--white);border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:background .15s;flex-shrink:0;white-space:nowrap;}
-.btn-sm:hover{background:var(--gold-h);}
-.btn-g{background:var(--white);color:var(--t2);border:1px solid var(--border2);border-radius:7px;padding:7px 13px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .12s;white-space:nowrap;}
-.btn-g:hover{border-color:var(--gold);color:var(--gold);}
-.btn-d{background:var(--white);color:var(--red);border:1px solid var(--red-bd);border-radius:7px;padding:7px 13px;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.btn-sm{background:linear-gradient(135deg,#F00573,#722A82);color:var(--white);border:none;border-radius:7px;padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;transition:opacity .15s;flex-shrink:0;white-space:nowrap;}
+.btn-sm:hover{opacity:.9;}
+.btn-g{background:var(--white);color:var(--t2);border:1px solid var(--border2);border-radius:7px;padding:7px 13px;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .12s;white-space:nowrap;}
+.btn-g:hover{border-color:var(--pri);color:var(--pri);}
+.btn-d{background:var(--white);color:var(--red);border:1px solid var(--red-bd);border-radius:7px;padding:7px 13px;font-size:12px;cursor:pointer;font-family:'Montserrat',sans-serif;}
 .btn-d:hover{background:var(--red-bg);}
 .btns{display:flex;gap:8px;flex-wrap:wrap;}
 
@@ -100,18 +94,18 @@ table.dt tr:hover td{background:var(--gold-pale);}
 
 /* ─── NOTICE BAR ──────────────────────────────────────────── */
 .notice{background:var(--amber-bg);border:1px solid var(--amber-bd);border-radius:8px;padding:10px 14px;font-size:11px;color:var(--amber);margin-bottom:1rem;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.notice input{padding:3px 8px;border:1px solid var(--amber-bd);border-radius:5px;font-size:11px;width:220px;background:white;font-family:'DM Sans',sans-serif;}
+.notice input{padding:3px 8px;border:1px solid var(--amber-bd);border-radius:5px;font-size:11px;width:220px;background:white;font-family:'Montserrat',sans-serif;}
 .notice button{padding:4px 10px;background:var(--gold);color:white;border:none;border-radius:5px;font-size:11px;cursor:pointer;}
 
 /* ─── MODAL ───────────────────────────────────────────────── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem;}
 .modal{background:var(--white);border-radius:14px;border:1px solid var(--border);padding:1.75rem;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.12);}
-.modal-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;margin-bottom:1.4rem;}
+.modal-title{font-family:'Poppins',sans-serif;font-size:22px;font-weight:500;margin-bottom:1.4rem;}
 .fr{margin-bottom:1rem;}
 .fl{font-size:11px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin-bottom:5px;display:block;}
-.fi{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;background:var(--white);outline:none;transition:border .12s;}
+.fi{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);font-family:'Montserrat',sans-serif;background:var(--white);outline:none;transition:border .12s;}
 .fi:focus{border-color:var(--gold);}
-.fs{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;background:var(--white);outline:none;}
+.fs{width:100%;padding:9px 13px;border:1px solid var(--border2);border-radius:8px;font-size:13px;color:var(--text);font-family:'Montserrat',sans-serif;background:var(--white);outline:none;}
 .fs:focus{border-color:var(--gold);}
 .fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .modal-acts{display:flex;gap:8px;justify-content:flex-end;margin-top:1.5rem;}
@@ -154,29 +148,29 @@ table.dt tr:hover td{background:var(--gold-pale);}
 .sug{font-size:11px;padding:4px 11px;border:1px solid var(--border2);border-radius:20px;cursor:pointer;color:var(--t2);transition:all .1s;}
 .sug:hover{border-color:var(--gold);color:var(--gold);}
 .msg-reply{padding:11px 14px;border-top:1px solid var(--border);display:flex;gap:7px;align-items:center;}
-.msg-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;}
+.msg-input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:12.5px;color:var(--text);outline:none;font-family:'Montserrat',sans-serif;}
 .msg-input:focus{border-color:var(--gold);}
 
 /* ─── PAYMENTS ────────────────────────────────────────────── */
 .pay-grid{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:14px;}
 .charge-panel{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.2rem;}
 .cp-lbl{font-size:11px;color:var(--t2);margin-bottom:5px;font-weight:500;}
-.charge-amt{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:500;text-align:center;padding:.8rem;border:1px solid var(--border);border-radius:10px;background:var(--bg);margin:9px 0;}
+.charge-amt{font-family:'Poppins',sans-serif;font-size:38px;font-weight:500;text-align:center;padding:.8rem;border:1px solid var(--border);border-radius:10px;background:var(--bg);margin:9px 0;}
 .qa{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px;}
-.qb{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 4px;font-size:12px;cursor:pointer;text-align:center;color:var(--t2);font-family:'DM Sans',sans-serif;transition:all .1s;}
+.qb{background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:8px 4px;font-size:12px;cursor:pointer;text-align:center;color:var(--t2);font-family:'Montserrat',sans-serif;transition:all .1s;}
 .qb:hover{border-color:var(--gold);color:var(--gold);}
 .week-pills{display:flex;gap:6px;margin-bottom:1.1rem;flex-wrap:wrap;}
 .wp{padding:5px 13px;border-radius:20px;font-size:11px;cursor:pointer;color:var(--t2);background:var(--white);border:1px solid var(--border);transition:all .1s;}
 .wp:hover{border-color:var(--gold);}
 .wp.on{background:var(--gold);color:var(--white);border-color:var(--gold);font-weight:500;}
-input.search{width:100%;padding:9px 13px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;color:var(--text);outline:none;font-family:'DM Sans',sans-serif;background:var(--white);margin-bottom:1rem;}
+input.search{width:100%;padding:9px 13px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;color:var(--text);outline:none;font-family:'Montserrat',sans-serif;background:var(--white);margin-bottom:1rem;}
 input.search:focus{border-color:var(--gold);}
 
 /* ─── PATIENT DETAIL ──────────────────────────────────────── */
 .pd{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.2rem;}
 .pd-hdr{display:flex;align-items:center;gap:14px;margin-bottom:1.2rem;padding-bottom:1.2rem;border-bottom:1px solid var(--border);}
 .pd-av{width:48px;height:48px;border-radius:50%;background:var(--gold-light);display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:500;color:var(--gold-h);flex-shrink:0;}
-.pd-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;}
+.pd-name{font-family:'Poppins',sans-serif;font-size:22px;font-weight:500;}
 .pd-cred{font-size:12px;color:var(--t3);margin-top:2px;}
 .pd-fields{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.2rem;}
 .pd-f{background:var(--bg);border-radius:8px;padding:.8rem;}
@@ -205,16 +199,16 @@ input.search:focus{border-color:var(--gold);}
 /* ─── KIOSK / INTAKE ──────────────────────────────────────── */
 #kiosk-overlay{display:none;position:fixed;inset:0;background:var(--bg);z-index:900;overflow-y:auto;}
 .kiosk-inner{max-width:680px;margin:0 auto;padding:2.5rem 2rem;}
-.kiosk-logo{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;text-align:center;margin-bottom:.3rem;}
+.kiosk-logo{font-family:'Poppins',sans-serif;font-size:22px;font-weight:500;text-align:center;margin-bottom:.3rem;}
 .kiosk-tagline{font-size:12px;color:var(--t3);text-align:center;margin-bottom:2.5rem;text-transform:uppercase;letter-spacing:.1em;}
 .kiosk-step{display:none;}
 .kiosk-step.active{display:block;}
-.ks-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:500;margin-bottom:.4rem;}
+.ks-title{font-family:'Poppins',sans-serif;font-size:26px;font-weight:500;margin-bottom:.4rem;}
 .ks-sub{font-size:13px;color:var(--t2);margin-bottom:1.8rem;line-height:1.6;}
 .kiosk-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:1.75rem;margin-bottom:1.25rem;}
 .kf{margin-bottom:1.2rem;}
 .kf label{display:block;font-size:12px;font-weight:500;color:var(--t2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
-.kf input,.kf select,.kf textarea{width:100%;padding:12px 16px;border:1.5px solid var(--border2);border-radius:10px;font-size:14px;color:var(--text);font-family:'DM Sans',sans-serif;background:var(--white);outline:none;transition:border .12s;}
+.kf input,.kf select,.kf textarea{width:100%;padding:12px 16px;border:1.5px solid var(--border2);border-radius:10px;font-size:14px;color:var(--text);font-family:'Montserrat',sans-serif;background:var(--white);outline:none;transition:border .12s;}
 .kf input:focus,.kf select:focus,.kf textarea:focus{border-color:var(--gold);}
 .kf2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 .consent-text{background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:1.25rem;font-size:12px;color:var(--t2);line-height:1.7;max-height:220px;overflow-y:auto;margin-bottom:1.25rem;}
@@ -241,13 +235,14 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
 @media (max-width: 900px){
   body{overflow:auto;}
   #app{flex-direction:column;height:auto;min-height:100vh;}
-  .sb{width:100%;flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--border);}
+  .sidebar{width:100%;flex-direction:row;flex-wrap:wrap;border-right:none;border-bottom:1px solid var(--border);}
   .sb-brand{border-bottom:none;border-right:1px solid var(--border);padding:.75rem 1rem;}
   .sb-user{padding:.75rem 1rem;border-top:none;border-left:1px solid var(--border);margin-top:0;margin-left:auto;}
-  .sb > div:first-child + div{display:flex;flex-direction:row;padding:0;overflow-x:auto;flex:1;}
+  .sidebar > div:nth-child(3){display:flex;flex-direction:row;padding:0;overflow-x:auto;flex:1;}
+  .sb-loc{display:none;}
   .ns{display:none;}
   .ni{padding:10px 14px;border-left:none;border-bottom:2px solid transparent;white-space:nowrap;}
-  .ni.active{border-left:none;border-bottom-color:var(--gold);}
+  .ni.active{border-left:none;border-bottom-color:#F00573;}
   .sb-rep{display:none;}
   .main{padding:1rem;}
   .stats-grid{grid-template-columns:repeat(2,1fr);}
@@ -269,8 +264,14 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
 </head>
 <body>
 
-<!-- SPLASH -->
-
+<!-- MEMBER VIEW OVERLAY -->
+<div id="member-overlay" style="display:none;position:fixed;inset:0;background:#fafafa;z-index:850;overflow-y:auto;">
+  <div style="background:#fff;border-bottom:1px solid #e5e1e8;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;">
+    <div><div style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;">Haus of Confidence</div><div style="font-size:10px;color:#9890a0;text-transform:uppercase;letter-spacing:.1em;">Member Portal Preview</div></div>
+    <button onclick="closeMemberView()" style="background:none;border:1px solid #e5e1e8;border-radius:8px;padding:7px 16px;font-size:12px;color:#5c5460;cursor:pointer;font-family:'Montserrat',sans-serif;">✕ Close Preview</button>
+  </div>
+  <div style="max-width:860px;margin:0 auto;padding:2.5rem 1.5rem;" id="member-view-body"></div>
+</div>
 
 <!-- KIOSK OVERLAY -->
 <div id="kiosk-overlay">
@@ -317,7 +318,7 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
       <div class="ks-sub">Tell us what brings you in today.</div>
       <div class="kiosk-card">
         <div class="kf"><label>Which service are you here for?</label>
-          <select id="ki-service"><option>LipoAway (Awake Liposuction)</option><option>Fat Transfer</option><option>Dermal Fillers</option><option>Botox</option><option>RF Microneedling</option><option>PDO Thread Lift</option><option>Medical Weight Loss</option><option>Hormone Replacement Therapy</option><option>Hair Restoration</option><option>IV Therapy</option><option>Consultation — not sure yet</option></select>
+          <select id="ki-service"><option>LipoAway (Awake Liposuction)</option><option>Fat Transfer</option><option>BodyTite</option><option>Botox</option><option>Dermal Fillers</option><option>Lip Fillers</option><option>Sculptra &amp; Radiesse</option><option>PDO Thread Lift</option><option>Kybella / Liquid Lipo</option><option>RF Microneedling</option><option>IPL Photofacial</option><option>Chemical Peel</option><option>Laser Hair Removal</option><option>Facial / Unicorn Facial</option><option>Stem Cell Therapy</option><option>Hormone Replacement Therapy</option><option>Medical Weight Loss</option><option>IV Therapy</option><option>Hair Restoration</option><option>FemiLift / BTL Emsella</option><option>Consultation — not sure yet</option></select>
         </div>
         <div class="kf"><label>What are your main goals?</label><textarea id="ki-goals" rows="3" placeholder="Tell us what results you're hoping to achieve..."></textarea></div>
         <div class="kf"><label>Any questions or concerns for your provider?</label><textarea id="ki-questions" rows="2" placeholder="Optional..."></textarea></div>
@@ -376,7 +377,7 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
     <div class="kiosk-step" id="ks-6">
       <div class="success-screen">
         <div class="success-icon">✓</div>
-        <div style="font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:500;margin-bottom:.5rem;">You're all checked in.</div>
+        <div style="font-family:'Poppins',sans-serif;font-size:32px;font-weight:500;margin-bottom:.5rem;">You're all checked in.</div>
         <div style="font-size:14px;color:var(--t2);margin-bottom:2rem;line-height:1.7;">Your intake form has been submitted and saved to your patient record. A member of our team will be with you shortly.</div>
         <div style="background:var(--gold-pale);border:1px solid var(--gold-border);border-radius:12px;padding:1.25rem;max-width:360px;margin:0 auto 2rem;text-align:left;">
           <div style="font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--gold-h);margin-bottom:.5rem;">Your intake summary</div>
@@ -390,28 +391,7 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
 
 <!-- APP -->
 <div id="app">
-  <div class="sb">
-    <div class="sb-brand"><div class="sb-logo">Haus of Confidence</div><div class="sb-tag">medspa platform</div></div>
-    <div style="flex:1;overflow-y:auto;padding-top:.3rem;">
-      <div class="ns">Operations</div>
-      <div class="ni active" onclick="nav('dashboard',this)"><div class="nd"></div>Dashboard</div>
-      <div class="ni" onclick="nav('appointments',this)"><div class="nsq"></div>Appointments</div>
-      <div class="ni" onclick="nav('patients',this)"><div class="nsq" style="border-radius:50%;"></div>Patients</div>
-      <div class="ns">Clinical</div>
-      <div class="ni" onclick="nav('photos',this)"><div class="nsq"></div>Before &amp; After</div>
-      <div class="ns">Engagement</div>
-      <div class="ni" onclick="nav('messages',this)"><div class="nsq" style="border-radius:50%;"></div>Messages<span class="nbadge">5</span></div>
-      <div class="ns">Finance</div>
-      <div class="ni" onclick="nav('payments',this)"><div class="nsq" style="border-radius:2px;"></div>Payments</div>
-      <div class="ns">More</div>
-      <a class="ni" href="charting.html"><div class="nsq"></div>Charting &amp; SOAP</a>
-      <a class="ni" href="analytics.html"><div class="nsq"></div>Analytics</a>
-      <a class="ni" href="memberships.html"><div class="nsq"></div>Memberships</a>
-      <a class="ni" href="inventory.html"><div class="nsq"></div>Inventory</a>
-    </div>
-    <div class="sb-rep">✦ Replaces: Clover + 3 other systems</div>
-    <div class="sb-user"><div class="sb-uname">Dr. Sara Ameli</div><div class="sb-ucred">DNP, FNP-C</div></div>
-  </div>
+  <div id="sidebar-wrap"></div>
 
   <div class="main">
 
@@ -421,19 +401,23 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
         <div><div class="pg-title">Good morning, Sara.</div><div class="pg-sub" id="dash-date"></div></div>
         <div class="btns">
           <button class="btn-g" onclick="openKiosk()">Patient Check-In</button>
+          <button class="btn-g" onclick="openMemberView()">View as Member</button>
+          <button class="btn-g" onclick="openTxPlanModal()">+ Treatment Plan</button>
           <button class="btn-sm" onclick="openApptModal()">+ New Appointment</button>
         </div>
       </div>
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-lbl">Today's Appointments</div><div class="stat-val" id="d-appts">0</div><div class="stat-hint" id="d-appts-h"></div></div>
         <div class="stat-card"><div class="stat-lbl">Total Patients</div><div class="stat-val" id="d-pts">0</div><div class="stat-hint">in your system</div></div>
-        <div class="stat-card"><div class="stat-lbl">Unread Messages</div><div class="stat-val">5</div><div class="stat-hint">2 texts · 3 emails</div></div>
+        <div class="stat-card"><div class="stat-lbl">Unread Messages</div><div class="stat-val" id="d-unread">0</div><div class="stat-hint" id="d-unread-h">0 awaiting reply</div></div>
         <div class="stat-card"><div class="stat-lbl">Monthly Revenue</div><div class="stat-val" id="d-rev">$0</div><div class="stat-hint">paid this month</div></div>
       </div>
       <div class="panel">
         <div class="panel-hdr">Today's Schedule<span style="font-size:11px;color:var(--t3);font-weight:400;" id="today-lbl"></span></div>
         <div id="dash-sched"></div>
       </div>
+      <div id="dash-rebook" style="margin-top:1.25rem;"></div>
+      <div id="dash-txplans" style="margin-top:1.25rem;"></div>
     </div>
 
     <!-- APPOINTMENTS -->
@@ -441,11 +425,16 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
       <div class="pg-hdr">
         <div><div class="pg-title">Appointments</div><div class="pg-sub">Add, edit, and manage all bookings</div></div>
         <div class="btns">
+          <button class="btn-g" onclick="printDaySheet()">Print Day Sheet</button>
+          <button class="btn-g" id="cal-toggle" onclick="toggleCalView()">Provider View</button>
+          <button class="btn-g" onclick="openWaitlistView()">Waitlist</button>
           <button class="btn-sm" onclick="openApptModal()">+ New Appointment</button>
         </div>
       </div>
       <div class="week-pills" id="week-pills"></div>
       <div class="panel" id="appt-wrap"></div>
+      <div id="provider-cal" style="display:none;"></div>
+      <div id="waitlist-view" style="display:none;margin-top:1.25rem;"></div>
     </div>
 
     <!-- PATIENTS -->
@@ -491,7 +480,7 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
         <div class="md">
           <div class="md-hdr"><div><span id="msg-name">Amanda K.</span><span class="md-ph" id="msg-info">(623) 555-0391 · SMS</span></div><span id="msg-status" style="font-size:11px;color:var(--green);"></span></div>
           <div class="msg-thread" id="msg-thread">
-            <div style="align-self:flex-end;"><div class="mb mb-out">Hi Amanda! Your RF Microneedling is confirmed for tomorrow at 11:15am with Jacqueline. Reply STOP to opt out.</div><div class="mb-meta" style="text-align:right;">Mar 16 · 4:02pm · Auto-reminder</div></div>
+            <div style="align-self:flex-end;"><div class="mb mb-out">Hi Amanda! Your RF Microneedling is confirmed for tomorrow at 11:15am with Shay. Reply STOP to opt out.</div><div class="mb-meta" style="text-align:right;">Mar 16 · 4:02pm · Auto-reminder</div></div>
             <div style="align-self:flex-start;"><div class="mb mb-in">Hey! Quick question — do I need to do anything to prep my skin before coming in?</div><div class="mb-meta">Amanda K. · 9:41am</div></div>
             <div style="text-align:center;font-size:10px;color:var(--t3);padding:2px 0;">Suggested replies</div>
             <div class="sug-row"><div class="sug" onclick="fillReply(this)">Avoid retinol 24hrs prior</div><div class="sug" onclick="fillReply(this)">Come with clean, dry skin</div><div class="sug" onclick="fillReply(this)">Send prep guide PDF</div></div>
@@ -523,9 +512,9 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
           <div style="font-size:13px;font-weight:500;margin-bottom:10px;">Quick Charge</div>
           <div class="charge-panel">
             <div class="cp-lbl">Patient</div>
-            <select class="fs" id="charge-pt" style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;background:var(--white);margin-bottom:11px;"></select>
+            <select class="fs" id="charge-pt" style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:'Montserrat',sans-serif;background:var(--white);margin-bottom:11px;"></select>
             <div class="cp-lbl">Service</div>
-            <select class="fs" id="charge-svc" onchange="prefillAmt(this)" style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:'DM Sans',sans-serif;background:var(--white);margin-bottom:11px;">
+            <select class="fs" id="charge-svc" onchange="prefillAmt(this)" style="width:100%;padding:9px 12px;border:1px solid var(--border2);border-radius:8px;font-size:12px;font-family:'Montserrat',sans-serif;background:var(--white);margin-bottom:11px;">
               <option value="150">LipoAway Consult — $150</option>
               <option value="4800">LipoAway Procedure — $4,800</option>
               <option value="720">Dermal Fillers — $720</option>
@@ -543,6 +532,7 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
             <div id="stripe-card-el" style="padding:10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);margin-bottom:10px;font-size:12px;color:var(--t3);text-align:center;min-height:38px;line-height:2.2;">Card form appears after connecting Stripe</div>
             <button class="btn-p" style="width:100%;padding:12px;font-size:14px;" onclick="processCharge()">Charge Card</button>
             <button class="btn-g" style="width:100%;padding:10px;font-size:12px;margin-top:8px;" onclick="sendInvoiceText()">Send Invoice by Text</button>
+            <button class="btn-g" style="width:100%;padding:10px;font-size:12px;margin-top:8px;" onclick="redeemGiftCard()">🎁 Redeem Gift Card</button>
             <div id="charge-status" style="margin-top:8px;font-size:12px;text-align:center;min-height:18px;"></div>
           </div>
         </div>
@@ -563,15 +553,22 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
       <div class="fr" style="margin-bottom:0;"><label class="fl">Time</label><input class="fi" type="time" id="ae-time"></div>
     </div>
     <div class="fr" style="margin-top:1rem;"><label class="fl">Service</label>
-      <select class="fs" id="ae-svc"><option>LipoAway Consult</option><option>LipoAway Procedure</option><option>Fat Transfer</option><option>Dermal Fillers</option><option>Sculptra &amp; Radiesse</option><option>Botox</option><option>RF Microneedling</option><option>PDO Thread Lift</option><option>Medical Weight Loss</option><option>Hormone Replacement Therapy</option><option>Hair Restoration</option><option>IV Therapy</option><option>Stem Cells</option><option>Facial</option></select>
+      <select class="fs" id="ae-svc"><option>LipoAway Consult</option><option>LipoAway Procedure</option><option>Fat Transfer</option><option>BodyTite</option><option>Botox</option><option>Dermal Fillers</option><option>Lip Fillers</option><option>Sculptra &amp; Radiesse</option><option>PDO Thread Lift</option><option>Kybella / Liquid Lipo</option><option>RF Microneedling</option><option>IPL Photofacial</option><option>Chemical Peel</option><option>Laser Skin Resurfacing</option><option>Laser Hair Removal</option><option>Unicorn Facial</option><option>Facial</option><option>Stem Cell Therapy</option><option>Natural Growth Factor Injections</option><option>Hormone Replacement Therapy</option><option>Medical Weight Loss</option><option>IV Therapy</option><option>Hair Restoration</option><option>FemiLift</option><option>BTL Emsella</option><option>Regenerative Joint Therapy</option><option>Biological Age Testing</option><option>Consultation</option></select>
     </div>
     <div class="fr"><label class="fl">Provider</label>
-      <select class="fs" id="ae-prov"><option>Dr. Sara Ameli</option><option>Dr. Todd Malan</option><option>Jacqueline</option></select>
+      <select class="fs" id="ae-prov"><option>Sara Ameli</option><option>Dr. Todd Malan</option><option>Dr. Margaret Husami</option><option>Shay</option><option>Cierra</option></select>
     </div>
     <div class="fr"><label class="fl">Status</label>
       <select class="fs" id="ae-st"><option>Confirmed</option><option>Pending</option><option>Completed</option><option>Cancelled</option></select>
     </div>
     <div class="fr"><label class="fl">Notes</label><textarea class="fi" id="ae-notes" rows="2" placeholder="Optional notes..."></textarea></div>
+    <div class="fr" id="ae-recur-wrap"><label class="fl">Recurring</label>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <label style="font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer;"><input type="checkbox" id="ae-recur"> Repeat this appointment</label>
+        <select class="fs" id="ae-recur-interval" style="width:auto;padding:5px 10px;font-size:12px;"><option value="4">Every 4 weeks</option><option value="6">Every 6 weeks</option><option value="8">Every 8 weeks</option><option value="12" selected>Every 12 weeks</option><option value="26">Every 6 months</option></select>
+        <select class="fs" id="ae-recur-count" style="width:auto;padding:5px 10px;font-size:12px;"><option value="3">3 times</option><option value="4" selected>4 times</option><option value="6">6 times</option><option value="12">12 times</option></select>
+      </div>
+    </div>
     <div class="modal-acts">
       <button class="btn-g" onclick="closeApptModal()">Cancel</button>
       <button class="btn-d" id="ae-del" style="display:none;" onclick="deleteAppt()">Delete</button>
@@ -597,13 +594,38 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
         <select class="fs" id="pe-src"><option>Instagram</option><option>Google</option><option>Referral</option><option>Walk-in</option><option>TikTok</option><option>Other</option></select>
       </div>
     </div>
-    <div class="fr" style="margin-top:1rem;"><label class="fl">Medical Notes</label><textarea class="fi" id="pe-notes" rows="2" placeholder="Allergies, conditions, preferences..."></textarea></div>
+    <div class="fr" style="margin-top:1rem;"><label class="fl">Referred By</label>
+      <select class="fs" id="pe-referrer"><option value="">— None —</option></select>
+    </div>
+    <div class="fr"><label class="fl">Medical Notes</label><textarea class="fi" id="pe-notes" rows="2" placeholder="Allergies, conditions, preferences..."></textarea></div>
     <div class="modal-acts">
       <button class="btn-g" onclick="closePtModal()">Cancel</button>
       <button class="btn-d" id="pe-del" style="display:none;" onclick="deletePatient()">Delete</button>
       <button class="btn-sm" onclick="savePatient()">Save</button>
     </div>
   </div>
+</div>
+
+<!-- TREATMENT PLAN MODAL -->
+<div id="tp-modal" class="overlay" style="display:none;" onclick="if(event.target===this)closeTxPlan()">
+  <div class="modal">
+    <div class="modal-title">New Treatment Plan</div>
+    <div class="fr"><label class="fl">Patient</label><select class="fs" id="tp-pt"></select></div>
+    <div class="fr"><label class="fl">Plan Name</label><input class="fi" id="tp-name" placeholder="e.g. Botox Maintenance"></div>
+    <div class="fr2">
+      <div class="fr" style="margin-bottom:0"><label class="fl">Service</label>
+        <select class="fs" id="tp-service"><option>Botox</option><option>Dermal Fillers</option><option>RF Microneedling</option><option>Facial</option><option>IPL Photofacial</option><option>Chemical Peel</option><option>Medical Weight Loss</option><option>Sculptra & Radiesse</option><option>Laser Hair Removal</option></select>
+      </div>
+      <div class="fr" style="margin-bottom:0"><label class="fl">Number of Sessions</label><input class="fi" id="tp-count" type="number" value="4" min="2" max="24"></div>
+    </div>
+    <div class="fr" style="margin-top:1rem;"><label class="fl">Interval (weeks between sessions)</label><input class="fi" id="tp-interval" type="number" value="12" min="1" max="52"></div>
+    <div class="fr"><label class="fl">Notes</label><textarea class="fi" id="tp-notes" rows="2" placeholder="Treatment goals, special instructions..."></textarea></div>
+    <div class="modal-acts"><button class="btn-g" onclick="closeTxPlan()">Cancel</button><button class="btn-sm" onclick="saveTxPlan()">Create Plan</button></div>
+  </div>
+</div>
+<!-- TREATMENT PLAN VIEW MODAL -->
+<div id="tp-view-modal" class="overlay" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
+  <div class="modal" id="tp-view-body"></div>
 </div>
 
 <!-- IMPORT MODAL -->
@@ -655,7 +677,9 @@ function save(k,d){localStorage.setItem(k,JSON.stringify(d));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function today(){return new Date().toISOString().slice(0,10);}
 
-if(!localStorage.getItem('hoc_seed')){
+if(!localStorage.getItem('hoc_seed_v4')){
+  // Clear old seeds
+  localStorage.removeItem('hoc_seed');
   const pts=[
     {id:'p1',first:'Maria',last:'G',phone:'(602) 555-0143',email:'maria@email.com',dob:'1988-04-12',source:'Instagram',notes:'No known allergies',created:Date.now()},
     {id:'p2',first:'Jessica',last:'T',phone:'(480) 555-0287',email:'jessica@email.com',dob:'1995-07-23',source:'Google',notes:'',created:Date.now()},
@@ -663,15 +687,58 @@ if(!localStorage.getItem('hoc_seed')){
     {id:'p4',first:'Nicole',last:'B',phone:'(480) 555-0518',email:'nicole@email.com',dob:'1983-09-30',source:'TikTok',notes:'',created:Date.now()},
     {id:'p5',first:'Rachel',last:'M',phone:'(602) 555-0774',email:'rachel@email.com',dob:'1979-11-05',source:'Google',notes:'Prefers afternoon slots',created:Date.now()},
     {id:'p6',first:'Carmen',last:'L',phone:'(480) 555-0922',email:'carmen@email.com',dob:'1990-06-18',source:'Instagram',notes:'',created:Date.now()},
+    {id:'p7',first:'Diana',last:'R',phone:'(480) 555-1133',email:'diana@email.com',dob:'1985-03-22',source:'Yelp',notes:'Interested in stem cells',created:Date.now()},
+    {id:'p8',first:'Sophia',last:'W',phone:'(602) 555-1245',email:'sophia@email.com',dob:'1993-08-09',source:'Instagram',notes:'',created:Date.now()},
   ];
   const t=today();
+  // Helper to get date strings relative to today
+  function dayOff(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
   const appts=[
-    {id:'a1',patientId:'p1',date:t,time:'09:00',service:'LipoAway Consult',provider:'Dr. Todd Malan',status:'Confirmed',notes:'',created:Date.now()},
-    {id:'a2',patientId:'p2',date:t,time:'10:30',service:'Dermal Fillers',provider:'Dr. Sara Ameli',status:'Confirmed',notes:'',created:Date.now()},
-    {id:'a3',patientId:'p3',date:t,time:'11:15',service:'RF Microneedling',provider:'Jacqueline',status:'Pending',notes:'',created:Date.now()},
-    {id:'a4',patientId:'p4',date:t,time:'13:00',service:'Medical Weight Loss',provider:'Dr. Sara Ameli',status:'Confirmed',notes:'',created:Date.now()},
-    {id:'a5',patientId:'p5',date:t,time:'14:30',service:'Botox',provider:'Dr. Sara Ameli',status:'Confirmed',notes:'',created:Date.now()},
-    {id:'a6',patientId:'p6',date:t,time:'15:45',service:'Fat Transfer Consult',provider:'Dr. Todd Malan',status:'Pending',notes:'',created:Date.now()},
+    // Today — full day across all providers
+    {id:'a1',patientId:'p1',date:t,time:'09:00',service:'LipoAway Consult',provider:'Dr. Todd Malan',status:'Confirmed',notes:''},
+    {id:'a2',patientId:'p2',date:t,time:'09:00',service:'Dermal Fillers',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a3',patientId:'p3',date:t,time:'10:00',service:'RF Microneedling',provider:'Shay',status:'Pending',notes:''},
+    {id:'a4',patientId:'p8',date:t,time:'10:00',service:'Facial',provider:'Cierra',status:'Confirmed',notes:''},
+    {id:'a5',patientId:'p4',date:t,time:'11:00',service:'Medical Weight Loss',provider:'Dr. Margaret Husami',status:'Confirmed',notes:''},
+    {id:'a6',patientId:'p5',date:t,time:'13:00',service:'Botox',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a7',patientId:'p6',date:t,time:'14:00',service:'Fat Transfer Consult',provider:'Dr. Todd Malan',status:'Pending',notes:''},
+    {id:'a8',patientId:'p7',date:t,time:'15:00',service:'IPL Photofacial',provider:'Shay',status:'Confirmed',notes:''},
+    // Tomorrow
+    {id:'a9',patientId:'p1',date:dayOff(1),time:'09:00',service:'LipoAway Procedure',provider:'Dr. Todd Malan',status:'Confirmed',notes:''},
+    {id:'a10',patientId:'p3',date:dayOff(1),time:'09:30',service:'Chemical Peel',provider:'Cierra',status:'Confirmed',notes:''},
+    {id:'a11',patientId:'p5',date:dayOff(1),time:'10:00',service:'Lip Fillers',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a12',patientId:'p7',date:dayOff(1),time:'11:00',service:'Stem Cell Therapy',provider:'Dr. Todd Malan',status:'Pending',notes:''},
+    {id:'a13',patientId:'p4',date:dayOff(1),time:'13:00',service:'Hormone Replacement Therapy',provider:'Dr. Margaret Husami',status:'Confirmed',notes:''},
+    {id:'a14',patientId:'p8',date:dayOff(1),time:'14:00',service:'Laser Hair Removal',provider:'Shay',status:'Confirmed',notes:''},
+    // Day after tomorrow
+    {id:'a15',patientId:'p2',date:dayOff(2),time:'09:00',service:'Sculptra & Radiesse',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a16',patientId:'p6',date:dayOff(2),time:'10:00',service:'BodyTite',provider:'Dr. Todd Malan',status:'Confirmed',notes:''},
+    {id:'a17',patientId:'p3',date:dayOff(2),time:'11:00',service:'Unicorn Facial',provider:'Cierra',status:'Confirmed',notes:''},
+    {id:'a18',patientId:'p1',date:dayOff(2),time:'14:00',service:'IV Therapy',provider:'Dr. Margaret Husami',status:'Pending',notes:''},
+    // 3 days out
+    {id:'a19',patientId:'p4',date:dayOff(3),time:'09:00',service:'Botox',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a20',patientId:'p7',date:dayOff(3),time:'10:00',service:'RF Microneedling',provider:'Shay',status:'Confirmed',notes:''},
+    {id:'a21',patientId:'p5',date:dayOff(3),time:'13:00',service:'PDO Thread Lift',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a22',patientId:'p8',date:dayOff(3),time:'15:00',service:'Kybella / Liquid Lipo',provider:'Sara Ameli',status:'Pending',notes:''},
+    // 4 days out
+    {id:'a23',patientId:'p6',date:dayOff(4),time:'09:00',service:'Dermal Fillers',provider:'Sara Ameli',status:'Confirmed',notes:''},
+    {id:'a24',patientId:'p2',date:dayOff(4),time:'10:00',service:'Facial',provider:'Cierra',status:'Confirmed',notes:''},
+    {id:'a25',patientId:'p1',date:dayOff(4),time:'11:00',service:'Consultation',provider:'Dr. Todd Malan',status:'Confirmed',notes:''},
+    // Past completed appointments (for analytics & rebooking)
+    {id:'a30',patientId:'p1',date:dayOff(-5),time:'10:00',service:'LipoAway Consult',provider:'Dr. Todd Malan',status:'Completed',notes:''},
+    {id:'a31',patientId:'p2',date:dayOff(-10),time:'11:00',service:'Botox',provider:'Sara Ameli',status:'Completed',notes:''},
+    {id:'a32',patientId:'p3',date:dayOff(-8),time:'09:30',service:'RF Microneedling',provider:'Shay',status:'Completed',notes:''},
+    {id:'a33',patientId:'p4',date:dayOff(-15),time:'14:00',service:'Medical Weight Loss',provider:'Dr. Margaret Husami',status:'Completed',notes:''},
+    {id:'a34',patientId:'p5',date:dayOff(-12),time:'13:30',service:'Dermal Fillers',provider:'Sara Ameli',status:'Completed',notes:''},
+    {id:'a35',patientId:'p1',date:dayOff(-20),time:'10:00',service:'Fat Transfer',provider:'Dr. Todd Malan',status:'Completed',notes:''},
+    {id:'a36',patientId:'p6',date:dayOff(-18),time:'11:30',service:'Botox',provider:'Sara Ameli',status:'Completed',notes:''},
+    {id:'a37',patientId:'p7',date:dayOff(-7),time:'14:00',service:'Stem Cell Therapy',provider:'Dr. Todd Malan',status:'Completed',notes:''},
+    {id:'a38',patientId:'p8',date:dayOff(-3),time:'09:00',service:'IPL Photofacial',provider:'Cierra',status:'Completed',notes:''},
+    {id:'a39',patientId:'p3',date:dayOff(-25),time:'09:00',service:'Facial',provider:'Shay',status:'Completed',notes:''},
+    {id:'a40',patientId:'p2',date:dayOff(-30),time:'14:00',service:'Lip Fillers',provider:'Sara Ameli',status:'Completed',notes:''},
+    {id:'a41',patientId:'p4',date:dayOff(-45),time:'13:00',service:'Botox',provider:'Sara Ameli',status:'Completed',notes:''},
+    {id:'a42',patientId:'p6',date:dayOff(-60),time:'10:00',service:'Chemical Peel',provider:'Cierra',status:'Completed',notes:''},
+    {id:'a43',patientId:'p5',date:dayOff(-90),time:'11:00',service:'Botox',provider:'Sara Ameli',status:'Completed',notes:''},
   ];
   const txns=[
     {id:'t1',patientId:'p1',service:'LipoAway Consult',amount:150,method:'Visa ···4821',status:'Paid',date:t},
@@ -679,9 +746,22 @@ if(!localStorage.getItem('hoc_seed')){
     {id:'t3',patientId:'p4',service:'Medical Weight Loss',amount:350,method:'Amex ···3804',status:'Paid',date:t},
     {id:'t4',patientId:'p3',service:'RF Microneedling',amount:1200,method:'Pending',status:'Due',date:t},
     {id:'t5',patientId:'p6',service:'Fat Transfer Consult',amount:200,method:'Pending',status:'Due',date:t},
+    {id:'t6',patientId:'p1',service:'LipoAway Consult',amount:150,method:'Visa ···4821',status:'Paid',date:dayOff(-5)},
+    {id:'t7',patientId:'p2',service:'Botox',amount:350,method:'MC ···9912',status:'Paid',date:dayOff(-10)},
+    {id:'t8',patientId:'p3',service:'RF Microneedling',amount:1200,method:'Cash',status:'Paid',date:dayOff(-8)},
+    {id:'t9',patientId:'p4',service:'Medical Weight Loss',amount:350,method:'Visa ···7721',status:'Paid',date:dayOff(-15)},
+    {id:'t10',patientId:'p5',service:'Dermal Fillers',amount:720,method:'Amex ···5544',status:'Paid',date:dayOff(-12)},
+    {id:'t11',patientId:'p1',service:'Fat Transfer',amount:2400,method:'Affirm',status:'Paid',date:dayOff(-20)},
+    {id:'t12',patientId:'p6',service:'Botox',amount:350,method:'Visa ···3381',status:'Paid',date:dayOff(-18)},
+    {id:'t13',patientId:'p7',service:'Stem Cell Therapy',amount:3500,method:'Visa ···6622',status:'Paid',date:dayOff(-7)},
+    {id:'t14',patientId:'p8',service:'IPL Photofacial',amount:450,method:'Cash',status:'Paid',date:dayOff(-3)},
+    {id:'t15',patientId:'p2',service:'Lip Fillers',amount:720,method:'Visa ···2290',status:'Paid',date:dayOff(-30)},
+    {id:'t16',patientId:'p3',service:'Facial',amount:180,method:'Visa ···8821',status:'Paid',date:dayOff(-25)},
+    {id:'t17',patientId:'p4',service:'Botox',amount:350,method:'Amex ···3804',status:'Paid',date:dayOff(-45)},
+    {id:'t18',patientId:'p5',service:'Botox',amount:350,method:'Visa ···5544',status:'Paid',date:dayOff(-90)},
   ];
   save(KP,pts);save(KA,appts);save(KT,txns);
-  localStorage.setItem('hoc_seed','1');
+  localStorage.setItem('hoc_seed_v4','1');
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────
@@ -696,7 +776,6 @@ function tbl(cols,rows){return'<table class="dt"><thead><tr>'+cols.map(c=>'<th>'
 
 // ── LAUNCH ─────────────────────────────────────────────────────────────
 function launch(){
-  document.getElementById('splash').style.display='none';
   document.getElementById('app').style.display='flex';
   renderDash();renderApptWeek();renderPatients();renderPayments();
   const now=new Date();
@@ -712,8 +791,9 @@ function nav(v,el){
   el.classList.add('active');
   if(v==='dashboard')renderDash();
   if(v==='appointments')renderApptWeek();
-  if(v==='patients')renderPatients();
+  if(v==='patients'){renderPatients();document.getElementById('pt-detail').innerHTML='';}
   if(v==='payments')renderPayments();
+  if(v==='messages'){renderMsgList();if(!activeMsgId){const msgs=load(KM);if(msgs.length)selMsg(msgs[0].id);}}
 }
 
 // ── DASHBOARD ──────────────────────────────────────────────────────────
@@ -726,11 +806,19 @@ function renderDash(){
   document.getElementById('d-pts').textContent=pts.length;
   const rev=txns.filter(x=>x.status==='Paid').reduce((s,x)=>s+Number(x.amount),0);
   document.getElementById('d-rev').textContent=fa(rev);
+  // Update unread messages count
+  const msgs=load(KM);
+  const unread=msgs.filter(t=>t.messages.length&&t.messages[t.messages.length-1].from==='in').length;
+  const unreadEl=document.getElementById('d-unread');
+  if(unreadEl)unreadEl.textContent=unread;
+  const unreadHint=document.getElementById('d-unread-h');
+  if(unreadHint)unreadHint.textContent=unread+' awaiting reply';
   const sorted=ta.slice().sort((a,b)=>a.time.localeCompare(b.time));
   const el=document.getElementById('dash-sched');
-  if(!sorted.length){el.innerHTML='<div class="empty">No appointments today. <a href="#" onclick="openApptModal();return false;" style="color:var(--gold);">Add one →</a></div>';return;}
+  if(!sorted.length){el.innerHTML='<div class="empty">No appointments today. <a href="#" onclick="openApptModal();return false;" style="color:var(--pri);">Add one →</a></div>';renderRebookPrompts();renderTxPlans();return;}
   el.innerHTML=tbl(['Time','Patient','Service','Provider','Status',''],
     sorted.map(a=>{const p=gp(a.patientId);return`<tr><td style="color:var(--t3);white-space:nowrap;">${ft(a.time)}</td><td><div class="prow"><div class="av">${pi(p)}</div><div><div class="pname">${pn(p)}</div></div></div></td><td>${a.service}</td><td>${a.provider}</td><td><span class="st ${sc(a.status)}">${a.status}</span></td><td><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="editAppt('${a.id}')">Edit</button></td></tr>`;}).join(''));
+  renderRebookPrompts();renderTxPlans();
 }
 
 // ── APPOINTMENTS ────────────────────────────────────────────────────────
@@ -749,7 +837,8 @@ function renderApptWeek(){
     `<div class="wp btn-g" onclick="wkOff++;renderApptWeek()">Next →</div>`;
   const appts=load(KA).filter(a=>a.date===selDate).sort((a,b)=>a.time.localeCompare(b.time));
   const wrap=document.getElementById('appt-wrap');
-  if(!appts.length){wrap.innerHTML='<div class="empty">No appointments this day. <a href="#" onclick="openApptModal();return false;" style="color:var(--gold);">Book one →</a></div>';return;}
+  if(provCalOn)renderProviderCal();
+  if(!appts.length){wrap.innerHTML='<div class="empty">No appointments this day. <a href="#" onclick="openApptModal();return false;" style="color:var(--pri);">Book one →</a></div>';return;}
   wrap.innerHTML=tbl(['Time','Patient','Service','Provider','Status',''],
     appts.map(a=>{const p=gp(a.patientId);return`<tr><td style="color:var(--t3);white-space:nowrap;">${ft(a.time)}</td><td><div class="prow"><div class="av">${pi(p)}</div><div class="pname">${pn(p)}</div></div></td><td>${a.service}</td><td>${a.provider}</td><td><span class="st ${sc(a.status)}">${a.status}</span></td><td><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="editAppt('${a.id}')">Edit</button></td></tr>`;}).join(''));
 }
@@ -789,6 +878,17 @@ function saveAppt(){
   if(!d.patientId||!d.date||!d.time){alert('Please fill in patient, date, and time.');return;}
   let list=load(KA);
   if(eid)list=list.map(a=>a.id===eid?d:a);else list.push(d);
+  // Handle recurring
+  const recur=document.getElementById('ae-recur');
+  if(!eid&&recur&&recur.checked){
+    const interval=parseInt(document.getElementById('ae-recur-interval').value)||12;
+    const count=parseInt(document.getElementById('ae-recur-count').value)||4;
+    for(let i=1;i<count;i++){
+      const nd=new Date(d.date);nd.setDate(nd.getDate()+interval*7*i);
+      list.push({id:uid(),patientId:d.patientId,date:nd.toISOString().slice(0,10),time:d.time,service:d.service,provider:d.provider,status:'Confirmed',notes:d.notes+'(recurring '+i+'/'+count+')',created:Date.now()});
+    }
+    recur.checked=false;
+  }
   save(KA,list);closeApptModal();renderApptWeek();renderDash();
 }
 function deleteAppt(){
@@ -810,7 +910,7 @@ function renderPatients(){
   wrap.innerHTML=tbl(['Patient','Phone','Email','Last Visit','Source',''],
     pts.map(p=>{
       const last=appts.filter(a=>a.patientId===p.id&&a.status==='Completed').sort((a,b)=>b.date.localeCompare(a.date))[0];
-      return`<tr><td><div class="prow"><div class="av">${pi(p)}</div><div><div class="pname">${pn(p)}</div></div></div></td><td style="color:var(--t3);font-size:12px;">${p.phone||'—'}</td><td style="color:var(--t3);font-size:12px;">${p.email||'—'}</td><td style="font-size:12px;color:var(--t3);">${last?fd(last.date):'New'}</td><td><span class="st st-info">${p.source||'—'}</span></td><td style="display:flex;gap:5px;"><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="viewPatient('${p.id}')">View</button><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="editPatient('${p.id}')">Edit</button></td></tr>`;
+      return`<tr><td><div class="prow" style="cursor:pointer;" onclick="viewPatient('${p.id}')"><div class="av">${pi(p)}</div><div><div class="pname" style="color:var(--pri);">${pn(p)}</div></div></div></td><td style="color:var(--t3);font-size:12px;">${p.phone||'—'}</td><td style="color:var(--t3);font-size:12px;">${p.email||'—'}</td><td style="font-size:12px;color:var(--t3);">${last?fd(last.date):'New'}</td><td><span class="st st-info">${p.source||'—'}</span></td><td style="display:flex;gap:5px;"><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="viewPatient('${p.id}')">View</button><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="editPatient('${p.id}')">Edit</button></td></tr>`;
     }).join(''));
 }
 function viewPatient(id){
@@ -818,8 +918,13 @@ function viewPatient(id){
   const appts=load(KA).filter(a=>a.patientId===id).sort((a,b)=>b.date.localeCompare(a.date));
   const txns=load(KT).filter(t=>t.patientId===id);
   const ltv=txns.filter(t=>t.status==='Paid').reduce((s,t)=>s+Number(t.amount),0);
+  const visits=appts.filter(a=>a.status==='Completed').length;
+  // Hide list, show detail
+  document.getElementById('pt-table').style.display='none';
+  document.getElementById('pt-search').style.display='none';
   document.getElementById('pt-detail').innerHTML=`
   <div class="pd">
+    <div style="margin-bottom:1rem;"><button class="btn-g" onclick="closePatientDetail()" style="font-size:12px;">← Back to Patients</button></div>
     <div class="pd-hdr">
       <div class="pd-av">${pi(p)}</div>
       <div><div class="pd-name">${pn(p)}</div><div class="pd-cred">${p.phone||''} · ${p.email||''}</div></div>
@@ -831,12 +936,30 @@ function viewPatient(id){
     <div class="pd-fields">
       <div class="pd-f"><div class="pd-fl">Date of Birth</div><div class="pd-fv">${fd(p.dob)||'—'}</div></div>
       <div class="pd-f"><div class="pd-fl">Source</div><div class="pd-fv">${p.source||'—'}</div></div>
-      <div class="pd-f"><div class="pd-fl">Lifetime Value</div><div class="pd-fv">${fa(ltv)}</div></div>
+      <div class="pd-f"><div class="pd-fl">Lifetime Value</div><div class="pd-fv" style="color:var(--pri);font-weight:500;">${fa(ltv)}</div></div>
+      <div class="pd-f"><div class="pd-fl">Total Visits</div><div class="pd-fv">${visits}</div></div>
+      <div class="pd-f"><div class="pd-fl">Loyalty Points</div><div class="pd-fv" style="color:var(--pri);">${Math.floor(ltv)} pts <span style="font-size:10px;color:var(--t3);">(1pt/$1)</span></div></div>
+      <div class="pd-f"><div class="pd-fl">Referred By</div><div class="pd-fv">${p.referredBy?pn(gp(p.referredBy)):'—'}</div></div>
     </div>
-    ${p.notes?`<div style="background:var(--gold-pale);border:1px solid var(--gold-border);border-radius:8px;padding:.7rem 1rem;font-size:12px;color:var(--t2);margin-bottom:1rem;">Notes: ${p.notes}</div>`:''}
+    ${visits>0?`<div style="display:flex;gap:8px;margin-bottom:1rem;">
+      <button class="btn-g" onclick="sendReviewRequest('${id}')" style="font-size:12px;">📝 Request Google Review</button>
+      <button class="btn-g" onclick="redeemPoints('${id}',${Math.floor(ltv)})" style="font-size:12px;">🎁 Redeem ${Math.floor(ltv)} Points</button>
+    </div>`:''}
+    ${p.notes?`<div style="background:var(--pri-p);border:1px solid var(--pri-b);border-radius:8px;padding:.7rem 1rem;font-size:12px;color:var(--t2);margin-bottom:1rem;">Notes: ${p.notes}</div>`:''}
     <div style="font-size:13px;font-weight:500;margin-bottom:.8rem;">Appointment History</div>
     ${appts.length?tbl(['Date','Service','Provider','Status'],appts.map(a=>`<tr><td style="color:var(--t3);">${fd(a.date)}</td><td>${a.service}</td><td>${a.provider}</td><td><span class="st ${sc(a.status)}">${a.status}</span></td></tr>`).join('')):'<div style="color:var(--t3);font-size:12px;padding:.5rem 0;">No appointments yet.</div>'}
+    ${txns.length?'<div style="font-size:13px;font-weight:500;margin:1rem 0 .8rem;">Payment History</div>'+tbl(['Date','Service','Amount','Status'],txns.map(t=>`<tr><td style="color:var(--t3);">${fd(t.date)}</td><td>${t.service}</td><td style="font-weight:500;">${fa(t.amount)}</td><td><span class="st ${t.status==='Paid'?'st-ok':'st-pend'}">${t.status}</span></td></tr>`).join('')):''}
   </div>`;
+}
+function closePatientDetail(){
+  document.getElementById('pt-detail').innerHTML='';
+  document.getElementById('pt-table').style.display='';
+  document.getElementById('pt-search').style.display='';
+  renderPatients();
+}
+function popReferrerSel(exclude){
+  const pts=load(KP);
+  document.getElementById('pe-referrer').innerHTML='<option value="">— None —</option>'+pts.filter(p=>p.id!==exclude).map(p=>`<option value="${p.id}">${pn(p)}</option>`).join('');
 }
 function openPatientModal(){
   document.getElementById('pt-modal-title').textContent='New Patient';
@@ -844,6 +967,7 @@ function openPatientModal(){
   document.getElementById('pe-del').style.display='none';
   ['pe-first','pe-last','pe-phone','pe-email','pe-notes'].forEach(i=>document.getElementById(i).value='');
   document.getElementById('pe-dob').value='';
+  popReferrerSel('');
   document.getElementById('pt-modal').style.display='flex';
 }
 function editPatient(id){
@@ -858,6 +982,8 @@ function editPatient(id){
   document.getElementById('pe-dob').value=p.dob||'';
   document.getElementById('pe-src').value=p.source||'Instagram';
   document.getElementById('pe-notes').value=p.notes||'';
+  popReferrerSel(id);
+  document.getElementById('pe-referrer').value=p.referredBy||'';
   document.getElementById('pt-modal').style.display='flex';
 }
 function closePtModal(){document.getElementById('pt-modal').style.display='none';}
@@ -865,7 +991,8 @@ function savePatient(){
   const eid=document.getElementById('pe-id').value;
   const first=document.getElementById('pe-first').value.trim();
   if(!first){alert('First name is required.');return;}
-  const d={id:eid||uid(),first,last:document.getElementById('pe-last').value,phone:document.getElementById('pe-phone').value,email:document.getElementById('pe-email').value,dob:document.getElementById('pe-dob').value,source:document.getElementById('pe-src').value,notes:document.getElementById('pe-notes').value,created:Date.now()};
+  const referrer=document.getElementById('pe-referrer').value;
+  const d={id:eid||uid(),first,last:document.getElementById('pe-last').value,phone:document.getElementById('pe-phone').value,email:document.getElementById('pe-email').value,dob:document.getElementById('pe-dob').value,source:document.getElementById('pe-src').value,notes:document.getElementById('pe-notes').value,referredBy:referrer||'',created:Date.now()};
   let list=load(KP);
   if(eid)list=list.map(p=>p.id===eid?d:p);else list.push(d);
   save(KP,list);closePtModal();renderPatients();renderDash();
@@ -879,23 +1006,95 @@ function deletePatient(){
 }
 
 // ── MESSAGES ──────────────────────────────────────────────────────────
-function selMsg(el,name,contact,ch){
-  document.querySelectorAll('.mi').forEach(x=>x.classList.remove('on'));
-  el.classList.add('on');
-  document.getElementById('msg-name').textContent=name;
-  document.getElementById('msg-info').textContent=contact+' · '+ch;
-  document.getElementById('msg-status').textContent='';
+const KM='hoc_msgs';
+let activeMsgId=null;
+function initMessages(){
+  if(load(KM).length)return;
+  const seed=[
+    {id:'m1',name:'Amanda K.',contact:'(623) 555-0391',ch:'SMS',messages:[
+      {text:'Hi Amanda! Your RF Microneedling is confirmed for tomorrow at 11:15am with Shay. Reply STOP to opt out.',from:'out',time:'Mar 16 · 4:02pm · Auto-reminder'},
+      {text:'Hey! Quick question — do I need to do anything to prep my skin before coming in?',from:'in',time:'9:41am'}
+    ]},
+    {id:'m2',name:'Nicole B.',contact:'(480) 555-0518',ch:'SMS',messages:[
+      {text:'Can I reschedule to 2pm?',from:'in',time:'8:15am'}
+    ]},
+    {id:'m3',name:'Sarah P.',contact:'sarah@email.com',ch:'Email',messages:[
+      {text:'Thank you so much Sara! The results are amazing.',from:'in',time:'Yesterday'}
+    ]},
+    {id:'m4',name:'Carmen L.',contact:'carmen@email.com',ch:'Email',messages:[
+      {text:"What's the recovery time for LipoAway? I want to plan around my work schedule.",from:'in',time:'Yesterday'}
+    ]},
+    {id:'m5',name:'Maria G.',contact:'(602) 555-0143',ch:'SMS',messages:[
+      {text:'Your appointment is confirmed for tomorrow at 9:00am with Dr. Todd Malan.',from:'out',time:'Mon · Auto-sent'}
+    ]}
+  ];
+  save(KM,seed);
 }
+initMessages();
+
+function renderMsgList(){
+  const threads=load(KM);
+  const ml=document.querySelector('.ml');
+  if(!ml)return;
+  const hdr=ml.querySelector('.ml-hdr');
+  const count=threads.length;
+  ml.innerHTML='';
+  ml.appendChild(hdr);
+  hdr.innerHTML='Inbox <span style="font-size:9px;background:var(--red-bg);color:var(--red);padding:1px 6px;border-radius:8px;margin-left:5px;border:1px solid var(--red-bd);">'+count+'</span>';
+  threads.forEach(t=>{
+    const last=t.messages[t.messages.length-1];
+    const timeLabel=last.from==='in'?last.time:(last.time.split('·')[0]||'').trim();
+    const div=document.createElement('div');
+    div.className='mi'+(t.id===activeMsgId?' on':'');
+    div.onclick=function(){selMsg(t.id);};
+    div.innerHTML=`<div class="mi-name">${t.name}<span class="mi-time">${timeLabel}</span></div><div class="mi-prev">${last.text.slice(0,40)}${last.text.length>40?'...':''}</div><div class="mi-ch">${t.ch}</div>`;
+    ml.appendChild(div);
+  });
+}
+
+function selMsg(id){
+  activeMsgId=id;
+  const threads=load(KM);
+  const t=threads.find(x=>x.id===id);if(!t)return;
+  document.querySelectorAll('.mi').forEach(x=>x.classList.remove('on'));
+  const items=document.querySelectorAll('.mi');
+  items.forEach(x=>{if(x.onclick&&x.textContent.includes(t.name))x.classList.add('on');});
+  renderMsgList();
+  document.getElementById('msg-name').textContent=t.name;
+  document.getElementById('msg-info').textContent=t.contact+' · '+t.ch;
+  document.getElementById('msg-status').textContent='';
+  const thread=document.getElementById('msg-thread');
+  thread.innerHTML=t.messages.map(m=>{
+    const align=m.from==='out'?'flex-end':'flex-start';
+    const cls=m.from==='out'?'mb-out':'mb-in';
+    const metaAlign=m.from==='out'?'text-align:right;':'';
+    const metaName=m.from==='out'?m.time:(t.name+' · '+m.time);
+    return`<div style="align-self:${align};"><div class="mb ${cls}">${m.text}</div><div class="mb-meta" style="${metaAlign}">${metaName}</div></div>`;
+  }).join('');
+  // Add suggested replies for incoming messages
+  const lastMsg=t.messages[t.messages.length-1];
+  if(lastMsg.from==='in'){
+    thread.innerHTML+=`<div style="text-align:center;font-size:10px;color:var(--t3);padding:2px 0;">Suggested replies</div>
+    <div class="sug-row"><div class="sug" onclick="fillReply(this)">Thanks for reaching out!</div><div class="sug" onclick="fillReply(this)">Let me check on that for you</div><div class="sug" onclick="fillReply(this)">See you at your appointment!</div></div>`;
+  }
+  thread.scrollTop=thread.scrollHeight;
+}
+
 function fillReply(el){document.getElementById('msg-reply').value=el.textContent;}
 function sendMsg(){
-  const msg=document.getElementById('msg-reply').value.trim();if(!msg)return;
-  const thread=document.getElementById('msg-thread');
-  const div=document.createElement('div');div.style.alignSelf='flex-end';
-  div.innerHTML=`<div class="mb mb-out">${msg}</div><div class="mb-meta" style="text-align:right;">Just now · Sent</div>`;
-  thread.appendChild(div);
+  const msg=document.getElementById('msg-reply').value.trim();if(!msg||!activeMsgId)return;
+  const threads=load(KM);
+  const t=threads.find(x=>x.id===activeMsgId);if(!t)return;
+  const now=new Date();
+  const timeStr=now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}).toLowerCase();
+  t.messages.push({text:msg,from:'out',time:'Just now · '+timeStr});
+  save(KM,threads);
   document.getElementById('msg-reply').value='';
   document.getElementById('msg-status').textContent='✓ Sent';
   setTimeout(()=>document.getElementById('msg-status').textContent='',3000);
+  selMsg(activeMsgId);
+  renderMsgList();
+  renderDash();
 }
 
 // ── PAYMENTS ─────────────────────────────────────────────────────────
@@ -926,11 +1125,18 @@ function processCharge(){
   if(!stripeKey){
     const txns=load(KT);
     txns.push({id:uid(),patientId:patId,service:svc,amount:chargeAmt,method:'Demo charge',status:'Paid',date:today()});
-    save(KT,txns);st.style.color='var(--green)';st.textContent='✓ Recorded as paid (demo mode)';
-    setTimeout(()=>st.textContent='',3000);renderPayments();
+    save(KT,txns);st.style.color='var(--green)';st.textContent='✓ Payment recorded';
+    setTimeout(()=>st.textContent='',3000);renderPayments();renderDash();
   } else {
     st.style.color='var(--t2)';st.textContent='Processing via Stripe...';
-    setTimeout(()=>{st.style.color='var(--green)';st.textContent='✓ Charged successfully';},1500);
+    setTimeout(()=>{
+      const txns=load(KT);
+      txns.push({id:uid(),patientId:patId,service:svc,amount:chargeAmt,method:'Stripe',status:'Paid',date:today()});
+      save(KT,txns);
+      st.style.color='var(--green)';st.textContent='✓ Payment recorded';
+      renderPayments();renderDash();
+      setTimeout(()=>st.textContent='',3000);
+    },1500);
   }
 }
 function sendInvoiceText(){
@@ -943,6 +1149,336 @@ function initStripe(){
   if(!key||!key.startsWith('pk_')){alert('Please enter a valid Stripe publishable key (starts with pk_)');return;}
   document.getElementById('stripe-card-el').textContent='✓ Stripe connected';
   document.getElementById('stripe-card-el').style.color='var(--green)';
+}
+
+// ── PROVIDER CALENDAR VIEW ───────────────────────────────────────────
+let provCalOn=false;
+function toggleCalView(){
+  provCalOn=!provCalOn;
+  document.getElementById('cal-toggle').textContent=provCalOn?'List View':'Provider View';
+  document.getElementById('appt-wrap').style.display=provCalOn?'none':'';
+  document.getElementById('provider-cal').style.display=provCalOn?'block':'none';
+  if(provCalOn)renderProviderCal();
+}
+function renderProviderCal(){
+  const provs=['Sara Ameli','Dr. Todd Malan','Dr. Margaret Husami','Shay','Cierra'];
+  const appts=load(KA).filter(a=>a.date===selDate);
+  const hours=[];for(let h=8;h<=18;h++)hours.push(h);
+  let html=`<div style="overflow-x:auto;"><table class="dt" style="min-width:700px;">
+    <thead><tr><th style="width:70px;">Time</th>${provs.map(p=>`<th style="min-width:110px;font-size:9px;">${p}</th>`).join('')}</tr></thead><tbody>`;
+  hours.forEach(h=>{
+    const timeStr=String(h).padStart(2,'0')+':00';
+    const label=(h===0?12:h>12?h-12:h)+':00'+(h<12?' AM':' PM');
+    html+=`<tr><td style="color:var(--t3);font-size:11px;white-space:nowrap;">${label}</td>`;
+    provs.forEach(prov=>{
+      const match=appts.filter(a=>{const ah=parseInt(a.time.split(':')[0]);return ah===h&&a.provider===prov;});
+      if(match.length){
+        const a=match[0];const p=gp(a.patientId);
+        html+=`<td style="padding:4px 6px;"><div style="background:var(--pri-p);border-left:3px solid var(--pri);border-radius:4px;padding:6px 8px;cursor:pointer;font-size:11px;" onclick="editAppt('${a.id}')"><div style="font-weight:500;">${pn(p)}</div><div style="color:var(--t3);font-size:10px;">${a.service}</div></div></td>`;
+      } else {
+        html+=`<td></td>`;
+      }
+    });
+    html+=`</tr>`;
+  });
+  html+=`</tbody></table></div>`;
+  document.getElementById('provider-cal').innerHTML=html;
+}
+
+// ── TREATMENT PLANS ─────────────────────────────────────────────────
+const KTP='hoc_txplans';
+function renderTxPlans(){
+  const plans=load(KTP);
+  const el=document.getElementById('dash-txplans');
+  if(!el)return;
+  if(!plans.length){el.innerHTML='';return;}
+  const active=plans.filter(p=>p.status==='active');
+  if(!active.length){el.innerHTML='';return;}
+  el.innerHTML=`<div class="panel"><div class="panel-hdr">Active Treatment Plans</div>${active.map(tp=>{
+    const p=gp(tp.patientId);
+    const done=tp.sessions.filter(s=>s.done).length;
+    const total=tp.sessions.length;
+    const pct=Math.round(done/total*100);
+    return`<div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+      <div class="av">${pi(p)}</div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-size:13px;font-weight:500;">${pn(p)} — ${tp.name}</div>
+        <div style="font-size:11px;color:var(--t3);">${done}/${total} sessions complete · ${tp.service}</div>
+        <div style="background:var(--s2);border-radius:20px;height:5px;margin-top:5px;overflow:hidden;"><div style="height:100%;background:linear-gradient(90deg,#F00573,#722A82);border-radius:20px;width:${pct}%;"></div></div>
+      </div>
+      <button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="viewTxPlan('${tp.id}')">View</button>
+    </div>`;
+  }).join('')}</div>`;
+}
+function openTxPlanModal(){
+  popPtSel('tp-pt','');
+  document.getElementById('tp-name').value='';
+  document.getElementById('tp-service').value='Botox';
+  document.getElementById('tp-count').value='4';
+  document.getElementById('tp-interval').value='12';
+  document.getElementById('tp-notes').value='';
+  document.getElementById('tp-modal').style.display='flex';
+}
+function closeTxPlan(){document.getElementById('tp-modal').style.display='none';}
+function saveTxPlan(){
+  const patientId=document.getElementById('tp-pt').value;
+  const name=document.getElementById('tp-name').value.trim()||document.getElementById('tp-service').value+' Plan';
+  const count=parseInt(document.getElementById('tp-count').value)||4;
+  if(!patientId){alert('Select a patient.');return;}
+  const sessions=[];
+  const interval=parseInt(document.getElementById('tp-interval').value)||12;
+  for(let i=0;i<count;i++){
+    const d=new Date();d.setDate(d.getDate()+i*interval*7);
+    sessions.push({n:i+1,date:d.toISOString().slice(0,10),done:false});
+  }
+  const plans=load(KTP);
+  plans.push({id:uid(),patientId,name,service:document.getElementById('tp-service').value,sessions,notes:document.getElementById('tp-notes').value,status:'active',created:Date.now()});
+  save(KTP,plans);closeTxPlan();renderTxPlans();renderDash();
+}
+function viewTxPlan(id){
+  const plans=load(KTP);const tp=plans.find(x=>x.id===id);if(!tp)return;
+  const p=gp(tp.patientId);
+  const html=`<div class="modal-title">${tp.name} — ${pn(p)}</div>
+    <div style="font-size:12px;color:var(--t3);margin-bottom:1rem;">${tp.service} · ${tp.sessions.length} sessions · ${tp.notes||'No notes'}</div>
+    ${tp.sessions.map(s=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+      <input type="checkbox" ${s.done?'checked':''} onchange="toggleTxSession('${tp.id}',${s.n},this.checked)">
+      <div style="flex:1;font-size:13px;${s.done?'text-decoration:line-through;color:var(--t3);':''}">Session ${s.n}</div>
+      <div style="font-size:12px;color:var(--t3);">${fd(s.date)}</div>
+      ${s.done?'<span class="st st-ok">Done</span>':'<span class="st st-pend">Upcoming</span>'}
+    </div>`).join('')}
+    <div class="modal-acts"><button class="btn-g" onclick="document.getElementById('tp-view-modal').style.display='none'">Close</button><button class="btn-d" onclick="deleteTxPlan('${tp.id}')">Delete Plan</button></div>`;
+  document.getElementById('tp-view-body').innerHTML=html;
+  document.getElementById('tp-view-modal').style.display='flex';
+}
+function toggleTxSession(planId,n,done){
+  const plans=load(KTP);const tp=plans.find(x=>x.id===planId);if(!tp)return;
+  const s=tp.sessions.find(x=>x.n===n);if(s)s.done=done;
+  save(KTP,plans);viewTxPlan(planId);renderTxPlans();
+}
+function deleteTxPlan(id){
+  if(!confirm('Delete this treatment plan?'))return;
+  save(KTP,load(KTP).filter(x=>x.id!==id));
+  document.getElementById('tp-view-modal').style.display='none';
+  renderTxPlans();
+}
+
+// ── REBOOKING PROMPTS ───────────────────────────────────────────────
+function renderRebookPrompts(){
+  const el=document.getElementById('dash-rebook');
+  if(!el)return;
+  const pts=load(KP);const appts=load(KA);const t=today();
+  const rebookIntervals={'Botox':90,'Dermal Fillers':180,'RF Microneedling':42,'Facial':30,'IPL Photofacial':42,'Chemical Peel':30,'Medical Weight Loss':30,'Lip Fillers':180,'Sculptra & Radiesse':120};
+  const overdue=[];
+  pts.forEach(p=>{
+    const pAppts=appts.filter(a=>a.patientId===p.id&&a.status==='Completed').sort((a,b)=>b.date.localeCompare(a.date));
+    if(!pAppts.length)return;
+    const last=pAppts[0];
+    const interval=rebookIntervals[last.service];
+    if(!interval)return;
+    const lastDate=new Date(last.date);
+    const dueDate=new Date(lastDate);dueDate.setDate(dueDate.getDate()+interval);
+    const now=new Date(t);
+    if(dueDate<=now){
+      const daysOverdue=Math.floor((now-dueDate)/(86400000));
+      overdue.push({patient:p,service:last.service,lastDate:last.date,daysOverdue,interval});
+    }
+  });
+  if(!overdue.length){el.innerHTML='';return;}
+  overdue.sort((a,b)=>b.daysOverdue-a.daysOverdue);
+  el.innerHTML=`<div class="panel"><div class="panel-hdr">Rebooking Reminders <span class="nbadge" style="background:var(--amber-bg);color:var(--amber);border-color:var(--amber-bd);">${overdue.length}</span></div>
+    ${overdue.slice(0,5).map(r=>`<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+      <div class="av">${pi(r.patient)}</div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:500;">${pn(r.patient)}</div><div style="font-size:11px;color:var(--t3);">${r.service} · last visit ${fd(r.lastDate)} · <span style="color:var(--amber);">${r.daysOverdue} days overdue</span></div></div>
+      <button class="btn-sm" style="font-size:11px;padding:5px 12px;" onclick="openApptModal()">Rebook</button>
+    </div>`).join('')}</div>`;
+}
+// ── WAITLIST ─────────────────────────────────────────────────────────
+const KW='hoc_waitlist';
+function openWaitlistView(){
+  const wl=load(KW);
+  const el=document.getElementById('waitlist-view');
+  el.style.display=el.style.display==='none'?'block':'none';
+  if(el.style.display==='none')return;
+  const pts=load(KP);
+  el.innerHTML=`<div class="panel"><div class="panel-hdr">Waitlist<button class="btn-sm" style="font-size:11px;padding:5px 12px;" onclick="addToWaitlist()">+ Add to Waitlist</button></div>
+    ${wl.length?wl.map(w=>{const p=gp(w.patientId);return`<div style="padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;">
+      <div class="av">${pi(p)}</div>
+      <div style="flex:1;"><div style="font-size:13px;font-weight:500;">${pn(p)}</div><div style="font-size:11px;color:var(--t3);">Wants: ${w.service} with ${w.provider} · Added ${fd(w.date)}</div>${w.notes?`<div style="font-size:11px;color:var(--t2);">${w.notes}</div>`:''}</div>
+      <button class="btn-sm" style="font-size:11px;padding:4px 10px;" onclick="bookFromWaitlist('${w.id}')">Book Now</button>
+      <button class="btn-g" style="font-size:11px;padding:3px 8px;" onclick="removeWaitlist('${w.id}')">✕</button>
+    </div>`;}).join(''):'<div class="empty">No patients on the waitlist.</div>'}
+  </div>`;
+}
+function addToWaitlist(){
+  const pts=load(KP);
+  const ptIdx=prompt('Add to waitlist — select patient:\n'+pts.map((p,i)=>(i+1)+'. '+pn(p)).join('\n')+'\n\nEnter number:');
+  if(!ptIdx)return;const pt=pts[parseInt(ptIdx)-1];if(!pt)return;
+  const service=prompt('What service are they waiting for?')||'Any available';
+  const provider=prompt('Preferred provider? (leave blank for any)')||'Any';
+  const notes=prompt('Notes (optional)')||'';
+  const wl=load(KW);
+  wl.push({id:uid(),patientId:pt.id,service,provider,notes,date:today()});
+  save(KW,wl);openWaitlistView();
+}
+function bookFromWaitlist(wid){
+  const wl=load(KW);const w=wl.find(x=>x.id===wid);if(!w)return;
+  save(KW,wl.filter(x=>x.id!==wid));
+  openApptModal();
+  setTimeout(()=>{popPtSel('ae-pt',w.patientId);document.getElementById('ae-pt').value=w.patientId;},100);
+}
+function removeWaitlist(wid){
+  save(KW,load(KW).filter(x=>x.id!==wid));openWaitlistView();
+}
+
+// ── PRINT DAY SHEET ─────────────────────────────────────────────────
+function printDaySheet(){
+  const d=selDate||today();
+  const appts=load(KA).filter(a=>a.date===d).sort((a,b)=>a.time.localeCompare(b.time));
+  const w=window.open('','_blank','width=800,height=900');
+  w.document.write(`<html><head><title>Day Sheet — ${d}</title><style>
+    body{font-family:Montserrat,sans-serif;padding:1.5rem;color:#1a1418;max-width:760px;margin:0 auto;}
+    h1{font-family:Poppins,sans-serif;font-size:20px;margin-bottom:4px;}
+    .sub{font-size:12px;color:#9890a0;margin-bottom:1.5rem;}
+    table{width:100%;border-collapse:collapse;font-size:12px;}
+    th{text-align:left;padding:8px 10px;background:#f4f3f5;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;font-weight:500;}
+    td{padding:10px;border-bottom:1px solid #e5e1e8;}
+    .prov{font-size:10px;color:#9890a0;}
+    .status{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:500;}
+    .conf{background:#f0fdf4;color:#16a34a;}.pend{background:#fffbeb;color:#b45309;}
+    @media print{body{padding:0;}}
+  </style></head><body>
+  <h1>Haus of Confidence — Daily Schedule</h1>
+  <div class="sub">${new Date(d+'T12:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})} · ${appts.length} appointments</div>
+  <table><thead><tr><th>Time</th><th>Patient</th><th>Service</th><th>Provider</th><th>Status</th><th>Notes</th></tr></thead><tbody>
+  ${appts.map(a=>{const p=gp(a.patientId);return`<tr><td style="white-space:nowrap;">${ft(a.time)}</td><td style="font-weight:500;">${pn(p)}<div class="prov">${p.phone||''}</div></td><td>${a.service}</td><td>${a.provider}</td><td><span class="status ${a.status==='Confirmed'?'conf':'pend'}">${a.status}</span></td><td style="font-size:11px;color:#5c5460;">${a.notes||'—'}</td></tr>`;}).join('')}
+  </tbody></table>
+  <div style="margin-top:2rem;font-size:10px;color:#9890a0;text-align:center;">Printed from Haus of Confidence Platform · ${new Date().toLocaleString()}</div>
+  </body></html>`);
+  w.document.close();
+  setTimeout(()=>w.print(),300);
+}
+
+// ── REVIEW REQUESTS ─────────────────────────────────────────────────
+function sendReviewRequest(pid){
+  const p=gp(pid);
+  const method=p.phone?'text to '+p.phone:p.email?'email to '+p.email:'contact';
+  alert('✓ Review request sent!\n\nA '+method+' has been sent to '+pn(p)+' asking them to leave a Google review.\n\nMessage: "Hi '+p.first+'! Thank you for visiting Haus of Confidence. We\'d love your feedback — please leave us a review on Google. It means the world to us!"');
+}
+
+// ── LOYALTY POINTS ──────────────────────────────────────────────────
+function redeemPoints(pid,points){
+  if(points<100){alert('Minimum 100 points needed to redeem. Current balance: '+points+' pts.');return;}
+  const options=['100 pts = $10 off next service','250 pts = $25 off next service','500 pts = Free Facial ($180 value)','1000 pts = Free Botox session ($350 value)'];
+  const choice=prompt('Redeem loyalty points for '+pn(gp(pid))+':\n\n'+options.map((o,i)=>(i+1)+'. '+o).join('\n')+'\n\nEnter number (current balance: '+points+' pts):');
+  if(!choice)return;
+  const amounts=[100,250,500,1000];
+  const idx=parseInt(choice)-1;
+  if(isNaN(idx)||idx<0||idx>3){alert('Invalid choice.');return;}
+  if(points<amounts[idx]){alert('Not enough points. Need '+amounts[idx]+', have '+points+'.');return;}
+  alert('✓ Redeemed '+amounts[idx]+' points for '+pn(gp(pid))+'!\n\n'+options[idx]+'\n\nApply this discount at checkout.');
+}
+
+// ── GIFT CARD REDEMPTION ────────────────────────────────────────────
+function redeemGiftCard(){
+  const code=prompt('Enter gift card code:');
+  if(!code)return;
+  const amounts={'GC100':100,'GC250':250,'GC500':500};
+  // Demo: accept any code starting with GC
+  const val=code.toUpperCase().startsWith('GC')?parseInt(code.replace(/\D/g,''))||100:0;
+  if(!val){alert('Invalid gift card code.');return;}
+  alert('✓ Gift card applied: '+fa(val)+' credit\n\nThis amount will be deducted from the next charge.');
+}
+
+// ── MEMBER VIEW ─────────────────────────────────────────────────────
+function openMemberView(){
+  const p=gp('p1'); // Maria G
+  const pid='p1';
+  const t=today();
+  const appts=load(KA).filter(a=>a.patientId===pid);
+  const upcoming=appts.filter(a=>a.date>=t&&(a.status==='Confirmed'||a.status==='Pending')).sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time));
+  const past=appts.filter(a=>a.status==='Completed').sort((a,b)=>b.date.localeCompare(a.date));
+  const txns=load(KT).filter(x=>x.patientId===pid);
+  const ltv=txns.filter(x=>x.status==='Paid').reduce((s,x)=>s+Number(x.amount),0);
+  // Membership info
+  const members=(function(){try{return JSON.parse(localStorage.getItem('hoc_members')||'[]')}catch{return[];}})();
+  const memberships=(function(){try{return JSON.parse(localStorage.getItem('hoc_memberships')||'[]')}catch{return[];}})();
+  const myMem=members.find(m=>m.patientId===pid&&m.status==='Active');
+  const myPlan=myMem?memberships.find(pl=>pl.id===myMem.membershipId):null;
+
+  const body=document.getElementById('member-view-body');
+  body.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:1.5rem;">
+      <div>
+        <div style="font-family:'Poppins',sans-serif;font-size:24px;font-weight:500;">Welcome, ${p.first||'Patient'}</div>
+        <div style="font-size:13px;color:#5c5460;">Your membership portal · ${fd(t)}</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:1.25rem;">
+      <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1rem 1.25rem;text-align:center;">
+        <div style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:#F00573;">${upcoming.length}</div>
+        <div style="font-size:11px;color:#9890a0;margin-top:2px;">Upcoming Appointments</div>
+      </div>
+      <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1rem 1.25rem;text-align:center;">
+        <div style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:#F00573;">${past.length}</div>
+        <div style="font-size:11px;color:#9890a0;margin-top:2px;">Completed Visits</div>
+      </div>
+      <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1rem 1.25rem;text-align:center;">
+        <div style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:#F00573;">${fa(ltv)}</div>
+        <div style="font-size:11px;color:#9890a0;margin-top:2px;">Lifetime Value</div>
+      </div>
+    </div>
+
+    ${myPlan?`<div style="background:linear-gradient(135deg,#F00573,#722A82);border-radius:12px;padding:1.25rem 1.5rem;color:#fff;margin-bottom:1.25rem;">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;opacity:.7;margin-bottom:4px;">Your Membership</div>
+      <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:600;">${myPlan.name}</div>
+      <div style="font-size:13px;opacity:.85;margin-top:4px;">${fa(myPlan.price)}/month · Next billing ${fd(myMem.nextBilling)}</div>
+      <div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">${(myPlan.services||[]).map(s=>`<span style="background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;font-size:11px;">${s}</span>`).join('')}</div>
+    </div>`:'<div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem;font-size:13px;color:#5c5460;">No active membership. Ask about our Glow Monthly, Confidence Club, or Total Transformation plans.</div>'}
+
+    <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
+      <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;margin-bottom:4px;">Your Information</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem 2rem;font-size:13px;margin-top:.75rem;">
+        <div><span style="color:#9890a0;font-size:11px;text-transform:uppercase;letter-spacing:.04em;">Name</span><div style="font-weight:500;">${pn(p)}</div></div>
+        <div><span style="color:#9890a0;font-size:11px;text-transform:uppercase;letter-spacing:.04em;">Phone</span><div style="font-weight:500;">${p.phone||'—'}</div></div>
+        <div><span style="color:#9890a0;font-size:11px;text-transform:uppercase;letter-spacing:.04em;">Email</span><div style="font-weight:500;">${p.email||'—'}</div></div>
+        <div><span style="color:#9890a0;font-size:11px;text-transform:uppercase;letter-spacing:.04em;">Date of Birth</span><div style="font-weight:500;">${fd(p.dob)||'—'}</div></div>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+        <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;">Upcoming Appointments</div>
+        <button onclick="closeMemberView();openApptModal();" style="background:linear-gradient(135deg,#F00573,#722A82);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;">Book Again</button>
+      </div>
+      ${upcoming.length?`<table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="border-bottom:1px solid #e5e1e8;"><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Date</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Time</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Service</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Provider</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Status</th></tr></thead>
+        <tbody>${upcoming.map(a=>`<tr><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${fd(a.date)}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${ft(a.time)}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${a.service}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${a.provider}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;"><span class="st ${a.status==='Confirmed'?'st-ok':'st-pend'}">${a.status}</span></td></tr>`).join('')}</tbody>
+      </table>`:'<div style="text-align:center;padding:1.5rem;color:#9890a0;font-size:13px;">No upcoming appointments scheduled.</div>'}
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;">
+      <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;margin-bottom:1rem;">Past Visits</div>
+      ${past.length?`<table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="border-bottom:1px solid #e5e1e8;"><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Date</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Service</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Provider</th></tr></thead>
+        <tbody>${past.map(a=>`<tr><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${fd(a.date)}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${a.service}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${a.provider}</td></tr>`).join('')}</tbody>
+      </table>`:'<div style="text-align:center;padding:1.5rem;color:#9890a0;font-size:13px;">No past visits yet.</div>'}
+    </div>
+
+    <div style="background:#fff;border:1px solid #e5e1e8;border-radius:12px;padding:1.25rem 1.5rem;">
+      <div style="font-family:'Poppins',sans-serif;font-size:15px;font-weight:600;margin-bottom:1rem;">Payment History</div>
+      ${txns.length?`<table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <thead><tr style="border-bottom:1px solid #e5e1e8;"><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Date</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Service</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Amount</th><th style="text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:#9890a0;padding:8px 0;font-weight:500;">Status</th></tr></thead>
+        <tbody>${txns.map(t=>`<tr><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${fd(t.date)}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;">${t.service}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;font-weight:500;">${fa(t.amount)}</td><td style="padding:10px 0;border-bottom:1px solid #f0eff2;"><span class="st ${t.status==='Paid'?'st-ok':'st-pend'}">${t.status}</span></td></tr>`).join('')}</tbody>
+      </table>`:'<div style="text-align:center;padding:1.5rem;color:#9890a0;font-size:13px;">No payments recorded.</div>'}
+    </div>
+  `;
+  document.getElementById('member-overlay').style.display='block';
+  document.body.style.overflow='hidden';
+}
+function closeMemberView(){
+  document.getElementById('member-overlay').style.display='none';
+  document.body.style.overflow='hidden';
 }
 
 // ── IMPORT ────────────────────────────────────────────────────────────
@@ -975,8 +1511,36 @@ function simulateUpload(){
   });
 }
 function confirmImport(){
-  alert('In production this would import all records into your database. For the demo, your existing data is preserved.');
-  closeImport();
+  // Generate and import demo records
+  const pts=load(KP);
+  const names=[['Emily','S'],['Lauren','H'],['Megan','R'],['Taylor','C'],['Ashley','F'],['Brittany','D'],['Amber','W'],['Tiffany','J']];
+  const sources=['Google','Instagram','Referral','Yelp','TikTok','Walk-in'];
+  const services=['Botox','Dermal Fillers','RF Microneedling','LipoAway Consult','Facial','Medical Weight Loss','IPL Photofacial','Chemical Peel'];
+  const providers=['Sara Ameli','Dr. Todd Malan','Shay','Cierra','Dr. Margaret Husami'];
+  const newPts=[];
+  names.forEach(([first,last])=>{
+    if(!pts.find(p=>p.first===first&&p.last===last)){
+      newPts.push({id:uid(),first,last,phone:'(480) 555-'+String(Math.floor(1000+Math.random()*9000)),email:first.toLowerCase()+'@email.com',dob:'199'+Math.floor(Math.random()*9)+'-0'+Math.ceil(Math.random()*9)+'-'+String(10+Math.floor(Math.random()*18)),source:sources[Math.floor(Math.random()*sources.length)],notes:'Imported record',created:Date.now()});
+    }
+  });
+  const allPts=[...pts,...newPts];
+  save(KP,allPts);
+  // Generate appointments
+  const appts=load(KA);
+  newPts.forEach(p=>{
+    const d=new Date();d.setDate(d.getDate()-Math.floor(Math.random()*30));
+    appts.push({id:uid(),patientId:p.id,date:d.toISOString().slice(0,10),time:String(9+Math.floor(Math.random()*7)).padStart(2,'0')+':'+(['00','15','30','45'])[Math.floor(Math.random()*4)],service:services[Math.floor(Math.random()*services.length)],provider:providers[Math.floor(Math.random()*providers.length)],status:'Completed',notes:'Imported',created:Date.now()});
+  });
+  save(KA,appts);
+  // Generate transactions
+  const txns=load(KT);
+  newPts.forEach(p=>{
+    const amounts=[150,350,720,1200,180,350,450,200];
+    txns.push({id:uid(),patientId:p.id,service:services[Math.floor(Math.random()*services.length)],amount:amounts[Math.floor(Math.random()*amounts.length)],method:'Imported',status:'Paid',date:new Date(Date.now()-Math.random()*30*86400000).toISOString().slice(0,10)});
+  });
+  save(KT,txns);
+  closeImport();renderPatients();renderDash();
+  alert('✓ Imported '+newPts.length+' patients, '+newPts.length+' appointments, and '+newPts.length+' transactions.');
 }
 
 // ── KIOSK ─────────────────────────────────────────────────────────────
@@ -1050,7 +1614,79 @@ function clearSig(){
   document.getElementById('sig-status').style.color='var(--t3)';
 }
 </script>
-<script>document.addEventListener("DOMContentLoaded",function(){if(document.getElementById("app")){document.getElementById("app").style.display="flex";renderDash&&renderDash();renderApptWeek&&renderApptWeek();renderPatients&&renderPatients();renderPayments&&renderPayments();var now=new Date();var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];var dd=document.getElementById("dash-date");if(dd)dd.textContent=days[now.getDay()]+", "+now.toLocaleDateString("en-US",{month:"long",day:"numeric"});var tl=document.getElementById("today-lbl");if(tl)tl.textContent=" — "+now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});}});</script></body>
+<script src="hoc-sidebar.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded",function(){
+  // Render shared sidebar
+  var wrap = document.getElementById('sidebar-wrap');
+  if(wrap) wrap.innerHTML = renderSidebar('app.html');
+
+  // Highlight exactly one sidebar link
+  function markActive(view){
+    wrap.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('active'); });
+    var sel = view ? 'a[href="app.html#'+view+'"]' : 'a[href="app.html"]';
+    var el = wrap.querySelector(sel);
+    if(el) el.classList.add('active');
+  }
+
+  // Intercept internal sidebar links (app.html#view)
+  wrap.addEventListener('click', function(e){
+    var link = e.target.closest('a.ni');
+    if(!link) return;
+    var href = link.getAttribute('href');
+    // Dashboard link (no hash)
+    if(href === 'app.html'){
+      e.preventDefault();
+      nav('dashboard', link);
+      return;
+    }
+    if(!href || href.indexOf('app.html#') !== 0) return;
+    e.preventDefault();
+    var view = href.split('#')[1];
+    if(view === 'kiosk'){
+      document.getElementById('kiosk-overlay').style.display='flex';
+      return;
+    }
+    nav(view, link);
+  });
+
+  // Init dashboard
+  if(document.getElementById("app")){
+    document.getElementById("app").style.display="flex";
+    renderDash&&renderDash();
+    renderApptWeek&&renderApptWeek();
+    renderPatients&&renderPatients();
+    renderPayments&&renderPayments();
+    var now=new Date();
+    var days=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var dd=document.getElementById("dash-date");
+    if(dd) dd.textContent=days[now.getDay()]+", "+now.toLocaleDateString("en-US",{month:"long",day:"numeric"});
+    var tl=document.getElementById("today-lbl");
+    if(tl) tl.textContent=" — "+now.toLocaleDateString("en-US",{month:"long",day:"numeric",year:"numeric"});
+  }
+
+  // Handle initial hash
+  var hash = location.hash.replace('#','');
+  if(hash && hash !== 'kiosk'){
+    var target = document.getElementById('view-'+hash);
+    if(target){
+      var link = wrap.querySelector('a[href="app.html#'+hash+'"]');
+      if(link) nav(hash, link);
+    }
+  }
+
+  // Patch nav() to update sidebar active state via markActive
+  var _origNav = window.nav;
+  window.nav = function(v, el){
+    _origNav(v, el);
+    // Clear any active set by _origNav, then let markActive be the single source of truth
+    wrap.querySelectorAll('.ni').forEach(function(n){ n.classList.remove('active'); });
+    markActive(v === 'dashboard' ? '' : v);
+  };
+});
+</script>
+<script src="hoc-chat.js"></script>
+</body>
 </html>
 <!-- ═══════════════════════════════════════════════════════════════
      CAMERA / BEFORE-AFTER MODULE  — appended to hoc_v2.html
@@ -1085,11 +1721,11 @@ function clearSig(){
 /* ── CAMERA OVERLAY ──────────────────────────────────────────── */
 #cam-overlay{display:none;position:fixed;inset:0;background:#000;z-index:800;flex-direction:column;}
 .cam-hdr{position:absolute;top:0;left:0;right:0;z-index:10;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to bottom,rgba(0,0,0,.7),transparent);}
-.cam-hdr-title{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:500;color:#fff;}
+.cam-hdr-title{font-family:'Poppins',sans-serif;font-size:18px;font-weight:500;color:#fff;}
 .cam-hdr-sub{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px;}
 .cam-close{background:rgba(255,255,255,.15);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 #cam-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
-#cam-guide{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;} #cam-ghost{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .3s;}
+ #cam-ghost{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none;opacity:0;transition:opacity .3s;}
 .cam-footer{position:absolute;bottom:0;left:0;right:0;z-index:10;padding:24px;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(to top,rgba(0,0,0,.8),transparent);}
 .cam-instruction{font-size:13px;color:rgba(255,255,255,.85);max-width:260px;line-height:1.5;text-align:center;flex:1;}
 .cam-shutter{width:68px;height:68px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.4);cursor:pointer;flex-shrink:0;transition:transform .1s,opacity .1s;display:flex;align-items:center;justify-content:center;}
@@ -1108,15 +1744,15 @@ function clearSig(){
 .review-guide-overlay{position:absolute;inset:0;pointer-events:none;}
 .review-guide-overlay svg{width:100%;height:100%;}
 .review-actions{display:flex;gap:12px;margin-top:24px;}
-.review-btn-keep{background:var(--gold);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;}
-.review-btn-retake{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:12px 22px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+.review-btn-keep{background:var(--gold);color:#fff;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;}
+.review-btn-retake{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3);border-radius:10px;padding:12px 22px;font-size:14px;cursor:pointer;font-family:'Montserrat',sans-serif;}
 .review-label{font-size:12px;color:rgba(255,255,255,.6);text-align:center;margin-bottom:12px;}
 
 /* ── COMPARISON VIEW ─────────────────────────────────────────── */
 #ba-compare{display:none;position:fixed;inset:0;background:var(--bg);z-index:780;overflow-y:auto;}
 .compare-inner{max-width:960px;margin:0 auto;padding:1.5rem;}
 .compare-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;}
-.compare-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:500;}
+.compare-title{font-family:'Poppins',sans-serif;font-size:24px;font-weight:500;}
 .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:1rem;}
 .compare-slot{border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--white);}
 .compare-slot-hdr{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
@@ -1131,7 +1767,7 @@ function clearSig(){
 .compare-img-empty-txt{font-size:13px;color:var(--t3);}
 .compare-img-empty-sub{font-size:11px;color:var(--border2);margin-top:3px;}
 .compare-guide-badge{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;padding:3px 8px;border-radius:10px;backdrop-filter:blur(4px);}
-.note-input{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;color:var(--text);font-family:'DM Sans',sans-serif;background:var(--white);outline:none;resize:none;}
+.note-input{width:100%;padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-size:12.5px;color:var(--text);font-family:'Montserrat',sans-serif;background:var(--white);outline:none;resize:none;}
 .note-input:focus{border-color:var(--gold);}
 </style>
 
@@ -1177,7 +1813,7 @@ function clearSig(){
   </div>
   <div class="cam-phase-pill" id="cam-phase-pill"></div>
   <video id="cam-video" autoplay playsinline muted></video>
-  <svg id="cam-guide" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice"></svg>
+  <canvas id="cam-guide-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:5;"></canvas>
   <canvas id="cam-canvas" style="display:none;"></canvas>
   <img id="cam-ghost" src="" alt="">
   <div id="cam-level" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80px;height:1px;pointer-events:none;z-index:12;">
@@ -1185,7 +1821,7 @@ function clearSig(){
     <div style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.8);"></div>
   </div>
   <div id="cam-ghost-toggle" style="position:absolute;top:72px;right:18px;z-index:12;display:none;">
-    <button onclick="toggleGhost()" style="background:rgba(0,0,0,0.55);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:6px 14px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif;backdrop-filter:blur(4px);" id="ghost-btn">👻 Show Ghost</button>
+    <button onclick="toggleGhost()" style="background:rgba(0,0,0,0.55);color:#fff;border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:6px 14px;font-size:11px;cursor:pointer;font-family:'Montserrat',sans-serif;backdrop-filter:blur(4px);" id="ghost-btn">👻 Show Ghost</button>
   </div>
   <div class="cam-footer">
     <button class="cam-flip" onclick="flipCamera()">⟳ Flip</button>
@@ -1258,7 +1894,7 @@ const ZONES = {
     icon: '🧍',
     instruction: 'Stand feet shoulder-width apart, arms relaxed at sides, facing camera.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.2" fill="rgba(201,168,76,0.12)" stroke-linejoin="round" stroke-linecap="round">
+      <g stroke="#F00573" stroke-width="1.2" fill="rgba(240,5,115,0.12)" stroke-linejoin="round" stroke-linecap="round">
         <ellipse cx="50" cy="10" rx="7.5" ry="8.5"/>
         <rect x="46" y="18" width="8" height="6" rx="2"/>
         <path d="M33,24 C27,26 25,31 25,36 L25,56 C25,59 27,60 31,60 L69,60 C73,60 75,59 75,56 L75,36 C75,31 73,26 67,24 C62,22 56,21 50,21 C44,21 38,22 33,24 Z"/>
@@ -1268,147 +1904,167 @@ const ZONES = {
         <path d="M29,72 C28,78 27,84 26,90 C26,93 28,95 31,95 L42,95 C45,95 46,93 46,90 L48,72 Z"/>
         <path d="M71,72 C72,78 73,84 74,90 C74,93 72,95 69,95 L58,95 C55,95 54,93 54,90 L52,72 Z"/>
       </g>
-      <line x1="50" y1="2" x2="50" y2="97" stroke="rgba(201,168,76,0.5)" stroke-width="0.6" stroke-dasharray="3,3"/>
+      <line x1="50" y1="2" x2="50" y2="97" stroke="rgba(240,5,115,0.5)" stroke-width="0.6" stroke-dasharray="3,3"/>
       <line x1="20" y1="26" x2="80" y2="26" stroke="rgba(255,255,255,0.6)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="13" y="25.5" font-size="3" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Shoulder</text>
+      <text x="13" y="25.5" font-size="3" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Shoulder</text>
       <line x1="20" y1="46" x2="80" y2="46" stroke="rgba(255,255,255,0.6)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="15" y="45.5" font-size="3" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Waist</text>
+      <text x="15" y="45.5" font-size="3" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Waist</text>
       <line x1="20" y1="63" x2="80" y2="63" stroke="rgba(255,255,255,0.6)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="16" y="62.5" font-size="3" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Hip</text>
+      <text x="16" y="62.5" font-size="3" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Hip</text>
     `
   },
   'Full Body Side': {
     icon: '🚶',
     instruction: 'Stand in profile, ear over shoulder over hip over ankle in one vertical line.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.2" fill="rgba(201,168,76,0.12)" stroke-linejoin="round" stroke-linecap="round">
+      <g stroke="#F00573" stroke-width="1.2" fill="rgba(240,5,115,0.12)" stroke-linejoin="round" stroke-linecap="round">
         <ellipse cx="50" cy="10" rx="7" ry="8.5"/>
         <rect x="46" y="18" width="8" height="6" rx="2"/>
         <path d="M38,24 C34,26 32,30 32,36 C32,44 33,50 35,54 C37,58 40,60 44,61 L58,61 C63,59 65,55 65,52 C66,47 65,40 63,34 C61,28 58,24 54,23 Z"/>
         <path d="M35,54 C32,58 31,63 33,68 L55,68 C60,63 62,61 58,61 L44,61 Z"/>
-        <path d="M63,28 C67,30 69,34 69,40 L69,58 C69,61 67,62 65,61 L62,61 L62,34 Z" fill="rgba(201,168,76,0.08)"/>
+        <path d="M63,28 C67,30 69,34 69,40 L69,58 C69,61 67,62 65,61 L62,61 L62,34 Z" fill="rgba(240,5,115,0.08)"/>
         <path d="M33,68 C31,75 30,83 30,90 C30,93 32,95 35,95 L44,95 C47,95 48,93 48,90 L50,68 Z"/>
-        <path d="M50,68 L55,68 C58,75 59,83 59,90 C59,93 57,95 54,95 L47,95 L48,68 Z" fill="rgba(201,168,76,0.08)"/>
+        <path d="M50,68 L55,68 C58,75 59,83 59,90 C59,93 57,95 54,95 L47,95 L48,68 Z" fill="rgba(240,5,115,0.08)"/>
       </g>
-      <line x1="50" y1="2" x2="50" y2="97" stroke="rgba(201,168,76,0.6)" stroke-width="0.7" stroke-dasharray="3,3"/>
-      <text x="52" y="12" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Ear</text>
-      <text x="52" y="27" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Shoulder</text>
-      <text x="52" y="62" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Hip</text>
-      <text x="52" y="88" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Ankle</text>
+      <line x1="50" y1="2" x2="50" y2="97" stroke="rgba(240,5,115,0.6)" stroke-width="0.7" stroke-dasharray="3,3"/>
+      <text x="52" y="12" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Ear</text>
+      <text x="52" y="27" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Shoulder</text>
+      <text x="52" y="62" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Hip</text>
+      <text x="52" y="88" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Ankle</text>
     `
   },
   'Abdomen': {
     icon: '🫃',
     instruction: 'Face camera, shirt raised, arms out to sides. Relax — do not flex.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.3" fill="rgba(201,168,76,0.12)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.3" fill="rgba(240,5,115,0.12)" stroke-linejoin="round">
         <path d="M22,5 C19,9 17,14 17,22 L17,80 C17,88 21,94 28,96 L72,96 C79,94 83,88 83,80 L83,22 C83,14 81,9 78,5 C69,2 60,0 50,0 C40,0 31,2 22,5 Z"/>
       </g>
       <circle cx="50" cy="52" r="2.8" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1"/>
       <line x1="50" y1="49" x2="50" y2="43" stroke="rgba(255,255,255,0.6)" stroke-width="0.6"/>
-      <text x="52" y="42" font-size="3" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Navel</text>
+      <text x="52" y="42" font-size="3" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Navel</text>
       <line x1="10" y1="30" x2="90" y2="30" stroke="rgba(255,255,255,0.55)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="2" y="29.5" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Chest</text>
+      <text x="2" y="29.5" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Chest</text>
       <line x1="10" y1="46" x2="90" y2="46" stroke="rgba(255,255,255,0.55)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="2" y="45.5" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Waist</text>
+      <text x="2" y="45.5" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Waist</text>
       <line x1="10" y1="66" x2="90" y2="66" stroke="rgba(255,255,255,0.55)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="4" y="65.5" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Hip</text>
-      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(201,168,76,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <text x="4" y="65.5" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Hip</text>
+      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(240,5,115,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
     `
   },
   'Flanks / Love Handles': {
     icon: '↔️',
     instruction: 'Hands on head, elbows out. Turn 45° to show both flanks. Relax core.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.3" fill="rgba(201,168,76,0.12)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.3" fill="rgba(240,5,115,0.12)" stroke-linejoin="round">
         <path d="M25,5 C22,9 20,14 20,22 L20,78 C20,88 25,94 33,96 L67,96 C75,94 80,88 80,78 L80,22 C80,14 78,9 75,5 C66,2 58,0 50,0 C42,0 34,2 25,5 Z"/>
       </g>
-      <path d="M14,36 C11,38 10,43 10,50 C10,57 11,62 14,64 L22,62 L22,38 Z" fill="rgba(201,168,76,0.35)" stroke="#C9A84C" stroke-width="1"/>
-      <text x="1" y="52" font-size="3" fill="#C9A84C" font-family="DM Sans,sans-serif">Flank L</text>
-      <path d="M86,36 C89,38 90,43 90,50 C90,57 89,62 86,64 L78,62 L78,38 Z" fill="rgba(201,168,76,0.35)" stroke="#C9A84C" stroke-width="1"/>
-      <text x="80" y="52" font-size="3" fill="#C9A84C" font-family="DM Sans,sans-serif">Flank R</text>
+      <path d="M14,36 C11,38 10,43 10,50 C10,57 11,62 14,64 L22,62 L22,38 Z" fill="rgba(240,5,115,0.35)" stroke="#F00573" stroke-width="1"/>
+      <text x="1" y="52" font-size="3" fill="#F00573" font-family="Montserrat,sans-serif">Flank L</text>
+      <path d="M86,36 C89,38 90,43 90,50 C90,57 89,62 86,64 L78,62 L78,38 Z" fill="rgba(240,5,115,0.35)" stroke="#F00573" stroke-width="1"/>
+      <text x="80" y="52" font-size="3" fill="#F00573" font-family="Montserrat,sans-serif">Flank R</text>
       <line x1="8" y1="48" x2="92" y2="48" stroke="rgba(255,255,255,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(201,168,76,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(240,5,115,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
     `
   },
   'Upper Arms': {
     icon: '💪',
     instruction: 'Extend both arms horizontally at shoulder height, palms facing up.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.2" fill="rgba(201,168,76,0.12)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.2" fill="rgba(240,5,115,0.12)" stroke-linejoin="round">
         <ellipse cx="50" cy="50" rx="13" ry="20"/>
         <path d="M37,40 C28,40 16,42 8,45 C5,46 4,49 4,50 C4,51 5,54 8,55 C16,58 28,60 37,60 Z"/>
         <path d="M63,40 C72,40 84,42 92,45 C95,46 96,49 96,50 C96,51 95,54 92,55 C84,58 72,60 63,60 Z"/>
       </g>
       <line x1="26" y1="35" x2="26" y2="65" stroke="rgba(255,255,255,0.7)" stroke-width="0.6" stroke-dasharray="2,2"/>
-      <text x="19" y="33" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Elbow</text>
+      <text x="19" y="33" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Elbow</text>
       <line x1="74" y1="35" x2="74" y2="65" stroke="rgba(255,255,255,0.7)" stroke-width="0.6" stroke-dasharray="2,2"/>
-      <text x="67" y="33" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="DM Sans,sans-serif">Elbow</text>
+      <text x="67" y="33" font-size="2.8" fill="rgba(255,255,255,0.9)" font-family="Montserrat,sans-serif">Elbow</text>
     `
   },
   'Thighs': {
     icon: '🦵',
     instruction: 'Stand facing camera, feet hip-width apart, hands on hips. Shorts required.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.2" fill="rgba(201,168,76,0.12)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.2" fill="rgba(240,5,115,0.12)" stroke-linejoin="round">
         <path d="M8,5 C6,9 5,14 5,20 L6,78 C6,85 9,91 16,93 L38,93 C45,91 47,85 47,78 L45,20 C44,14 42,9 39,6 Z"/>
         <path d="M55,5 C53,9 52,14 52,20 L53,78 C53,85 56,91 62,93 L86,93 C93,91 96,85 95,78 L95,20 C94,14 91,9 88,6 Z"/>
       </g>
-      <line x1="47" y1="10" x2="53" y2="10" stroke="rgba(201,168,76,0.8)" stroke-width="0.8"/>
+      <line x1="47" y1="10" x2="53" y2="10" stroke="rgba(240,5,115,0.8)" stroke-width="0.8"/>
       <line x1="4" y1="50" x2="96" y2="50" stroke="rgba(255,255,255,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="30" y="49" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Mid-thigh</text>
-      <text x="18" y="12" font-size="3" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Left</text>
-      <text x="68" y="12" font-size="3" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Right</text>
+      <text x="30" y="49" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Mid-thigh</text>
+      <text x="18" y="12" font-size="3" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Left</text>
+      <text x="68" y="12" font-size="3" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Right</text>
     `
   },
   'Back / Bra Roll': {
     icon: '🔙',
     instruction: 'Patient faces away, arms slightly raised. Frame shoulder blades to waist.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.3" fill="rgba(201,168,76,0.12)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.3" fill="rgba(240,5,115,0.12)" stroke-linejoin="round">
         <path d="M22,5 C19,9 17,14 17,22 L17,80 C17,88 21,94 28,96 L72,96 C79,94 83,88 83,80 L83,22 C83,14 81,9 78,5 C69,2 60,0 50,0 C40,0 31,2 22,5 Z"/>
       </g>
-      <rect x="13" y="30" width="74" height="22" rx="3" fill="rgba(201,168,76,0.25)" stroke="#C9A84C" stroke-width="1" stroke-dasharray="3,2"/>
-      <text x="28" y="43" font-size="3.5" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">Bra Roll Zone</text>
+      <rect x="13" y="30" width="74" height="22" rx="3" fill="rgba(240,5,115,0.25)" stroke="#F00573" stroke-width="1" stroke-dasharray="3,2"/>
+      <text x="28" y="43" font-size="3.5" fill="#F00573" font-family="Montserrat,sans-serif" font-weight="500">Bra Roll Zone</text>
       <line x1="50" y1="5" x2="50" y2="95" stroke="rgba(255,255,255,0.55)" stroke-width="0.5" stroke-dasharray="2,3"/>
       <line x1="12" y1="30" x2="88" y2="30" stroke="rgba(255,255,255,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
       <line x1="12" y1="62" x2="88" y2="62" stroke="rgba(255,255,255,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="2" y="61" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="DM Sans,sans-serif">Waist</text>
+      <text x="2" y="61" font-size="2.8" fill="rgba(255,255,255,0.8)" font-family="Montserrat,sans-serif">Waist</text>
     `
   },
   'Chin / Neck': {
     icon: '😶',
     instruction: 'Seated, head level, neutral expression. Frame chin to collarbone, no tilt.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.3" fill="rgba(201,168,76,0.12)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.3" fill="rgba(240,5,115,0.12)" stroke-linejoin="round">
         <path d="M50,4 C35,4 25,14 25,28 C25,38 30,46 38,51 C39,56 39,60 37,64 L63,64 C61,60 61,56 62,51 C70,46 75,38 75,28 C75,14 65,4 50,4 Z"/>
         <path d="M37,64 C34,68 33,73 33,77 L67,77 C67,73 66,68 63,64 Z"/>
-        <path d="M22,77 C18,79 14,82 12,86 L88,86 C86,82 82,79 78,77 Z" fill="rgba(201,168,76,0.07)"/>
+        <path d="M22,77 C18,79 14,82 12,86 L88,86 C86,82 82,79 78,77 Z" fill="rgba(240,5,115,0.07)"/>
       </g>
-      <ellipse cx="50" cy="60" rx="17" ry="7" fill="rgba(201,168,76,0.3)" stroke="#C9A84C" stroke-width="1" stroke-dasharray="2.5,1.5"/>
-      <text x="34" y="74" font-size="3.2" fill="#C9A84C" font-family="DM Sans,sans-serif" font-weight="500">Treatment zone</text>
+      <ellipse cx="50" cy="60" rx="17" ry="7" fill="rgba(240,5,115,0.3)" stroke="#F00573" stroke-width="1" stroke-dasharray="2.5,1.5"/>
+      <text x="34" y="74" font-size="3.2" fill="#F00573" font-family="Montserrat,sans-serif" font-weight="500">Treatment zone</text>
       <line x1="8" y1="26" x2="92" y2="26" stroke="rgba(255,255,255,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="9" y="25" font-size="2.8" fill="rgba(255,255,255,0.85)" font-family="DM Sans,sans-serif">Eye level</text>
+      <text x="9" y="25" font-size="2.8" fill="rgba(255,255,255,0.85)" font-family="Montserrat,sans-serif">Eye level</text>
       <line x1="8" y1="56" x2="92" y2="56" stroke="rgba(255,255,255,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="10" y="55" font-size="2.8" fill="rgba(255,255,255,0.85)" font-family="DM Sans,sans-serif">Chin</text>
-      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(201,168,76,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <text x="10" y="55" font-size="2.8" fill="rgba(255,255,255,0.85)" font-family="Montserrat,sans-serif">Chin</text>
+      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(240,5,115,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
     `
   },
   'Chest / Breast': {
     icon: '🫁',
     instruction: 'Stand facing camera, arms slightly raised. Frame collarbone to lower ribcage.',
     silhouette: `
-      <g stroke="#C9A84C" stroke-width="1.3" fill="rgba(201,168,76,0.1)" stroke-linejoin="round">
+      <g stroke="#F00573" stroke-width="1.3" fill="rgba(240,5,115,0.1)" stroke-linejoin="round">
         <path d="M22,5 C19,9 17,14 17,22 L17,80 C17,88 21,94 28,96 L72,96 C79,94 83,88 83,80 L83,22 C83,14 81,9 78,5 C69,2 60,0 50,0 C40,0 31,2 22,5 Z"/>
       </g>
-      <ellipse cx="35" cy="45" rx="16" ry="18" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1"/>
-      <ellipse cx="65" cy="45" rx="16" ry="18" fill="rgba(201,168,76,0.15)" stroke="#C9A84C" stroke-width="1"/>
-      <line x1="12" y1="62" x2="88" y2="62" stroke="#C9A84C" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.8"/>
-      <text x="22" y="61" font-size="2.8" fill="#C9A84C" font-family="DM Sans,sans-serif">Inframammary fold</text>
+      <ellipse cx="35" cy="45" rx="16" ry="18" fill="rgba(240,5,115,0.15)" stroke="#F00573" stroke-width="1"/>
+      <ellipse cx="65" cy="45" rx="16" ry="18" fill="rgba(240,5,115,0.15)" stroke="#F00573" stroke-width="1"/>
+      <line x1="12" y1="62" x2="88" y2="62" stroke="#F00573" stroke-width="0.7" stroke-dasharray="2,2" opacity="0.8"/>
+      <text x="22" y="61" font-size="2.8" fill="#F00573" font-family="Montserrat,sans-serif">Inframammary fold</text>
       <line x1="12" y1="18" x2="88" y2="18" stroke="rgba(255,255,255,0.5)" stroke-width="0.5" stroke-dasharray="2,3"/>
-      <text x="22" y="17" font-size="2.8" fill="rgba(255,255,255,0.85)" font-family="DM Sans,sans-serif">Collarbone</text>
-      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(201,168,76,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
+      <text x="22" y="17" font-size="2.8" fill="rgba(255,255,255,0.85)" font-family="Montserrat,sans-serif">Collarbone</text>
+      <line x1="50" y1="2" x2="50" y2="98" stroke="rgba(240,5,115,0.45)" stroke-width="0.5" stroke-dasharray="2,3"/>
     `
+  },
+  'Face Frontal': {
+    icon: '🙂',
+    instruction: 'Seated, head level, neutral expression, facing camera directly. Frame hairline to chin.',
+  },
+  'Face Oblique Left': {
+    icon: '🙂',
+    instruction: 'Seated, head turned 45° to the right so the left side faces the camera. Neutral expression.',
+  },
+  'Face Oblique Right': {
+    icon: '🙂',
+    instruction: 'Seated, head turned 45° to the left so the right side faces the camera. Neutral expression.',
+  },
+  'Face Profile Left': {
+    icon: '👤',
+    instruction: 'Seated, head turned 90° to the right showing the left profile. Neutral expression.',
+  },
+  'Face Profile Right': {
+    icon: '👤',
+    instruction: 'Seated, head turned 90° to the left showing the right profile. Neutral expression.',
   }
 };
 
@@ -1533,6 +2189,563 @@ function startSession() {
 }
 
 // ══════════════════════════════════════════════════
+//  CAMERA GUIDE (canvas)
+// ══════════════════════════════════════════════════
+let guideRAF = null;
+
+function drawGuide() {
+  const canvas = document.getElementById('cam-guide-canvas');
+  const overlay = document.getElementById('cam-overlay');
+  if (!canvas || !overlay || overlay.style.display === 'none') return;
+
+  // Match canvas size to overlay
+  const w = overlay.clientWidth;
+  const h = overlay.clientHeight;
+  if (canvas.width !== w) canvas.width = w;
+  if (canvas.height !== h) canvas.height = h;
+
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = '#F00573';
+  ctx.lineWidth = 3;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  const cx = w / 2;
+  const cy = h / 2;
+  const zone = activeZone;
+
+  const FACE_ZONES = ['Chin / Neck', 'Face Frontal', 'Face Oblique Left', 'Face Oblique Right', 'Face Profile Left', 'Face Profile Right'];
+  const isFace = FACE_ZONES.includes(zone);
+
+  if (isFace) {
+    // ── Face zone: gold ellipse for head ──
+    drawFaceGuide(ctx, cx, cy, w, h, zone);
+  } else {
+    // ── Body zone: gold outline of body part ──
+    drawBodyGuide(ctx, cx, cy, w, h, zone);
+  }
+}
+
+function drawFaceGuide(ctx, cx, cy, w, h, zone) {
+  const isProfile = zone.includes('Profile');
+  const isOblique = zone.includes('Oblique');
+  const isLeft = zone.includes('Left');
+
+  // Oval top at 10% of canvas height, filling ~60% of canvas height
+  const headRy = h * 0.30;
+  const headRx = w * 0.22;
+  const headCy = h * 0.10 + headRy; // top of oval at h*0.10
+
+  // Narrower for profile/oblique, slight horizontal offset
+  const rxMult = isProfile ? 0.65 : isOblique ? 0.85 : 1.0;
+  const offsetX = isProfile ? (isLeft ? -w * 0.04 : w * 0.04) : isOblique ? (isLeft ? -w * 0.02 : w * 0.02) : 0;
+
+  // Head ellipse
+  ctx.beginPath();
+  ctx.ellipse(cx + offsetX, headCy, headRx * rxMult, headRy, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Neck
+  const neckW = headRx * 0.45 * rxMult;
+  const neckTop = headCy + headRy;
+  const neckBot = neckTop + h * 0.08;
+  ctx.beginPath();
+  ctx.moveTo(cx + offsetX - neckW, neckTop);
+  ctx.lineTo(cx + offsetX - neckW * 1.15, neckBot);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + offsetX + neckW, neckTop);
+  ctx.lineTo(cx + offsetX + neckW * 1.15, neckBot);
+  ctx.stroke();
+
+  // Shoulders — short curves that stay within the canvas
+  const shoulderW = w * 0.22;
+  ctx.beginPath();
+  ctx.moveTo(cx + offsetX - neckW * 1.15, neckBot);
+  ctx.quadraticCurveTo(cx + offsetX - shoulderW * 0.5, neckBot + h * 0.015, cx + offsetX - shoulderW, neckBot + h * 0.04);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + offsetX + neckW * 1.15, neckBot);
+  ctx.quadraticCurveTo(cx + offsetX + shoulderW * 0.5, neckBot + h * 0.015, cx + offsetX + shoulderW, neckBot + h * 0.04);
+  ctx.stroke();
+
+  // Horizontal guide lines: Eye, Nose, Lips, Chin — contained within the oval
+  const eyeY = headCy - headRy * 0.18;
+  const noseY = headCy + headRy * 0.22;
+  const lipsY = headCy + headRy * 0.45;
+  const chinY = headCy + headRy * 0.82;
+  const lineLeft = cx + offsetX - headRx * rxMult * 0.85;
+  const lineRight = cx + offsetX + headRx * rxMult * 0.85;
+  const labelFont = `${Math.max(11, w * 0.022)}px 'DM Sans', sans-serif`;
+
+  ctx.save();
+  ctx.setLineDash([5, 5]);
+  ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+  ctx.lineWidth = 1;
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.font = labelFont;
+  ctx.textAlign = 'left';
+
+  const guides = [
+    { y: eyeY, label: 'Eye level' },
+    { y: noseY, label: 'Nose' },
+    { y: lipsY, label: 'Lips' },
+    { y: chinY, label: 'Chin' }
+  ];
+
+  for (const g of guides) {
+    ctx.beginPath();
+    ctx.moveTo(lineLeft, g.y);
+    ctx.lineTo(lineRight, g.y);
+    ctx.stroke();
+    ctx.fillText(g.label, lineRight + 8, g.y + 4);
+  }
+  ctx.restore();
+
+  // Chin / Neck treatment zone (dashed ellipse)
+  if (zone === 'Chin / Neck') {
+    ctx.save();
+    ctx.setLineDash([8, 6]);
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.ellipse(cx + offsetX, neckTop - h * 0.01, headRx * rxMult * 0.6, h * 0.055, 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Center alignment line
+  ctx.save();
+  ctx.setLineDash([6, 8]);
+  ctx.strokeStyle = 'rgba(240,5,115,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx + offsetX, h * 0.05);
+  ctx.lineTo(cx + offsetX, neckBot + h * 0.06);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawBodyGuide(ctx, cx, cy, w, h, zone) {
+  if (zone === 'Full Body Front') {
+    drawFullBodyFront(ctx, cx, cy, w, h);
+  } else if (zone === 'Full Body Side') {
+    drawFullBodySide(ctx, cx, cy, w, h);
+  } else if (zone === 'Abdomen') {
+    drawAbdomen(ctx, cx, cy, w, h);
+  } else if (zone === 'Flanks / Love Handles') {
+    drawFlanks(ctx, cx, cy, w, h);
+  } else if (zone === 'Upper Arms') {
+    drawUpperArms(ctx, cx, cy, w, h);
+  } else if (zone === 'Thighs') {
+    drawThighs(ctx, cx, cy, w, h);
+  } else if (zone === 'Back / Bra Roll') {
+    drawBack(ctx, cx, cy, w, h);
+  } else if (zone === 'Chest / Breast') {
+    drawChest(ctx, cx, cy, w, h);
+  }
+
+  // Center alignment line (all body zones)
+  ctx.save();
+  ctx.setLineDash([6, 8]);
+  ctx.strokeStyle = 'rgba(240,5,115,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx, h * 0.03);
+  ctx.lineTo(cx, h * 0.97);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawFullBodyFront(ctx, cx, cy, w, h) {
+  // Fill 80% of canvas height, centered horizontally
+  const bodyH = h * 0.80;
+  const top = h * 0.10;
+
+  // Head
+  const headRx = bodyH * 0.045;
+  const headRy = bodyH * 0.055;
+  const headCy = top + bodyH * 0.055;
+  ctx.beginPath();
+  ctx.ellipse(cx, headCy, headRx, headRy, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Neck
+  const neckW = headRx * 0.55;
+  const neckTop = headCy + headRy;
+  const neckBot = neckTop + bodyH * 0.03;
+
+  // Torso — widths relative to bodyH so proportions stay consistent
+  const shoulderW = bodyH * 0.13;
+  const shoulderY = neckBot;
+  const waistW = bodyH * 0.085;
+  const waistY = top + bodyH * 0.42;
+  const hipW = bodyH * 0.11;
+  const hipY = top + bodyH * 0.52;
+
+  ctx.beginPath();
+  ctx.moveTo(cx - neckW, neckTop);
+  ctx.lineTo(cx - shoulderW, shoulderY);
+  ctx.lineTo(cx - waistW, waistY);
+  ctx.lineTo(cx - hipW, hipY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + neckW, neckTop);
+  ctx.lineTo(cx + shoulderW, shoulderY);
+  ctx.lineTo(cx + waistW, waistY);
+  ctx.lineTo(cx + hipW, hipY);
+  ctx.stroke();
+
+  // Arms
+  const armOutX = bodyH * 0.17;
+  const elbowY = top + bodyH * 0.36;
+  const handY = top + bodyH * 0.52;
+  ctx.beginPath();
+  ctx.moveTo(cx - shoulderW, shoulderY);
+  ctx.quadraticCurveTo(cx - armOutX, elbowY, cx - armOutX * 0.9, handY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + shoulderW, shoulderY);
+  ctx.quadraticCurveTo(cx + armOutX, elbowY, cx + armOutX * 0.9, handY);
+  ctx.stroke();
+
+  // Legs
+  const kneeY = top + bodyH * 0.72;
+  const ankleY = top + bodyH * 0.93;
+  const footW = bodyH * 0.03;
+  const legSpread = bodyH * 0.055;
+  ctx.beginPath();
+  ctx.moveTo(cx - hipW, hipY);
+  ctx.lineTo(cx - legSpread, kneeY);
+  ctx.lineTo(cx - legSpread * 0.9, ankleY);
+  ctx.lineTo(cx - legSpread - footW, ankleY + bodyH * 0.02);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + hipW, hipY);
+  ctx.lineTo(cx + legSpread, kneeY);
+  ctx.lineTo(cx + legSpread * 0.9, ankleY);
+  ctx.lineTo(cx + legSpread + footW, ankleY + bodyH * 0.02);
+  ctx.stroke();
+
+  // Reference lines
+  drawRefLine(ctx, w, shoulderY, 'Shoulder');
+  drawRefLine(ctx, w, waistY, 'Waist');
+  drawRefLine(ctx, w, hipY, 'Hip');
+}
+
+function drawFullBodySide(ctx, cx, cy, w, h) {
+  const s = Math.min(w, h);
+  const top = h * 0.04;
+  const bodyH = h * 0.92;
+
+  // Head
+  const headRx = s * 0.05;
+  const headRy = s * 0.065;
+  const headCy = top + bodyH * 0.06;
+  ctx.beginPath();
+  ctx.ellipse(cx, headCy, headRx, headRy, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Side body profile — single curved line
+  const neckTop = headCy + headRy;
+  const shoulderY = neckTop + bodyH * 0.02;
+  const waistY = top + bodyH * 0.4;
+  const hipY = top + bodyH * 0.5;
+  const kneeY = top + bodyH * 0.72;
+  const ankleY = top + bodyH * 0.93;
+  const torsoDepth = s * 0.08;
+
+  // Front line
+  ctx.beginPath();
+  ctx.moveTo(cx - torsoDepth * 0.3, neckTop);
+  ctx.quadraticCurveTo(cx + torsoDepth, shoulderY + bodyH * 0.08, cx + torsoDepth * 0.6, waistY);
+  ctx.quadraticCurveTo(cx + torsoDepth * 0.9, hipY - bodyH * 0.04, cx + torsoDepth * 0.5, hipY);
+  ctx.lineTo(cx + torsoDepth * 0.3, kneeY);
+  ctx.lineTo(cx + torsoDepth * 0.25, ankleY);
+  ctx.stroke();
+
+  // Back line
+  ctx.beginPath();
+  ctx.moveTo(cx + torsoDepth * 0.3, neckTop);
+  ctx.quadraticCurveTo(cx - torsoDepth * 0.8, shoulderY + bodyH * 0.1, cx - torsoDepth * 0.5, waistY);
+  ctx.quadraticCurveTo(cx - torsoDepth * 1.0, hipY - bodyH * 0.03, cx - torsoDepth * 0.4, hipY);
+  ctx.lineTo(cx - torsoDepth * 0.2, kneeY);
+  ctx.lineTo(cx - torsoDepth * 0.15, ankleY);
+  ctx.stroke();
+
+  // Labels
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.font = `${Math.max(11, w * 0.022)}px 'DM Sans', sans-serif`;
+  ctx.textAlign = 'left';
+  const lx = cx + torsoDepth + 14;
+  ctx.fillText('Ear', lx, headCy);
+  ctx.fillText('Shoulder', lx, shoulderY + 4);
+  ctx.fillText('Hip', lx, hipY + 4);
+  ctx.fillText('Ankle', lx, ankleY);
+}
+
+function drawAbdomen(ctx, cx, cy, w, h) {
+  const rw = w * 0.32;
+  const rh = h * 0.42;
+  const ry = cy;
+
+  // Torso outline
+  ctx.beginPath();
+  ctx.moveTo(cx - rw, ry - rh);
+  ctx.quadraticCurveTo(cx - rw * 1.05, ry, cx - rw, ry + rh);
+  ctx.lineTo(cx + rw, ry + rh);
+  ctx.quadraticCurveTo(cx + rw * 1.05, ry, cx + rw, ry - rh);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Navel
+  ctx.beginPath();
+  ctx.arc(cx, cy + h * 0.03, w * 0.015, 0, Math.PI * 2);
+  ctx.stroke();
+
+  drawRefLine(ctx, w, cy - rh * 0.45, 'Chest');
+  drawRefLine(ctx, w, cy - rh * 0.05, 'Waist');
+  drawRefLine(ctx, w, cy + rh * 0.5, 'Hip');
+}
+
+function drawFlanks(ctx, cx, cy, w, h) {
+  const rw = w * 0.28;
+  const rh = h * 0.42;
+
+  // Torso outline
+  ctx.beginPath();
+  ctx.moveTo(cx - rw, cy - rh);
+  ctx.quadraticCurveTo(cx - rw * 1.05, cy, cx - rw, cy + rh);
+  ctx.lineTo(cx + rw, cy + rh);
+  ctx.quadraticCurveTo(cx + rw * 1.05, cy, cx + rw, cy - rh);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Flank zones (highlighted bulges)
+  ctx.save();
+  ctx.fillStyle = 'rgba(240,5,115,0.2)';
+  const flankW = w * 0.06;
+  const flankH = h * 0.15;
+
+  // Left flank
+  ctx.beginPath();
+  ctx.ellipse(cx - rw - flankW * 0.3, cy, flankW, flankH, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+
+  // Right flank
+  ctx.beginPath();
+  ctx.ellipse(cx + rw + flankW * 0.3, cy, flankW, flankH, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  // Labels
+  ctx.fillStyle = '#F00573';
+  ctx.font = `${Math.max(11, w * 0.022)}px 'DM Sans', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('L Flank', cx - rw - flankW, cy + flankH + 16);
+  ctx.fillText('R Flank', cx + rw + flankW, cy + flankH + 16);
+}
+
+function drawUpperArms(ctx, cx, cy, w, h) {
+  // Torso center
+  const torsoRx = w * 0.1;
+  const torsoRy = h * 0.18;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, torsoRx, torsoRy, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Left arm
+  const armLen = w * 0.28;
+  const armW = h * 0.05;
+  ctx.beginPath();
+  ctx.moveTo(cx - torsoRx, cy - armW);
+  ctx.lineTo(cx - torsoRx - armLen, cy - armW * 0.8);
+  ctx.lineTo(cx - torsoRx - armLen, cy + armW * 0.8);
+  ctx.lineTo(cx - torsoRx, cy + armW);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Right arm
+  ctx.beginPath();
+  ctx.moveTo(cx + torsoRx, cy - armW);
+  ctx.lineTo(cx + torsoRx + armLen, cy - armW * 0.8);
+  ctx.lineTo(cx + torsoRx + armLen, cy + armW * 0.8);
+  ctx.lineTo(cx + torsoRx, cy + armW);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Elbow lines
+  const elbowLx = cx - torsoRx - armLen * 0.55;
+  const elbowRx = cx + torsoRx + armLen * 0.55;
+  ctx.save();
+  ctx.setLineDash([4, 4]);
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(elbowLx, cy - armW * 1.6);
+  ctx.lineTo(elbowLx, cy + armW * 1.6);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(elbowRx, cy - armW * 1.6);
+  ctx.lineTo(elbowRx, cy + armW * 1.6);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.font = `${Math.max(10, w * 0.02)}px 'DM Sans', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Elbow', elbowLx, cy - armW * 1.8);
+  ctx.fillText('Elbow', elbowRx, cy - armW * 1.8);
+}
+
+function drawThighs(ctx, cx, cy, w, h) {
+  const thighW = w * 0.15;
+  const thighH = h * 0.4;
+  const gap = w * 0.03;
+  const topY = cy - thighH;
+  const botY = cy + thighH;
+
+  // Left thigh
+  ctx.beginPath();
+  ctx.moveTo(cx - gap - thighW, topY);
+  ctx.quadraticCurveTo(cx - gap - thighW * 1.15, cy, cx - gap - thighW * 0.85, botY);
+  ctx.lineTo(cx - gap, botY);
+  ctx.quadraticCurveTo(cx - gap * 0.5, cy, cx - gap, topY);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Right thigh
+  ctx.beginPath();
+  ctx.moveTo(cx + gap, topY);
+  ctx.quadraticCurveTo(cx + gap * 0.5, cy, cx + gap, botY);
+  ctx.lineTo(cx + gap + thighW * 0.85, botY);
+  ctx.quadraticCurveTo(cx + gap + thighW * 1.15, cy, cx + gap + thighW, topY);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Mid-thigh line
+  drawRefLine(ctx, w, cy, 'Mid-thigh');
+
+  ctx.fillStyle = 'rgba(255,255,255,0.85)';
+  ctx.font = `${Math.max(11, w * 0.022)}px 'DM Sans', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Left', cx - gap - thighW * 0.5, topY - 10);
+  ctx.fillText('Right', cx + gap + thighW * 0.5, topY - 10);
+}
+
+function drawBack(ctx, cx, cy, w, h) {
+  const rw = w * 0.32;
+  const rh = h * 0.42;
+
+  // Back torso outline
+  ctx.beginPath();
+  ctx.moveTo(cx - rw, cy - rh);
+  ctx.quadraticCurveTo(cx - rw * 1.05, cy, cx - rw, cy + rh);
+  ctx.lineTo(cx + rw, cy + rh);
+  ctx.quadraticCurveTo(cx + rw * 1.05, cy, cx + rw, cy - rh);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Bra roll zone (dashed rectangle)
+  const zoneTop = cy - rh * 0.35;
+  const zoneBot = cy + rh * 0.05;
+  ctx.save();
+  ctx.setLineDash([8, 5]);
+  ctx.lineWidth = 2;
+  ctx.fillStyle = 'rgba(240,5,115,0.15)';
+  ctx.beginPath();
+  ctx.rect(cx - rw * 0.9, zoneTop, rw * 1.8, zoneBot - zoneTop);
+  ctx.fill();
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.fillStyle = '#F00573';
+  ctx.font = `bold ${Math.max(12, w * 0.024)}px 'DM Sans', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Bra Roll Zone', cx, (zoneTop + zoneBot) / 2 + 5);
+
+  drawRefLine(ctx, w, zoneTop, '');
+  drawRefLine(ctx, w, cy + rh * 0.35, 'Waist');
+}
+
+function drawChest(ctx, cx, cy, w, h) {
+  const rw = w * 0.32;
+  const rh = h * 0.42;
+
+  // Torso outline
+  ctx.beginPath();
+  ctx.moveTo(cx - rw, cy - rh);
+  ctx.quadraticCurveTo(cx - rw * 1.05, cy, cx - rw, cy + rh);
+  ctx.lineTo(cx + rw, cy + rh);
+  ctx.quadraticCurveTo(cx + rw * 1.05, cy, cx + rw, cy - rh);
+  ctx.closePath();
+  ctx.stroke();
+
+  // Breast outlines
+  const breastRx = rw * 0.42;
+  const breastRy = rh * 0.36;
+  const breastY = cy - rh * 0.08;
+  ctx.beginPath();
+  ctx.ellipse(cx - rw * 0.32, breastY, breastRx, breastRy, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.ellipse(cx + rw * 0.32, breastY, breastRx, breastRy, 0, 0, Math.PI * 2);
+  ctx.stroke();
+
+  // Inframammary fold line
+  const foldY = breastY + breastRy;
+  ctx.save();
+  ctx.setLineDash([5, 4]);
+  ctx.strokeStyle = '#F00573';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(cx - rw * 0.85, foldY);
+  ctx.lineTo(cx + rw * 0.85, foldY);
+  ctx.stroke();
+  ctx.restore();
+
+  ctx.fillStyle = '#F00573';
+  ctx.font = `${Math.max(10, w * 0.02)}px 'DM Sans', sans-serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('Inframammary fold', cx, foldY + 16);
+
+  drawRefLine(ctx, w, cy - rh * 0.7, 'Collarbone');
+}
+
+function drawRefLine(ctx, w, y, label) {
+  ctx.save();
+  ctx.setLineDash([4, 6]);
+  ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(w * 0.06, y);
+  ctx.lineTo(w * 0.94, y);
+  ctx.stroke();
+  ctx.restore();
+  if (label) {
+    ctx.fillStyle = 'rgba(255,255,255,0.8)';
+    ctx.font = `${Math.max(10, w * 0.02)}px 'DM Sans', sans-serif`;
+    ctx.textAlign = 'left';
+    ctx.fillText(label, w * 0.07, y - 5);
+  }
+}
+
+function startGuideLoop() {
+  stopGuideLoop();
+  function loop() {
+    drawGuide();
+    guideRAF = requestAnimationFrame(loop);
+  }
+  guideRAF = requestAnimationFrame(loop);
+}
+
+function stopGuideLoop() {
+  if (guideRAF) { cancelAnimationFrame(guideRAF); guideRAF = null; }
+}
+
+// ══════════════════════════════════════════════════
 //  CAMERA
 // ══════════════════════════════════════════════════
 async function openCamera(phase) {
@@ -1555,9 +2768,8 @@ async function openCamera(phase) {
   document.getElementById('cam-sub').textContent = 'Align patient to the guide outline';
   document.getElementById('cam-instruction').textContent = ZONES[activeZone]?.instruction || 'Position patient within the guide.';
 
-  // Draw guide SVG
-  const guideEl = document.getElementById('cam-guide');
-  guideEl.innerHTML = ZONES[activeZone]?.guide || '';
+  // Start canvas guide loop
+  startGuideLoop();
 
   try {
     camStream = await navigator.mediaDevices.getUserMedia({
@@ -1575,6 +2787,7 @@ async function openCamera(phase) {
 }
 
 function stopCamera() {
+  stopGuideLoop();
   if (camStream) { camStream.getTracks().forEach(t => t.stop()); camStream = null; }
   document.getElementById('cam-overlay').style.display = 'none';
   document.body.style.overflow = 'hidden';
@@ -1602,11 +2815,11 @@ function capturePhoto() {
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = capturePhase === 'before' ? '#1a1a2e' : '#0d1b2a';
     ctx.fillRect(0, 0, 640, 960);
-    ctx.strokeStyle = 'rgba(201,168,76,0.6)';
+    ctx.strokeStyle = 'rgba(240,5,115,0.6)';
     ctx.lineWidth = 2;
     ctx.setLineDash([8, 8]);
     ctx.strokeRect(80, 60, 480, 840);
-    ctx.fillStyle = 'rgba(201,168,76,0.7)';
+    ctx.fillStyle = 'rgba(240,5,115,0.7)';
     ctx.font = 'bold 28px DM Sans, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(capturePhase === 'before' ? 'BEFORE' : 'AFTER', 320, 490);

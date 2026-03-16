@@ -31,6 +31,7 @@
       <div class="tab active" id="tab-all" onclick="showTab('all')">All Inventory</div>
       <div class="tab" id="tab-injectables" onclick="showTab('injectables')">Injectables</div>
       <div class="tab" id="tab-supplies" onclick="showTab('supplies')">Supplies</div>
+      <div class="tab" id="tab-retail" onclick="showTab('retail')">Retail Products</div>
       <div class="tab" id="tab-alerts" onclick="showTab('alerts')">Alerts <span id="alert-count" class="nbadge" style="position:relative;top:0;margin-left:4px;"></span></div>
     </div>
 
@@ -45,6 +46,11 @@
     </div>
     <div id="view-supplies" style="display:none;">
       <div class="panel" id="inv-table-supplies"></div>
+    </div>
+    <div id="view-retail" style="display:none;">
+      <div class="stats-grid" id="retail-stats"></div>
+      <div class="panel" id="retail-table"></div>
+      <div id="retail-sales-toast" style="position:fixed;bottom:24px;right:24px;background:#1a1418;color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;z-index:999;display:none;box-shadow:0 4px 20px rgba(0,0,0,.2);"></div>
     </div>
     <div id="view-alerts" style="display:none;">
       <div class="panel" id="inv-alerts-panel"></div>
@@ -186,13 +192,16 @@ function renderAlerts(){
 }
 
 function showTab(t){
-  ['all','injectables','supplies','alerts'].forEach(v=>{
-    document.getElementById('view-'+v).style.display=v===t?'block':'none';
-    document.getElementById('tab-'+v).classList.toggle('active',v===t);
+  ['all','injectables','supplies','retail','alerts'].forEach(v=>{
+    const el=document.getElementById('view-'+v);if(el)el.style.display=v===t?'block':'none';
+    const tab=document.getElementById('tab-'+v);if(tab)tab.classList.toggle('active',v===t);
   });
+  // Show medical stats for medical tabs, hide for retail
+  document.getElementById('inv-stats').style.display=(t==='retail')?'none':'';
   if(t==='all') renderInventory('all');
   if(t==='injectables') renderInventory('injectables');
   if(t==='supplies') renderInventory('supplies');
+  if(t==='retail') renderRetail();
   if(t==='alerts') renderAlerts();
 }
 
@@ -261,7 +270,89 @@ function deleteItem(){
   closeInvModal();renderStats();renderInventory('all');
 }
 
+// ── RETAIL PRODUCTS ──────────────────────────────────────────────────
+const KR='hoc_retail';
+const KRS='hoc_retail_sales';
+function seedRetail(){
+  if(HOC.load(KR).length)return;
+  HOC.save(KR,[
+    {id:'r1',name:'SkinMedica TNS Serum',retail:280,cost:140,qty:8,reorder:3,unit:'bottle'},
+    {id:'r2',name:'Revision Skincare Brightening Serum',retail:160,cost:80,qty:12,reorder:4,unit:'bottle'},
+    {id:'r3',name:'Elta MD UV Clear Sunscreen',retail:40,cost:18,qty:24,reorder:6,unit:'tube'},
+    {id:'r4',name:'ZO Skin Health Exfoliating Polish',retail:98,cost:45,qty:6,reorder:3,unit:'jar'},
+    {id:'r5',name:'Hempvana Pain Cream',retail:35,cost:15,qty:15,reorder:5,unit:'tube'},
+    {id:'r6',name:'Haus of Confidence Gift Card — $100',retail:100,cost:0,qty:999,reorder:0,unit:'card',isGiftCard:true},
+    {id:'r7',name:'Haus of Confidence Gift Card — $250',retail:250,cost:0,qty:999,reorder:0,unit:'card',isGiftCard:true},
+    {id:'r8',name:'Haus of Confidence Gift Card — $500',retail:500,cost:0,qty:999,reorder:0,unit:'card',isGiftCard:true},
+  ]);
+}
+seedRetail();
+
+function renderRetail(){
+  const products=HOC.load(KR);
+  const sales=HOC.load(KRS);
+
+  // Stats
+  const physical=products.filter(p=>!p.isGiftCard);
+  const totalCost=physical.reduce((s,p)=>s+p.cost*p.qty,0);
+  const totalRetail=physical.reduce((s,p)=>s+p.retail*p.qty,0);
+  const potentialProfit=totalRetail-totalCost;
+  const totalSalesRev=sales.reduce((s,x)=>s+x.retail,0);
+  const lowStock=physical.filter(p=>p.qty<=p.reorder&&p.qty>0).length;
+
+  document.getElementById('retail-stats').innerHTML=`
+    <div class="stat-card"><div class="stat-lbl">Inventory at Cost</div><div class="stat-val">${HOC.fa(Math.round(totalCost))}</div><div class="stat-hint">${physical.length} products</div></div>
+    <div class="stat-card"><div class="stat-lbl">Inventory at Retail</div><div class="stat-val">${HOC.fa(Math.round(totalRetail))}</div><div class="stat-hint">shelf value</div></div>
+    <div class="stat-card"><div class="stat-lbl">Potential Profit</div><div class="stat-val" style="color:var(--green);">${HOC.fa(Math.round(potentialProfit))}</div><div class="stat-hint">${totalRetail?Math.round(potentialProfit/totalRetail*100)+'% margin':'—'}</div></div>
+    <div class="stat-card" style="${lowStock?'border-color:var(--rbd);background:var(--rbg);':''}"><div class="stat-lbl">Retail Sales</div><div class="stat-val">${HOC.fa(Math.round(totalSalesRev))}</div><div class="stat-hint">${sales.length} items sold</div></div>
+  `;
+
+  // Table
+  const el=document.getElementById('retail-table');
+  el.innerHTML=`<table class="dt"><thead><tr><th>Product</th><th>Retail Price</th><th>Cost</th><th>Margin</th><th>In Stock</th><th>Status</th><th></th></tr></thead><tbody>`+
+  products.map(p=>{
+    const margin=p.retail>0&&p.cost>0?Math.round((p.retail-p.cost)/p.retail*100):p.isGiftCard?100:0;
+    const isLow=!p.isGiftCard&&p.qty<=p.reorder&&p.qty>0;
+    const isOut=!p.isGiftCard&&p.qty===0;
+    let statusHtml='<span class="st st-ok">In Stock</span>';
+    if(isOut) statusHtml='<span class="st" style="background:var(--rbg);color:var(--red);border:1px solid var(--rbd);">Out of Stock</span>';
+    else if(isLow) statusHtml='<span class="st st-pend">Low Stock</span>';
+    if(p.isGiftCard) statusHtml='<span class="st" style="background:var(--pbg);color:var(--purple);border:1px solid var(--pbd);">Gift Card</span>';
+    return `<tr class="${isLow?'inv-warn':isOut?'inv-low':''}">
+      <td style="font-weight:500;font-size:12.5px;">${p.name}</td>
+      <td style="font-weight:500;">${HOC.fa(p.retail)}</td>
+      <td style="color:var(--t3);">${p.cost?HOC.fa(p.cost):'—'}</td>
+      <td><span style="color:${margin>=50?'var(--green)':margin>=30?'var(--amber)':'var(--t3)'};font-weight:500;">${margin}%</span></td>
+      <td>${p.isGiftCard?'∞':p.qty+' '+p.unit+'s'}${isLow?'<div style="font-size:10px;color:var(--red);">⚠ Reorder at '+p.reorder+'</div>':''}</td>
+      <td>${statusHtml}</td>
+      <td><button class="btn-sm" style="font-size:11px;padding:5px 12px;" onclick="retailSale('${p.id}')"${isOut?' disabled style="opacity:.4;font-size:11px;padding:5px 12px;"':''}>Sell</button></td>
+    </tr>`;
+  }).join('')+'</tbody></table>';
+}
+
+function retailSale(id){
+  const products=HOC.load(KR);
+  const p=products.find(x=>x.id===id);if(!p)return;
+  // Deduct qty (unless gift card)
+  if(!p.isGiftCard){
+    if(p.qty<=0){alert('Out of stock!');return;}
+    p.qty--;
+    HOC.save(KR,products);
+  }
+  // Record sale
+  const sales=HOC.load(KRS);
+  sales.push({id:HOC.uid(),productId:id,name:p.name,retail:p.retail,cost:p.cost||0,date:HOC.today(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});
+  HOC.save(KRS,sales);
+  // Toast
+  const toast=document.getElementById('retail-sales-toast');
+  toast.textContent='✓ Sold '+p.name+' — '+HOC.fa(p.retail);
+  toast.style.display='block';
+  setTimeout(()=>toast.style.display='none',2500);
+  renderRetail();
+}
+
 renderStats();renderInventory('all');
 </script>
+<script src="hoc-chat.js"></script>
 </body>
 </html>
