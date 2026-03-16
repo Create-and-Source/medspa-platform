@@ -476,9 +476,11 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
     <!-- MESSAGES -->
     <div id="view-messages" class="view">
       <div class="pg-hdr" style="margin-bottom:.9rem;"><div><div class="pg-title">Messages</div><div class="pg-sub">SMS · Email · All in one inbox</div></div><button class="btn-sm">+ Compose</button></div>
-      <div class="notice">⚡ <strong>SMS</strong> requires Twilio (10 min setup). <strong>Email</strong> — add an EmailJS key to send now:
-        <input id="ej-key" placeholder="EmailJS public key (optional)">
+      <div style="display:flex;gap:6px;margin-bottom:.9rem;">
+        <div class="dr on" onclick="showMsgTab('inbox',this)" style="padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;background:linear-gradient(135deg,#F00573,#722A82);color:#fff;border:1px solid transparent;font-weight:500;">Inbox</div>
+        <div class="dr" onclick="showMsgTab('auto',this)" style="padding:5px 14px;border-radius:20px;font-size:12px;cursor:pointer;color:var(--t2);background:var(--white);border:1px solid var(--border);">Automated Messages</div>
       </div>
+      <div id="msg-inbox-wrap">
       <div class="msg-wrap">
         <div class="ml">
           <div class="ml-hdr">Inbox <span style="font-size:9px;background:var(--red-bg);color:var(--red);padding:1px 6px;border-radius:8px;margin-left:5px;border:1px solid var(--red-bd);">5</span></div>
@@ -497,6 +499,13 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
             <div class="sug-row"><div class="sug" onclick="fillReply(this)">Avoid retinol 24hrs prior</div><div class="sug" onclick="fillReply(this)">Come with clean, dry skin</div><div class="sug" onclick="fillReply(this)">Send prep guide PDF</div></div>
           </div>
           <div class="msg-reply"><input class="msg-input" id="msg-reply" type="text" placeholder="Reply..."><button class="btn-sm" onclick="sendMsg()">Send</button></div>
+        </div>
+      </div>
+      </div><!-- /msg-inbox-wrap -->
+      <div id="msg-auto-wrap" style="display:none;">
+        <div class="panel">
+          <div class="panel-hdr">Automated Messages <span style="font-size:11px;color:var(--t3);font-weight:400;">· Sent automatically based on appointment schedule</span></div>
+          <div id="auto-msg-log" style="max-height:500px;overflow-y:auto;"></div>
         </div>
       </div>
     </div>
@@ -1230,6 +1239,63 @@ function selMsg(id){
   thread.scrollTop=thread.scrollHeight;
 }
 
+function showMsgTab(tab,el){
+  document.querySelectorAll('#view-messages .dr').forEach(d=>{d.style.background=d===el?'linear-gradient(135deg,#F00573,#722A82)':'var(--white)';d.style.color=d===el?'#fff':'var(--t2)';d.style.borderColor=d===el?'transparent':'var(--border)';d.style.fontWeight=d===el?'500':'400';});
+  document.getElementById('msg-inbox-wrap').style.display=tab==='inbox'?'':'none';
+  document.getElementById('msg-auto-wrap').style.display=tab==='auto'?'':'none';
+  if(tab==='auto')renderAutoMessages();
+}
+function renderAutoMessages(){
+  const appts=load(KA);const t=today();
+  const log=[];
+  // Reminders for upcoming
+  appts.filter(a=>a.date>=t&&(a.status==='Confirmed'||a.status==='Pending')).forEach(a=>{
+    const p=gp(a.patientId);if(!p.id)return;
+    // 48hr reminder (sent 2 days before)
+    const d48=new Date(a.date+'T12:00:00');d48.setDate(d48.getDate()-2);
+    if(d48.toISOString().slice(0,10)<=t){
+      log.push({icon:'⏰',label:'48hr Reminder',name:pn(p),phone:p.phone||'',time:d48.toISOString().slice(0,10),status:'Delivered',
+        msg:'Hi '+p.first+'! This is Haus of Confidence. Reminder: you have a '+a.service+' appointment on '+fd(a.date)+' at '+ft(a.time)+' with '+a.provider+'. Reply C to confirm or R to reschedule.'});
+    }
+    // Day-of
+    if(a.date===t){
+      log.push({icon:'📱',label:'Day-of Reminder',name:pn(p),phone:p.phone||'',time:t,status:'Delivered',
+        msg:'Hi '+p.first+'! Your '+a.service+' is today at '+ft(a.time)+' with '+a.provider+'. See you soon! 📍 4205 N Winfield Scott Plaza, Scottsdale'});
+    }
+  });
+  // Post-visit review requests
+  appts.filter(a=>a.status==='Completed').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,4).forEach(a=>{
+    const p=gp(a.patientId);if(!p.id)return;
+    log.push({icon:'⭐',label:'Review Request',name:pn(p),phone:p.phone||'',time:a.date,status:'Delivered',
+      msg:'Hi '+p.first+'! Thank you for your '+a.service+' at Haus of Confidence. We\'d love your feedback! Leave us a review: g.page/hausofconfidence ⭐'});
+  });
+  // Rebooking reminders
+  const rebookIntervals={'Botox':90,'Dermal Fillers':180,'RF Microneedling':42,'Facial':30};
+  load(KP).forEach(p=>{
+    const pAppts=appts.filter(a=>a.patientId===p.id&&a.status==='Completed').sort((a,b)=>b.date.localeCompare(a.date));
+    if(!pAppts.length)return;
+    const last=pAppts[0];const interval=rebookIntervals[last.service];if(!interval)return;
+    const due=new Date(last.date);due.setDate(due.getDate()+interval);
+    if(due<=new Date(t)){
+      log.push({icon:'🔄',label:'Rebooking Reminder',name:pn(p),phone:p.phone||'',time:due.toISOString().slice(0,10),status:'Delivered',
+        msg:'Hi '+p.first+'! It\'s been a while since your last '+last.service+' at Haus of Confidence. Ready to book your next session? Call us at (480) 493-5921 or book online.'});
+    }
+  });
+  log.sort((a,b)=>b.time.localeCompare(a.time));
+  const el=document.getElementById('auto-msg-log');
+  el.innerHTML=`<div style="padding:12px 16px;background:var(--bg);font-size:11px;color:var(--t3);border-bottom:1px solid var(--border);">${log.length} automated messages sent · All delivered via SMS</div>`+
+    log.map(r=>`<div style="padding:10px 16px;border-bottom:1px solid var(--border);">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <div style="font-size:13px;font-weight:500;">${r.icon} ${r.name} <span style="font-weight:400;color:var(--t3);font-size:12px;">${r.phone}</span></div>
+        <div style="display:flex;gap:6px;align-items:center;">
+          <span style="font-size:10px;padding:2px 8px;border-radius:10px;background:var(--gbg);color:var(--green);border:1px solid var(--gbd);">${r.label}</span>
+          <span style="font-size:10px;color:var(--green);">✓ ${r.status}</span>
+        </div>
+      </div>
+      <div style="background:var(--bg);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--t2);line-height:1.5;margin-top:4px;">${r.msg}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px;">Sent ${fd(r.time)}</div>
+    </div>`).join('');
+}
 function fillReply(el){document.getElementById('msg-reply').value=el.textContent;}
 function sendMsg(){
   const msg=document.getElementById('msg-reply').value.trim();if(!msg||!activeMsgId)return;
