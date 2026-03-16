@@ -267,8 +267,8 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
 <!-- MEMBER VIEW OVERLAY -->
 <div id="member-overlay" style="display:none;position:fixed;inset:0;background:#fafafa;z-index:850;overflow-y:auto;">
   <div style="background:#fff;border-bottom:1px solid #e5e1e8;padding:1rem 2rem;display:flex;align-items:center;justify-content:space-between;">
-    <div><div style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;">Haus of Confidence</div><div style="font-size:10px;color:#9890a0;text-transform:uppercase;letter-spacing:.1em;">Member Portal Preview</div></div>
-    <button onclick="closeMemberView()" style="background:none;border:1px solid #e5e1e8;border-radius:8px;padding:7px 16px;font-size:12px;color:#5c5460;cursor:pointer;font-family:'Montserrat',sans-serif;">✕ Close Preview</button>
+    <div><div style="font-family:'Poppins',sans-serif;font-size:16px;font-weight:600;">Haus of Confidence</div><div style="font-size:10px;color:#9890a0;text-transform:uppercase;letter-spacing:.1em;">Patient Portal</div></div>
+    <button onclick="closeMemberView()" style="background:none;border:1px solid #e5e1e8;border-radius:8px;padding:7px 16px;font-size:12px;color:#5c5460;cursor:pointer;font-family:'Montserrat',sans-serif;">✕ Close</button>
   </div>
   <div style="max-width:860px;margin:0 auto;padding:2.5rem 1.5rem;" id="member-view-body"></div>
 </div>
@@ -398,8 +398,9 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
     <!-- DASHBOARD -->
     <div id="view-dashboard" class="view active">
       <div class="pg-hdr">
-        <div><div class="pg-title">Good morning, Sara.</div><div class="pg-sub" id="dash-date"></div></div>
+        <div><div class="pg-title" id="dash-greeting">Good morning, Sara.</div><div class="pg-sub" id="dash-date"></div></div>
         <div class="btns">
+          <button class="btn-g" onclick="resetDemo()" style="font-size:11px;padding:6px 12px;color:var(--t3);">Reset Demo</button>
           <button class="btn-g" onclick="openKiosk()">Patient Check-In</button>
           <button class="btn-g" onclick="openMemberView()">View as Member</button>
           <button class="btn-g" onclick="openTxPlanModal()">+ Treatment Plan</button>
@@ -411,6 +412,16 @@ canvas#sig{position:absolute;inset:0;width:100%;height:100%;}
         <div class="stat-card"><div class="stat-lbl">Total Patients</div><div class="stat-val" id="d-pts">0</div><div class="stat-hint">in your system</div></div>
         <div class="stat-card"><div class="stat-lbl">Unread Messages</div><div class="stat-val" id="d-unread">0</div><div class="stat-hint" id="d-unread-h">0 awaiting reply</div></div>
         <div class="stat-card"><div class="stat-lbl">Monthly Revenue</div><div class="stat-val" id="d-rev">$0</div><div class="stat-hint">paid this month</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:1.25rem;">
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+          <div style="font-size:13px;font-weight:500;margin-bottom:.75rem;">Revenue This Week</div>
+          <canvas id="dash-chart" height="120"></canvas>
+        </div>
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.25rem;">
+          <div style="font-size:13px;font-weight:500;margin-bottom:.75rem;">Today's Timeline</div>
+          <div id="dash-timeline" style="max-height:140px;overflow-y:auto;"></div>
+        </div>
       </div>
       <div class="panel">
         <div class="panel-hdr">Today's Schedule<span style="font-size:11px;color:var(--t3);font-weight:400;" id="today-lbl"></span></div>
@@ -677,9 +688,9 @@ function save(k,d){localStorage.setItem(k,JSON.stringify(d));}
 function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
 function today(){return new Date().toISOString().slice(0,10);}
 
-if(!localStorage.getItem('hoc_seed_v4')){
+if(!localStorage.getItem('hoc_seed_v5')){
   // Clear old seeds
-  localStorage.removeItem('hoc_seed');
+  localStorage.removeItem('hoc_seed');localStorage.removeItem('hoc_seed_v4');
   const pts=[
     {id:'p1',first:'Maria',last:'G',phone:'(602) 555-0143',email:'maria@email.com',dob:'1988-04-12',source:'Instagram',notes:'No known allergies',created:Date.now()},
     {id:'p2',first:'Jessica',last:'T',phone:'(480) 555-0287',email:'jessica@email.com',dob:'1995-07-23',source:'Google',notes:'',created:Date.now()},
@@ -759,9 +770,28 @@ if(!localStorage.getItem('hoc_seed_v4')){
     {id:'t16',patientId:'p3',service:'Facial',amount:180,method:'Visa ···8821',status:'Paid',date:dayOff(-25)},
     {id:'t17',patientId:'p4',service:'Botox',amount:350,method:'Amex ···3804',status:'Paid',date:dayOff(-45)},
     {id:'t18',patientId:'p5',service:'Botox',amount:350,method:'Visa ···5544',status:'Paid',date:dayOff(-90)},
+    // Maria G rich history — high LTV demo patient
+    {id:'t20',patientId:'p1',service:'LipoAway Procedure',amount:4800,method:'Affirm Financing',status:'Paid',date:dayOff(-60)},
+    {id:'t21',patientId:'p1',service:'Botox',amount:420,method:'Visa ···4821',status:'Paid',date:dayOff(-45)},
+    {id:'t22',patientId:'p1',service:'Dermal Fillers',amount:720,method:'Visa ···4821',status:'Paid',date:dayOff(-30)},
+    {id:'t23',patientId:'p1',service:'Facial',amount:180,method:'Visa ···4821',status:'Paid',date:dayOff(-15)},
+    {id:'t24',patientId:'p1',service:'IV Therapy',amount:199,method:'Cash',status:'Paid',date:dayOff(-8)},
   ];
+  // More Maria past appointments
+  appts.push(
+    {id:'a50',patientId:'p1',date:dayOff(-60),time:'10:00',service:'LipoAway Procedure',provider:'Dr. Todd Malan',status:'Completed',notes:'Abdomen — excellent candidate'},
+    {id:'a51',patientId:'p1',date:dayOff(-45),time:'11:00',service:'Botox',provider:'Sara Ameli',status:'Completed',notes:'Forehead + crows feet'},
+    {id:'a52',patientId:'p1',date:dayOff(-30),time:'10:30',service:'Dermal Fillers',provider:'Sara Ameli',status:'Completed',notes:'Lips + nasolabial folds'},
+    {id:'a53',patientId:'p1',date:dayOff(-15),time:'14:00',service:'Facial',provider:'Cierra',status:'Completed',notes:'Post-filler glow facial'},
+    {id:'a54',patientId:'p1',date:dayOff(-8),time:'13:00',service:'IV Therapy',provider:'Dr. Margaret Husami',status:'Completed',notes:'Immunity drip'}
+  );
   save(KP,pts);save(KA,appts);save(KT,txns);
-  localStorage.setItem('hoc_seed_v4','1');
+  // Pre-seed waitlist
+  save(KW,[
+    {id:'w1',patientId:'p4',service:'LipoAway Procedure',provider:'Dr. Todd Malan',notes:'Wants next available Friday',date:today()},
+    {id:'w2',patientId:'p8',service:'Botox',provider:'Sara Ameli',notes:'Flexible on time, prefers mornings',date:dayOff(-2)},
+  ]);
+  localStorage.setItem('hoc_seed_v5','1');
 }
 
 // ── HELPERS ───────────────────────────────────────────────────────────
@@ -797,15 +827,28 @@ function nav(v,el){
 }
 
 // ── DASHBOARD ──────────────────────────────────────────────────────────
+function resetDemo(){
+  if(!confirm('Reset all demo data? This clears everything and reloads fresh seed data.'))return;
+  const keys=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k.startsWith('hoc'))keys.push(k);}
+  keys.forEach(k=>localStorage.removeItem(k));
+  location.reload();
+}
 function renderDash(){
   const appts=load(KA),pts=load(KP),txns=load(KT),t=today();
+  // Smart greeting
+  const hr=new Date().getHours();
+  const greet=hr<12?'Good morning':hr<17?'Good afternoon':'Good evening';
+  const greetEl=document.getElementById('dash-greeting');
+  if(greetEl)greetEl.textContent=greet+', Sara.';
   const ta=appts.filter(a=>a.date===t);
   const pend=ta.filter(a=>a.status==='Pending').length;
   document.getElementById('d-appts').textContent=ta.length;
   document.getElementById('d-appts-h').textContent=pend+' pending confirmation';
   document.getElementById('d-pts').textContent=pts.length;
-  const rev=txns.filter(x=>x.status==='Paid').reduce((s,x)=>s+Number(x.amount),0);
-  document.getElementById('d-rev').textContent=fa(rev);
+  // Monthly revenue (this month only)
+  const month=t.slice(0,7);
+  const monthRev=txns.filter(x=>x.status==='Paid'&&x.date&&x.date.startsWith(month)).reduce((s,x)=>s+Number(x.amount),0);
+  document.getElementById('d-rev').textContent=fa(monthRev);
   // Update unread messages count
   const msgs=load(KM);
   const unread=msgs.filter(t=>t.messages.length&&t.messages[t.messages.length-1].from==='in').length;
@@ -813,12 +856,69 @@ function renderDash(){
   if(unreadEl)unreadEl.textContent=unread;
   const unreadHint=document.getElementById('d-unread-h');
   if(unreadHint)unreadHint.textContent=unread+' awaiting reply';
+  // Revenue sparkline
+  renderDashChart(txns);
+  // Timeline
+  renderDashTimeline(ta);
   const sorted=ta.slice().sort((a,b)=>a.time.localeCompare(b.time));
   const el=document.getElementById('dash-sched');
   if(!sorted.length){el.innerHTML='<div class="empty">No appointments today. <a href="#" onclick="openApptModal();return false;" style="color:var(--pri);">Add one →</a></div>';renderRebookPrompts();renderTxPlans();return;}
   el.innerHTML=tbl(['Time','Patient','Service','Provider','Status',''],
     sorted.map(a=>{const p=gp(a.patientId);return`<tr><td style="color:var(--t3);white-space:nowrap;">${ft(a.time)}</td><td><div class="prow"><div class="av">${pi(p)}</div><div><div class="pname">${pn(p)}</div></div></div></td><td>${a.service}</td><td>${a.provider}</td><td><span class="st ${sc(a.status)}">${a.status}</span></td><td><button class="btn-g" style="font-size:11px;padding:3px 10px;" onclick="editAppt('${a.id}')">Edit</button></td></tr>`;}).join(''));
   renderRebookPrompts();renderTxPlans();
+}
+function renderDashChart(txns){
+  const c=document.getElementById('dash-chart');if(!c)return;
+  const ctx=c.getContext('2d');
+  const w=c.width=c.parentElement.clientWidth-40;
+  const h=c.height=120;
+  ctx.clearRect(0,0,w,h);
+  // Last 7 days revenue
+  const days=[];const amounts=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const ds=d.toISOString().slice(0,10);
+    const dayName=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][d.getDay()];
+    days.push(dayName);
+    amounts.push(txns.filter(t=>t.status==='Paid'&&t.date===ds).reduce((s,t)=>s+Number(t.amount),0));
+  }
+  const max=Math.max(...amounts,100);
+  const barW=Math.min(30,(w-60)/7);
+  const gap=(w-barW*7)/(7+1);
+  // Bars
+  amounts.forEach((a,i)=>{
+    const x=gap+(barW+gap)*i;
+    const barH=Math.max(2,(a/max)*(h-30));
+    const y=h-20-barH;
+    // Gradient bar
+    const grad=ctx.createLinearGradient(x,y,x,h-20);
+    grad.addColorStop(0,'#F00573');grad.addColorStop(1,'#722A82');
+    ctx.fillStyle=grad;
+    ctx.beginPath();ctx.roundRect(x,y,barW,barH,3);ctx.fill();
+    // Label
+    ctx.fillStyle='#9890a0';ctx.font='10px Montserrat,sans-serif';ctx.textAlign='center';
+    ctx.fillText(days[i],x+barW/2,h-6);
+    // Amount on top
+    if(a>0){ctx.fillStyle='#1a1418';ctx.font='500 10px Montserrat,sans-serif';ctx.fillText('$'+Math.round(a/1000)+'k',x+barW/2,y-4);}
+  });
+}
+function renderDashTimeline(ta){
+  const el=document.getElementById('dash-timeline');if(!el)return;
+  const sorted=ta.slice().sort((a,b)=>a.time.localeCompare(b.time));
+  if(!sorted.length){el.innerHTML='<div style="font-size:12px;color:var(--t3);padding:.5rem 0;">No appointments today.</div>';return;}
+  const now=new Date().getHours()*60+new Date().getMinutes();
+  el.innerHTML=sorted.map(a=>{
+    const p=gp(a.patientId);
+    const [ah,am]=(a.time||'0:0').split(':').map(Number);
+    const apptMin=ah*60+am;
+    const isPast=apptMin<now-60;
+    const isCurrent=Math.abs(apptMin-now)<60;
+    return`<div style="display:flex;gap:10px;padding:5px 0;${isPast?'opacity:.5;':''}${isCurrent?'background:var(--pri-p);margin:0 -8px;padding:5px 8px;border-radius:6px;':''}">
+      <div style="font-size:11px;color:var(--t3);min-width:52px;white-space:nowrap;">${ft(a.time)}</div>
+      <div style="width:3px;border-radius:2px;${isCurrent?'background:var(--pri);':'background:var(--border);'}flex-shrink:0;"></div>
+      <div style="flex:1;min-width:0;"><div style="font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${pn(p)}</div><div style="font-size:10px;color:var(--t3);">${a.service} · ${a.provider}</div></div>
+    </div>`;
+  }).join('');
 }
 
 // ── APPOINTMENTS ────────────────────────────────────────────────────────
@@ -850,6 +950,7 @@ function openApptModal(){
   document.getElementById('appt-modal-title').textContent='New Appointment';
   document.getElementById('ae-id').value='';
   document.getElementById('ae-del').style.display='none';
+  document.getElementById('ae-recur-wrap').style.display='';
   document.getElementById('ae-date').value=selDate||today();
   document.getElementById('ae-time').value='09:00';
   document.getElementById('ae-st').value='Confirmed';
@@ -862,6 +963,7 @@ function editAppt(id){
   document.getElementById('appt-modal-title').textContent='Edit Appointment';
   document.getElementById('ae-id').value=id;
   document.getElementById('ae-del').style.display='inline-block';
+  document.getElementById('ae-recur-wrap').style.display='none';
   document.getElementById('ae-date').value=a.date;
   document.getElementById('ae-time').value=a.time;
   document.getElementById('ae-svc').value=a.service;

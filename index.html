@@ -4,46 +4,51 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Haus of Confidence · Platform</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{--gold:#C9A84C;--gold-h:#b8943e;--gold-l:#f5edda;--gold-p:#fdf9f0;--gold-b:#e8d5a3;--white:#fff;--bg:#fafaf8;--border:#e8e4dc;--text:#1a1814;--t2:#6b6459;--t3:#a09890;}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;}
+:root{--pri:#F00573;--sec:#722A82;--white:#fff;--bg:#fafafa;--border:#e5e1e8;--text:#1a1418;--t2:#5c5460;--t3:#9890a0;}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;}
 .splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:2.5rem 2rem;}
-.eye{font-size:11px;text-transform:uppercase;letter-spacing:.18em;color:var(--gold);margin-bottom:.9rem;}
-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,54px);font-weight:500;line-height:1.1;margin-bottom:.5rem;}
-.sub{font-size:14px;color:var(--t2);margin-bottom:2.5rem;max-width:420px;line-height:1.7;}
-.sys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:500px;width:100%;margin-bottom:1.4rem;}
-.sc{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;}
-.sn{font-size:12px;font-weight:500;}.st{font-size:11px;color:var(--t3);margin-top:3px;}
-.arr{display:flex;align-items:center;gap:12px;color:var(--t3);font-size:12px;max-width:500px;width:100%;margin-bottom:1.4rem;}
+.eye{font-size:10px;text-transform:uppercase;letter-spacing:.2em;color:var(--pri);margin-bottom:1rem;font-weight:600;}
+h1{font-family:'Poppins',sans-serif;font-size:clamp(30px,5vw,48px);font-weight:600;line-height:1.15;margin-bottom:.5rem;}
+h1 span{background:linear-gradient(135deg,#F00573,#722A82);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sub{font-size:14px;color:var(--t2);margin-bottom:2.5rem;max-width:460px;line-height:1.7;}
+.sys{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;max-width:520px;width:100%;margin-bottom:1.4rem;}
+.sc{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;transition:all .12s;}
+.sc:hover{border-color:var(--pri);background:#fef5fa;}
+.sn{font-size:12px;font-weight:500;}.st2{font-size:11px;color:var(--t3);margin-top:3px;}
+.arr{display:flex;align-items:center;gap:12px;color:var(--t3);font-size:12px;max-width:520px;width:100%;margin-bottom:1.4rem;}
 .al{flex:1;height:1px;background:var(--border);}
-.ubox{background:var(--white);border:2px solid var(--gold);border-radius:12px;padding:14px 36px;margin-bottom:2rem;}
-.un{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;}
+.ubox{background:var(--white);border:2px solid var(--pri);border-radius:14px;padding:16px 40px;margin-bottom:2rem;}
+.un{font-family:'Poppins',sans-serif;font-size:20px;font-weight:600;background:linear-gradient(135deg,#F00573,#722A82);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .us{font-size:11px;color:var(--t3);margin-top:4px;letter-spacing:.03em;}
 .btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
-.btn-p{background:var(--gold);color:var(--white);border:none;border-radius:8px;padding:13px 28px;font-size:14px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:background .15s;}
-.btn-p:hover{background:var(--gold-h);}
-.btn-g{background:var(--white);color:var(--t2);border:1px solid var(--border);border-radius:8px;padding:12px 22px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;text-decoration:none;transition:all .12s;}
-.btn-g:hover{border-color:var(--gold);color:var(--gold);}
-.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:660px;width:100%;margin-top:2.5rem;}
-.mod{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:left;text-decoration:none;color:var(--text);transition:all .12s;}
-.mod:hover{border-color:var(--gold);background:var(--gold-p);}
+.btn-p{background:linear-gradient(135deg,#F00573,#722A82);color:var(--white);border:none;border-radius:10px;padding:14px 32px;font-size:14px;font-weight:500;cursor:pointer;font-family:'Montserrat',sans-serif;text-decoration:none;transition:opacity .15s;}
+.btn-p:hover{opacity:.9;}
+.btn-g{background:var(--white);color:var(--t2);border:1px solid var(--border);border-radius:10px;padding:13px 24px;font-size:14px;cursor:pointer;font-family:'Montserrat',sans-serif;text-decoration:none;transition:all .12s;}
+.btn-g:hover{border-color:var(--pri);color:var(--pri);}
+.modules{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;max-width:680px;width:100%;margin-top:2.5rem;}
+.mod{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:left;text-decoration:none;color:var(--text);transition:all .12s;}
+.mod:hover{border-color:var(--pri);background:#fef5fa;transform:translateY(-2px);box-shadow:0 4px 16px rgba(240,5,115,.1);}
 .mod-icon{font-size:18px;margin-bottom:6px;}
 .mod-name{font-size:13px;font-weight:500;margin-bottom:2px;}
 .mod-sub{font-size:11px;color:var(--t3);}
+.locs{display:flex;gap:8px;justify-content:center;margin-top:2rem;font-size:11px;color:var(--t3);}
+.loc{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:6px 14px;}
+@media(max-width:600px){.sys{grid-template-columns:repeat(2,1fr);}.modules{grid-template-columns:1fr;}}
 </style>
 </head>
 <body>
 <div class="splash">
-  <p class="eye">Haus of Confidence</p>
-  <h1>One platform.<br>Every tool you need.</h1>
-  <p class="sub">Replaces Clover, your booking tool, your EHR, and your messaging platform — built specifically for Haus of Confidence.</p>
+  <p class="eye">A Premier Medspa in Scottsdale</p>
+  <h1>One platform.<br><span>Every tool you need.</span></h1>
+  <p class="sub">Replaces Clover, Boulevard, your EHR, and your messaging tools — built specifically for Haus of Confidence.</p>
   <div class="sys">
-    <div class="sc"><div class="sn">Clover</div><div class="st">Payments</div></div>
-    <div class="sc"><div class="sn">Booking Tool</div><div class="st">Scheduling</div></div>
-    <div class="sc"><div class="sn">EHR System</div><div class="st">Patient records</div></div>
-    <div class="sc"><div class="sn">Email / SMS</div><div class="st">Marketing</div></div>
+    <div class="sc"><div class="sn">Clover</div><div class="st2">Payments</div></div>
+    <div class="sc"><div class="sn">Boulevard</div><div class="st2">Booking</div></div>
+    <div class="sc"><div class="sn">EHR System</div><div class="st2">Records</div></div>
+    <div class="sc"><div class="sn">Email / SMS</div><div class="st2">Outreach</div></div>
   </div>
   <div class="arr"><div class="al"></div><span>all replaced by</span><div class="al"></div></div>
   <div class="ubox">
@@ -52,15 +57,20 @@ h1{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,5vw,54px);font-we
   </div>
   <div class="btns">
     <a href="app.html" class="btn-p">Enter Platform →</a>
-    <a href="booking.html" target="_blank" class="btn-g">Preview Patient Booking ↗</a>
+    <a href="booking.html" target="_blank" class="btn-g">Patient Booking ↗</a>
+    <a href="patient-portal.html" target="_blank" class="btn-g">Patient Portal ↗</a>
   </div>
   <div class="modules">
-    <a href="app.html" class="mod"><div class="mod-icon">📋</div><div class="mod-name">Dashboard & Appointments</div><div class="mod-sub">Daily schedule, patients, payments</div></a>
-    <a href="charting.html" class="mod"><div class="mod-icon">📝</div><div class="mod-name">Charting & SOAP Notes</div><div class="mod-sub">Clinical records, injectable log</div></a>
-    <a href="analytics.html" class="mod"><div class="mod-icon">📊</div><div class="mod-name">Analytics</div><div class="mod-sub">Revenue, retention, providers</div></a>
-    <a href="memberships.html" class="mod"><div class="mod-icon">💳</div><div class="mod-name">Memberships & Packages</div><div class="mod-sub">Recurring revenue, financing</div></a>
-    <a href="inventory.html" class="mod"><div class="mod-icon">💉</div><div class="mod-name">Inventory</div><div class="mod-sub">Injectables, supplies, expiry</div></a>
-    <a href="booking.html" target="_blank" class="mod"><div class="mod-icon">🗓</div><div class="mod-name">Online Booking</div><div class="mod-sub">Public patient-facing booking</div></a>
+    <a href="app.html" class="mod"><div class="mod-icon">📋</div><div class="mod-name">Dashboard</div><div class="mod-sub">Schedule, patients, payments, messages</div></a>
+    <a href="charting.html" class="mod"><div class="mod-icon">📝</div><div class="mod-name">Charting & SOAP</div><div class="mod-sub">Clinical records, consent forms</div></a>
+    <a href="analytics.html" class="mod"><div class="mod-icon">📊</div><div class="mod-name">Analytics</div><div class="mod-sub">Revenue, commissions, retention</div></a>
+    <a href="memberships.html" class="mod"><div class="mod-icon">💳</div><div class="mod-name">Memberships</div><div class="mod-sub">Plans, packages, financing</div></a>
+    <a href="inventory.html" class="mod"><div class="mod-icon">💉</div><div class="mod-name">Inventory & Retail</div><div class="mod-sub">Injectables, skincare, gift cards</div></a>
+    <a href="settings.html" class="mod"><div class="mod-icon">⚙️</div><div class="mod-name">Settings</div><div class="mod-sub">Hours, notifications, integrations</div></a>
+  </div>
+  <div class="locs">
+    <div class="loc">📍 4205 N Winfield Scott Plaza, Scottsdale</div>
+    <div class="loc">📍 4236 N Brown Ave, Scottsdale</div>
   </div>
 </div>
 <script src="hoc.js"></script>

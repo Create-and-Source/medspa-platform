@@ -131,9 +131,16 @@ body{background:var(--bg);color:var(--text);font-family:'Montserrat',sans-serif;
     <div class="success-icon">✓</div>
     <div class="bk-title">You're booked!</div>
     <div class="bk-sub">We've received your request and will confirm by text within 1 hour during business hours.</div>
+    <div style="text-align:center;margin-bottom:1rem;">
+      <div style="font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;">Confirmation Number</div>
+      <div id="confirm-number" style="font-family:'Poppins',sans-serif;font-size:22px;font-weight:600;color:var(--pri);margin-top:2px;">HOC-0000</div>
+    </div>
     <div class="confirm-card" id="success-summary"></div>
     <div style="background:var(--gbg);border:1px solid var(--gbd);border-radius:10px;padding:12px 14px;font-size:13px;color:var(--green);margin-bottom:1rem;text-align:center;">
       ✓ Confirmation sent to your phone and email
+    </div>
+    <div style="font-size:12px;color:var(--t3);text-align:center;margin-bottom:1rem;">
+      Questions? Call us at <strong style="color:var(--text);">(480) 493-5921</strong> or reply to your confirmation text.
     </div>
     <button class="bk-btn" onclick="resetBooking()">Book Another Appointment</button>
   </div>
@@ -251,6 +258,7 @@ function confirmBooking(){
     appts.push({id:HOC.uid(),patientId,date:booking.date,time:booking.time.replace(' AM','').replace(' PM','').replace(':',':'),service:booking.service?.name||'Appointment',provider:booking.provider?.name||'TBD',status:'Pending',notes:document.getElementById('bk-notes').value});
     HOC.save(HOC.K.appts,appts);
   }
+  document.getElementById('confirm-number').textContent='HOC-'+Math.floor(10000+Math.random()*90000);
   document.getElementById('success-summary').innerHTML=`<div class="confirm-row"><span style="color:var(--t3);">Name</span><span style="font-weight:500;">${first} ${last}</span></div><div class="confirm-row"><span style="color:var(--t3);">Service</span><span style="font-weight:500;">${booking.service?.name||'—'}</span></div><div class="confirm-row"><span style="color:var(--t3);">Date & Time</span><span style="font-weight:500;">${HOC.fd(booking.date)} · ${booking.time}</span></div><div class="confirm-row"><span style="color:var(--t3);">Provider</span><span style="font-weight:500;">${booking.provider?.name||'TBD'}</span></div>`;
   nextStep(7);
 }

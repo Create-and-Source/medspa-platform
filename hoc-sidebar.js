@@ -76,7 +76,7 @@ function renderSidebar(activePage) {
   }
 
   html += `</div>
-    <div class="sb-rep">✦ Unified platform · 2 locations</div>
+    <div class="sb-rep">✦ Replaces Clover + Boulevard + EHR + SMS</div>
     <div class="sb-user"><div class="sb-uname">Sara Ameli</div><div class="sb-ucred">DNP, FNP-C · Founder</div></div>
   </div>`;
   return html;
