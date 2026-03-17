@@ -224,8 +224,6 @@ export default function Layout({ children }) {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F5F3F0', position: 'relative' }}>
-      {/* Animated background orbs */}
-      <div className="bg-orbs" />
 
       {/* Desktop sidebar */}
       <div className="sidebar-desktop" style={{ display: 'block' }}>

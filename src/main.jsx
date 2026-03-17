@@ -48,34 +48,6 @@ input, textarea, select, button { font-family: inherit; }
   transform: translateY(-1px);
 }
 
-/* Animated background orbs */
-.bg-orbs {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  pointer-events: none;
-  z-index: 0;
-  overflow: hidden;
-}
-.bg-orbs::before, .bg-orbs::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.35;
-}
-.bg-orbs::before {
-  width: 400px; height: 400px;
-  top: -100px; right: -50px;
-  background: var(--accent-color, #ddd);
-  animation: orb1 20s ease-in-out infinite;
-}
-.bg-orbs::after {
-  width: 300px; height: 300px;
-  bottom: -50px; left: 20%;
-  background: var(--accent-color, #ddd);
-  opacity: 0.2;
-  animation: orb2 25s ease-in-out infinite;
-}
 
 /* Table rows */
 table tbody tr {

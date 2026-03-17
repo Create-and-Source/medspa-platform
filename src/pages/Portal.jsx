@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useStyles } from '../theme';
 import {
   getPatients, getAppointments, getServices, getProviders,
@@ -39,6 +39,46 @@ const TIER_COLORS = {
   Gold: { color: '#D97706', bg: '#FFFBEB' },
   Platinum: { color: '#7C3AED', bg: '#F5F3FF' },
 };
+
+/* --- keyframe injection (once) --- */
+const ANIM_ID = 'portal-luxury-anims';
+if (!document.getElementById(ANIM_ID)) {
+  const sheet = document.createElement('style');
+  sheet.id = ANIM_ID;
+  sheet.textContent = `
+    @keyframes portalFadeInUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes portalOrb1 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(40px,-30px) scale(1.15); }
+    }
+    @keyframes portalOrb2 {
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%     { transform: translate(-50px,25px) scale(1.1); }
+    }
+    @keyframes portalRingSpin {
+      from { transform: rotate(-90deg); }
+      to   { transform: rotate(-90deg); }
+    }
+    @keyframes portalPillSlide {
+      from { opacity:0; transform: translateX(10px); }
+      to   { opacity:1; transform: translateX(0); }
+    }
+    .portal-fadeInUp { animation: portalFadeInUp 0.5s cubic-bezier(0.16,1,0.3,1) both; }
+    .portal-stagger-1 { animation-delay: 0.04s; }
+    .portal-stagger-2 { animation-delay: 0.08s; }
+    .portal-stagger-3 { animation-delay: 0.12s; }
+    .portal-stagger-4 { animation-delay: 0.16s; }
+    .portal-stagger-5 { animation-delay: 0.20s; }
+    .portal-stagger-6 { animation-delay: 0.24s; }
+    .portal-stagger-7 { animation-delay: 0.28s; }
+    .portal-stagger-8 { animation-delay: 0.32s; }
+    .portal-tabs::-webkit-scrollbar { display:none; }
+  `;
+  document.head.appendChild(sheet);
+}
 
 export default function Portal() {
   const s = useStyles();
@@ -135,201 +175,348 @@ export default function Portal() {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // -- Style helpers --
-  const portalBg = '#F9FAFB';
+  // -- Nav items --
   const navItems = [
-    { id: 'home', label: 'Home' },
-    { id: 'appointments', label: 'Appointments' },
-    { id: 'treatment', label: 'Treatment Plan' },
-    { id: 'membership', label: 'Membership' },
-    { id: 'wallet', label: 'Wallet' },
-    { id: 'photos', label: 'Before & After' },
-    { id: 'waivers', label: 'Waivers' },
-    { id: 'referrals', label: 'Refer a Friend' },
-    { id: 'info', label: 'My Info' },
+    { id: 'home', label: 'Home', icon: '\u2302' },
+    { id: 'appointments', label: 'Appointments', icon: '\uD83D\uDCC5' },
+    { id: 'treatment', label: 'Treatments', icon: '\u2728' },
+    { id: 'membership', label: 'Membership', icon: '\u2606' },
+    { id: 'wallet', label: 'Wallet', icon: '\uD83D\uDCB3' },
+    { id: 'photos', label: 'Photos', icon: '\uD83D\uDCF7' },
+    { id: 'waivers', label: 'Waivers', icon: '\uD83D\uDCDD' },
+    { id: 'referrals', label: 'Referrals', icon: '\uD83D\uDC96' },
+    { id: 'info', label: 'Profile', icon: '\uD83D\uDC64' },
   ];
 
-  const Card = ({ children, style }) => (
-    <div style={{ background: '#fff', borderRadius: 16, border: '1px solid #EAEAEA', boxShadow: '0 1px 4px rgba(0,0,0,0.04)', ...style }}>
+  // -- Shared luxury design tokens --
+  const glass = {
+    background: 'rgba(255,255,255,0.55)',
+    backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+    border: '1px solid rgba(255,255,255,0.7)',
+    borderRadius: 20,
+    boxShadow: '0 8px 32px rgba(0,0,0,0.06), 0 1.5px 4px rgba(0,0,0,0.03)',
+    transition: 'all 0.35s cubic-bezier(0.16,1,0.3,1)',
+  };
+
+  const glassHover = (e) => {
+    e.currentTarget.style.transform = 'translateY(-2px)';
+    e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.04)';
+  };
+  const glassUnhover = (e) => {
+    e.currentTarget.style.transform = 'translateY(0)';
+    e.currentTarget.style.boxShadow = '0 8px 32px rgba(0,0,0,0.06), 0 1.5px 4px rgba(0,0,0,0.03)';
+  };
+
+  const Card = ({ children, style, hover = false, className = '' }) => (
+    <div
+      className={className}
+      style={{ ...glass, ...style }}
+      onMouseEnter={hover ? glassHover : undefined}
+      onMouseLeave={hover ? glassUnhover : undefined}
+    >
       {children}
     </div>
   );
 
-  const SectionTitle = ({ children }) => (
-    <h2 style={{ font: `600 20px ${s.FONT}`, color: s.text, margin: '0 0 16px 0' }}>{children}</h2>
+  const SectionLabel = ({ children }) => (
+    <div style={{
+      fontFamily: s.MONO, fontSize: 10, textTransform: 'uppercase', letterSpacing: 2,
+      color: s.text3, marginBottom: 14, fontWeight: 500,
+    }}>{children}</div>
+  );
+
+  const SectionTitle = ({ children, sub }) => (
+    <div style={{ marginBottom: 28 }} className="portal-fadeInUp">
+      <h2 style={{ font: `300 28px ${s.FONT}`, color: s.text, margin: 0, letterSpacing: -0.5 }}>{children}</h2>
+      {sub && <p style={{ font: `400 14px ${s.FONT}`, color: s.text3, margin: '6px 0 0', letterSpacing: 0.1 }}>{sub}</p>}
+    </div>
   );
 
   const Badge = ({ text, color, bg }) => (
     <span style={{
-      display: 'inline-block', padding: '4px 12px', borderRadius: 100,
-      font: `600 11px ${s.FONT}`, textTransform: 'uppercase', letterSpacing: 0.5,
+      display: 'inline-block', padding: '5px 14px', borderRadius: 100,
+      font: `600 10px ${s.FONT}`, textTransform: 'uppercase', letterSpacing: 1,
       color: color || '#fff', background: bg || s.accent,
     }}>{text}</span>
   );
 
   const ProgressBar = ({ value, max, color }) => (
-    <div style={{ height: 8, borderRadius: 100, background: '#F0F0F0', overflow: 'hidden' }}>
+    <div style={{ height: 6, borderRadius: 100, background: 'rgba(0,0,0,0.05)', overflow: 'hidden' }}>
       <div style={{
         height: '100%', borderRadius: 100, width: `${Math.min(100, (value / max) * 100)}%`,
-        background: color || s.accent, transition: 'width 0.4s ease',
+        background: color || s.accent, transition: 'width 0.6s cubic-bezier(0.16,1,0.3,1)',
       }} />
     </div>
   );
 
-  // -- Sections --
+  /* --- SVG progress ring for home dashboard --- */
+  const ProgressRing = ({ value, max, size = 56, stroke = 5 }) => {
+    const pct = max > 0 ? Math.min(1, value / max) : 0;
+    const r = (size - stroke) / 2;
+    const circ = 2 * Math.PI * r;
+    return (
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={s.accent} strokeWidth={stroke}
+          strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)} strokeLinecap="round"
+          style={{ transition: 'stroke-dashoffset 0.8s cubic-bezier(0.16,1,0.3,1)' }} />
+      </svg>
+    );
+  };
 
-  const renderHome = () => (
-    <div>
-      {/* Welcome */}
-      <Card style={{ padding: '32px 28px', marginBottom: 20 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+  // ------- SECTION RENDERERS -------
+
+  const renderHome = () => {
+    const firstPlan = treatmentPlans[0];
+    const planCompleted = firstPlan ? firstPlan.sessions.filter(ss => ss.status === 'completed').length : 0;
+    const planTotal = firstPlan ? firstPlan.sessions.length : 0;
+    const walletTotal = giftCards.reduce((sum, g) => sum + g.balance, 0) + credits.reduce((sum, c) => sum + c.balance, 0);
+
+    return (
+      <div>
+        {/* --- Hero Welcome Gradient --- */}
+        <div className="portal-fadeInUp" style={{
+          borderRadius: 24, padding: '40px 36px 36px',
+          background: `linear-gradient(135deg, ${s.accent}18 0%, ${s.accent}08 50%, rgba(255,255,255,0) 100%)`,
+          marginBottom: 28, position: 'relative', overflow: 'hidden',
+        }}>
+          {/* decorative accent circle */}
           <div style={{
-            width: 56, height: 56, borderRadius: '50%', background: s.accentLight,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            font: `600 22px ${s.FONT}`, color: s.accent, flexShrink: 0,
-          }}>
-            {patient?.firstName?.[0]}{patient?.lastName?.[0]}
-          </div>
-          <div style={{ flex: 1 }}>
-            <h1 style={{ font: `600 28px ${s.FONT}`, color: s.text, margin: 0 }}>
-              Welcome back, {patientName}
-            </h1>
-            <p style={{ font: `400 14px ${s.FONT}`, color: s.text2, margin: '4px 0 0' }}>
-              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
-            </p>
-          </div>
-          {membership && tierInfo && (
-            <Badge text={`${membership.tier} Member`} color={tierInfo.color} bg={tierInfo.bg} />
-          )}
-        </div>
-      </Card>
-
-      {/* Next Appointment Preview */}
-      {nextAppt && (
-        <Card style={{ padding: '24px 28px', marginBottom: 20, borderLeft: `4px solid ${s.accent}` }}>
-          <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-            Next Appointment
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+            position: 'absolute', top: -40, right: -40, width: 160, height: 160,
+            borderRadius: '50%', background: `${s.accent}0A`, pointerEvents: 'none',
+          }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap', position: 'relative' }}>
+            <div style={{
+              width: 60, height: 60, borderRadius: '50%',
+              background: `linear-gradient(135deg, ${s.accent}30, ${s.accent}10)`,
+              border: `2px solid ${s.accent}25`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              font: `500 22px ${s.FONT}`, color: s.accent, flexShrink: 0,
+              letterSpacing: -0.5,
+            }}>
+              {patient?.firstName?.[0]}{patient?.lastName?.[0]}
+            </div>
             <div style={{ flex: 1 }}>
-              <div style={{ font: `600 16px ${s.FONT}`, color: s.text, marginBottom: 4 }}>
-                {svcName(nextAppt.serviceId)}
-              </div>
-              <div style={{ font: `400 14px ${s.FONT}`, color: s.text2 }}>
-                {fmtWeekday(nextAppt.date)} at {nextAppt.time}
-              </div>
-              <div style={{ font: `400 13px ${s.FONT}`, color: s.text3, marginTop: 2 }}>
-                with {provName(nextAppt.providerId)}
+              <h1 style={{ font: `300 32px ${s.FONT}`, color: s.text, margin: 0, letterSpacing: -0.8 }}>
+                Welcome back, {patientName}
+              </h1>
+              <p style={{ font: `400 14px ${s.FONT}`, color: s.text2, margin: '4px 0 0', letterSpacing: 0.1 }}>
+                {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
+              </p>
+            </div>
+            {membership && tierInfo && (
+              <span style={{
+                padding: '6px 18px', borderRadius: 100,
+                background: `${tierInfo.color}15`, border: `1.5px solid ${tierInfo.color}30`,
+                font: `600 11px ${s.FONT}`, textTransform: 'uppercase', letterSpacing: 1.2,
+                color: tierInfo.color,
+              }}>{membership.tier} Member</span>
+            )}
+          </div>
+
+          {/* Floating next-appointment glass card */}
+          {nextAppt && (
+            <div style={{
+              marginTop: 28, ...glass,
+              borderRadius: 16, padding: '22px 26px',
+              borderLeft: `3px solid ${s.accent}`,
+              background: 'rgba(255,255,255,0.65)',
+            }}>
+              <SectionLabel>Next Appointment</SectionLabel>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ font: `500 17px ${s.FONT}`, color: s.text, marginBottom: 3, letterSpacing: -0.2 }}>
+                    {svcName(nextAppt.serviceId)}
+                  </div>
+                  <div style={{ font: `400 14px ${s.FONT}`, color: s.text2 }}>
+                    {fmtWeekday(nextAppt.date)} at {nextAppt.time}
+                  </div>
+                  <div style={{ font: `400 13px ${s.FONT}`, color: s.text3, marginTop: 2 }}>
+                    with {provName(nextAppt.providerId)}
+                  </div>
+                </div>
+                <button onClick={() => setSection('appointments')} style={{
+                  ...s.pillOutline, padding: '10px 22px', borderRadius: 100,
+                }}>View All</button>
               </div>
             </div>
-            <button onClick={() => setSection('appointments')} style={{
-              ...s.pillOutline, padding: '10px 20px',
-            }}>View All</button>
-          </div>
-        </Card>
-      )}
+          )}
+        </div>
 
-      {/* Quick Links Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
-        {[
-          { id: 'appointments', label: 'My Appointments', count: upcomingAppts.length, sub: 'upcoming' },
-          { id: 'treatment', label: 'Treatment Plan', count: treatmentPlans.length, sub: treatmentPlans.length === 1 ? 'active plan' : 'plans' },
-          { id: 'membership', label: 'Membership', count: membership ? membership.tier : 'None', sub: membership ? 'active' : '' },
-          { id: 'wallet', label: 'Wallet', count: loyalty ? `${loyalty.points.toLocaleString()} pts` : '$0', sub: 'balance' },
-          { id: 'referrals', label: 'Referrals', count: creditedReferrals.length, sub: 'friends referred' },
-          { id: 'waivers', label: 'Waivers', count: waivers.filter(w => w.status === 'pending').length, sub: 'pending' },
-        ].map(item => (
-          <Card key={item.id} style={{ padding: '20px 18px', cursor: 'pointer', transition: 'all 0.15s' }}
-            onClick={() => setSection(item.id)}
-            onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.08)'}
-            onMouseLeave={e => e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.04)'}
-          >
-            <div style={{ font: `600 22px ${s.FONT}`, color: s.accent, marginBottom: 4 }}>{item.count}</div>
-            <div style={{ font: `500 13px ${s.FONT}`, color: s.text }}>{item.label}</div>
-            {item.sub && <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{item.sub}</div>}
+        {/* --- Dashboard Cards Grid --- */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 16, marginBottom: 28 }}>
+          {/* Membership summary */}
+          <Card hover className="portal-fadeInUp portal-stagger-1" style={{ padding: '24px 22px', cursor: 'pointer' }}
+            onClick={() => setSection('membership')}>
+            <SectionLabel>Membership</SectionLabel>
+            {membership ? (
+              <>
+                <div style={{ font: `500 18px ${s.FONT}`, color: s.text, marginBottom: 4 }}>{membership.tier}</div>
+                {(membership.wallet || []).slice(0, 1).map((w, i) => (
+                  <div key={i} style={{ font: `400 13px ${s.FONT}`, color: s.text2 }}>
+                    {w.remaining} / {w.total} {w.service} remaining
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>No membership</div>
+            )}
           </Card>
-        ))}
+
+          {/* Wallet summary */}
+          <Card hover className="portal-fadeInUp portal-stagger-2" style={{ padding: '24px 22px', cursor: 'pointer' }}
+            onClick={() => setSection('wallet')}>
+            <SectionLabel>Wallet</SectionLabel>
+            <div style={{ font: `500 22px ${s.FONT}`, color: s.text, marginBottom: 2 }}>
+              {walletTotal > 0 ? fmt(walletTotal) : '$0'}
+            </div>
+            {loyalty && (
+              <div style={{ font: `400 13px ${s.FONT}`, color: s.accent }}>{loyalty.points.toLocaleString()} loyalty pts</div>
+            )}
+          </Card>
+
+          {/* Treatment plan progress */}
+          <Card hover className="portal-fadeInUp portal-stagger-3" style={{ padding: '24px 22px', cursor: 'pointer' }}
+            onClick={() => setSection('treatment')}>
+            <SectionLabel>Treatment Plan</SectionLabel>
+            {firstPlan ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                <ProgressRing value={planCompleted} max={planTotal} />
+                <div>
+                  <div style={{ font: `500 15px ${s.FONT}`, color: s.text }}>{firstPlan.name}</div>
+                  <div style={{ font: `400 13px ${s.FONT}`, color: s.text2 }}>
+                    {planCompleted}/{planTotal} sessions
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>No active plan</div>
+            )}
+          </Card>
+
+          {/* Upcoming appts count */}
+          <Card hover className="portal-fadeInUp portal-stagger-4" style={{ padding: '24px 22px', cursor: 'pointer' }}
+            onClick={() => setSection('appointments')}>
+            <SectionLabel>Upcoming</SectionLabel>
+            <div style={{ font: `500 28px ${s.FONT}`, color: s.accent, marginBottom: 2 }}>{upcomingAppts.length}</div>
+            <div style={{ font: `400 13px ${s.FONT}`, color: s.text3 }}>
+              {upcomingAppts.length === 1 ? 'appointment' : 'appointments'}
+            </div>
+          </Card>
+        </div>
+
+        {/* Quick action buttons */}
+        <div className="portal-fadeInUp portal-stagger-5" style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <button style={{
+            ...s.pillAccent, padding: '14px 32px', fontSize: 14, borderRadius: 100,
+            boxShadow: `0 4px 20px ${s.accent}30`,
+          }}>
+            Book Appointment
+          </button>
+          <button onClick={() => setSection('referrals')} style={{
+            ...s.pillOutline, padding: '14px 32px', fontSize: 14, borderRadius: 100,
+          }}>
+            Refer a Friend
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderAppointments = () => (
     <div>
-      <SectionTitle>My Appointments</SectionTitle>
+      <SectionTitle sub={`${upcomingAppts.length} upcoming, ${pastAppts.length} past`}>
+        My Appointments
+      </SectionTitle>
 
       {/* Upcoming */}
-      <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-        Upcoming ({upcomingAppts.length})
-      </div>
+      <SectionLabel>Upcoming</SectionLabel>
       {upcomingAppts.length === 0 ? (
-        <Card style={{ padding: 32, textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>No upcoming appointments</div>
+        <Card className="portal-fadeInUp" style={{ padding: '40px 28px', textAlign: 'center', marginBottom: 28 }}>
+          <div style={{ font: `400 15px ${s.FONT}`, color: s.text3 }}>No upcoming appointments</div>
         </Card>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 24 }}>
-          {upcomingAppts.map(a => (
-            <Card key={a.id} style={{ padding: '18px 22px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-                <div style={{
-                  width: 48, height: 48, borderRadius: 12, background: s.accentLight,
-                  display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}>
-                  <div style={{ font: `600 14px ${s.FONT}`, color: s.accent, lineHeight: 1 }}>
-                    {new Date(a.date + 'T12:00:00').getDate()}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginBottom: 28 }}>
+          {upcomingAppts.map((a, i) => {
+            const dt = new Date(a.date + 'T12:00:00');
+            return (
+              <Card key={a.id} hover className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 8)}`}
+                style={{ padding: '20px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+                  {/* Date tile */}
+                  <div style={{
+                    width: 52, height: 58, borderRadius: 14,
+                    background: `linear-gradient(135deg, ${s.accent}15, ${s.accent}08)`,
+                    border: `1px solid ${s.accent}20`,
+                    display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                  }}>
+                    <div style={{ font: `600 20px ${s.FONT}`, color: s.accent, lineHeight: 1 }}>
+                      {dt.getDate()}
+                    </div>
+                    <div style={{ font: `500 9px ${s.MONO}`, color: s.accent, textTransform: 'uppercase', letterSpacing: 1, marginTop: 2 }}>
+                      {dt.toLocaleDateString('en-US', { month: 'short' })}
+                    </div>
                   </div>
-                  <div style={{ font: `400 9px ${s.MONO}`, color: s.accent, textTransform: 'uppercase' }}>
-                    {new Date(a.date + 'T12:00:00').toLocaleDateString('en-US', { month: 'short' })}
+                  <div style={{ flex: 1 }}>
+                    <div style={{ font: `500 16px ${s.FONT}`, color: s.text, letterSpacing: -0.2 }}>{svcName(a.serviceId)}</div>
+                    <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginTop: 2 }}>
+                      {fmtWeekday(a.date)} at {a.time}
+                    </div>
+                    <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginTop: 2 }}>
+                      with {provName(a.providerId)} {a.room ? `\u00B7 ${a.room}` : ''}
+                    </div>
                   </div>
+                  <Badge
+                    text={a.status}
+                    color={a.status === 'confirmed' ? s.success : s.warning}
+                    bg={a.status === 'confirmed' ? '#F0FDF4' : '#FFFBEB'}
+                  />
                 </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ font: `600 15px ${s.FONT}`, color: s.text }}>{svcName(a.serviceId)}</div>
-                  <div style={{ font: `400 13px ${s.FONT}`, color: s.text2 }}>
-                    {fmtWeekday(a.date)} at {a.time}
-                  </div>
-                  <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginTop: 2 }}>
-                    with {provName(a.providerId)} {a.room ? `- ${a.room}` : ''}
-                  </div>
-                </div>
-                <Badge
-                  text={a.status}
-                  color={a.status === 'confirmed' ? s.success : s.warning}
-                  bg={a.status === 'confirmed' ? '#F0FDF4' : '#FFFBEB'}
-                />
-              </div>
-            </Card>
-          ))}
+              </Card>
+            );
+          })}
         </div>
       )}
 
-      <button style={{ ...s.pillAccent, padding: '12px 28px', marginBottom: 32 }}>
-        Book New Appointment
-      </button>
+      <div className="portal-fadeInUp portal-stagger-3" style={{ marginBottom: 36 }}>
+        <button style={{
+          ...s.pillAccent, padding: '14px 32px', fontSize: 14, borderRadius: 100,
+          boxShadow: `0 4px 20px ${s.accent}30`,
+        }}>
+          Book New Appointment
+        </button>
+      </div>
+
+      {/* Divider */}
+      <div style={{ height: 1, background: 'rgba(0,0,0,0.06)', marginBottom: 28 }} />
 
       {/* Past */}
-      <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-        Past Appointments ({pastAppts.length})
-      </div>
+      <SectionLabel>Past Appointments</SectionLabel>
       {pastAppts.length === 0 ? (
-        <Card style={{ padding: 32, textAlign: 'center' }}>
-          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>No past appointments</div>
+        <Card className="portal-fadeInUp" style={{ padding: '40px 28px', textAlign: 'center' }}>
+          <div style={{ font: `400 15px ${s.FONT}`, color: s.text3 }}>No past appointments</div>
         </Card>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {pastAppts.slice(0, 10).map(a => (
-            <Card key={a.id} style={{ padding: '14px 22px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {pastAppts.slice(0, 10).map((a, i) => (
+            <Card key={a.id} className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 8)}`}
+              style={{ padding: '16px 24px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 <div style={{ flex: 1 }}>
                   <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{svcName(a.serviceId)}</div>
                   <div style={{ font: `400 12px ${s.FONT}`, color: s.text3 }}>
-                    {fmtDate(a.date)} at {a.time} - {provName(a.providerId)}
+                    {fmtDate(a.date)} at {a.time} \u00B7 {provName(a.providerId)}
                   </div>
                 </div>
-                <span style={{ font: `400 11px ${s.FONT}`, color: s.text3, textTransform: 'uppercase' }}>Completed</span>
+                <span style={{
+                  font: `500 10px ${s.FONT}`, textTransform: 'uppercase', letterSpacing: 1,
+                  color: s.text3, opacity: 0.7,
+                }}>Completed</span>
               </div>
             </Card>
           ))}
           {pastAppts.length > 10 && (
-            <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, textAlign: 'center', padding: 8 }}>
+            <div style={{ font: `400 13px ${s.FONT}`, color: s.text3, textAlign: 'center', padding: 12 }}>
               + {pastAppts.length - 10} more
             </div>
           )}
@@ -340,28 +527,32 @@ export default function Portal() {
 
   const renderTreatmentPlan = () => (
     <div>
-      <SectionTitle>My Treatment Plan</SectionTitle>
+      <SectionTitle sub="Your personalized treatment journey">My Treatment Plan</SectionTitle>
       {treatmentPlans.length === 0 ? (
-        <Card style={{ padding: 40, textAlign: 'center' }}>
-          <div style={{ font: `500 16px ${s.FONT}`, color: s.text, marginBottom: 8 }}>No active treatment plan</div>
-          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>
+        <Card className="portal-fadeInUp" style={{ padding: '48px 32px', textAlign: 'center' }}>
+          <div style={{ font: `300 20px ${s.FONT}`, color: s.text, marginBottom: 10 }}>No active treatment plan</div>
+          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3, maxWidth: 340, margin: '0 auto' }}>
             Ask your provider about a personalized treatment plan at your next visit.
           </div>
         </Card>
-      ) : treatmentPlans.map(plan => {
+      ) : treatmentPlans.map((plan, pi) => {
         const completed = plan.sessions.filter(ss => ss.status === 'completed').length;
         const total = plan.sessions.length;
         const nextSession = plan.sessions.find(ss => ss.status === 'upcoming' || ss.status === 'in-progress');
         return (
-          <Card key={plan.id} style={{ padding: '24px 28px', marginBottom: 16 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <Card key={plan.id} className={`portal-fadeInUp portal-stagger-${Math.min(pi + 1, 4)}`}
+            style={{ padding: '28px 30px', marginBottom: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20, flexWrap: 'wrap', gap: 12 }}>
               <div>
-                <div style={{ font: `600 18px ${s.FONT}`, color: s.text }}>{plan.name}</div>
+                <div style={{ font: `300 22px ${s.FONT}`, color: s.text, letterSpacing: -0.3 }}>{plan.name}</div>
                 <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginTop: 4 }}>
                   with {provName(plan.providerId)}
                 </div>
               </div>
-              <div style={{ font: `600 14px ${s.FONT}`, color: s.accent }}>{completed}/{total} sessions</div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <ProgressRing value={completed} max={total} size={48} stroke={4} />
+                <div style={{ font: `500 14px ${s.FONT}`, color: s.accent }}>{completed}/{total}</div>
+              </div>
             </div>
             <ProgressBar value={completed} max={total} />
             <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginTop: 8 }}>
@@ -369,30 +560,29 @@ export default function Portal() {
             </div>
             {nextSession && (
               <div style={{
-                marginTop: 16, padding: '14px 18px', borderRadius: 12,
-                background: s.accentLight, display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                marginTop: 20, padding: '16px 20px', borderRadius: 14,
+                background: `${s.accent}08`, border: `1px solid ${s.accent}15`,
+                display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10,
               }}>
                 <div>
-                  <div style={{ font: `500 13px ${s.FONT}`, color: s.text }}>Next: {nextSession.name}</div>
+                  <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>Next: {nextSession.name}</div>
                   <div style={{ font: `400 12px ${s.FONT}`, color: s.text2, marginTop: 2 }}>{fmtDate(nextSession.date)}</div>
                 </div>
                 <Badge text={nextSession.status} color={nextSession.status === 'in-progress' ? s.warning : s.accent} bg={nextSession.status === 'in-progress' ? '#FFFBEB' : s.accentLight} />
               </div>
             )}
             {/* Sessions list */}
-            <div style={{ marginTop: 20 }}>
-              <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-                All Sessions
-              </div>
+            <div style={{ marginTop: 24 }}>
+              <SectionLabel>All Sessions</SectionLabel>
               {plan.sessions.map((ss, i) => (
                 <div key={i} style={{
-                  display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0',
-                  borderBottom: i < plan.sessions.length - 1 ? '1px solid #F5F5F5' : 'none',
+                  display: 'flex', alignItems: 'center', gap: 14, padding: '12px 0',
+                  borderBottom: i < plan.sessions.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
                 }}>
                   <div style={{
-                    width: 24, height: 24, borderRadius: '50%', flexShrink: 0,
+                    width: 28, height: 28, borderRadius: '50%', flexShrink: 0,
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    background: ss.status === 'completed' ? s.success : ss.status === 'in-progress' ? s.warning : '#E5E5E5',
+                    background: ss.status === 'completed' ? s.success : ss.status === 'in-progress' ? s.warning : 'rgba(0,0,0,0.06)',
                     color: ss.status === 'completed' || ss.status === 'in-progress' ? '#fff' : s.text3,
                     font: `600 11px ${s.FONT}`,
                   }}>
@@ -403,7 +593,7 @@ export default function Portal() {
                     {ss.date && <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{fmtDate(ss.date)}</div>}
                   </div>
                   <span style={{
-                    font: `500 10px ${s.FONT}`, textTransform: 'uppercase', letterSpacing: 0.5,
+                    font: `500 10px ${s.FONT}`, textTransform: 'uppercase', letterSpacing: 0.8,
                     color: ss.status === 'completed' ? s.success : ss.status === 'in-progress' ? s.warning : s.text3,
                   }}>{ss.status}</span>
                 </div>
@@ -417,26 +607,33 @@ export default function Portal() {
 
   const renderMembership = () => (
     <div>
-      <SectionTitle>My Membership</SectionTitle>
+      <SectionTitle sub="Your exclusive benefits">My Membership</SectionTitle>
       {!membership ? (
-        <Card style={{ padding: 40, textAlign: 'center' }}>
-          <div style={{ font: `500 18px ${s.FONT}`, color: s.text, marginBottom: 8 }}>
+        <Card className="portal-fadeInUp" style={{ padding: '48px 32px', textAlign: 'center' }}>
+          <div style={{ font: `300 22px ${s.FONT}`, color: s.text, marginBottom: 10 }}>
             You don't have a membership yet
           </div>
-          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3, marginBottom: 20 }}>
+          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3, marginBottom: 28, maxWidth: 340, margin: '0 auto 28px' }}>
             Unlock exclusive savings with a membership tier.
           </div>
-          <button style={{ ...s.pillAccent, padding: '12px 32px', fontSize: 14 }}>
+          <button style={{
+            ...s.pillAccent, padding: '14px 36px', fontSize: 14, borderRadius: 100,
+            boxShadow: `0 4px 20px ${s.accent}30`,
+          }}>
             Explore Memberships
           </button>
         </Card>
       ) : (
         <div>
-          <Card style={{ padding: '28px', marginBottom: 16, background: tierInfo?.bg || '#fff' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}>
+          <Card className="portal-fadeInUp" style={{
+            padding: '30px', marginBottom: 20,
+            background: `linear-gradient(135deg, ${tierInfo?.bg || '#fff'}, rgba(255,255,255,0.6))`,
+            backdropFilter: 'blur(24px)', WebkitBackdropFilter: 'blur(24px)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 22, flexWrap: 'wrap', gap: 12 }}>
               <div>
-                <Badge text={membership.tier} color={tierInfo?.color} bg='rgba(255,255,255,0.8)' />
-                <div style={{ font: `600 22px ${s.FONT}`, color: s.text, marginTop: 10 }}>
+                <Badge text={membership.tier} color={tierInfo?.color} bg='rgba(255,255,255,0.85)' />
+                <div style={{ font: `300 24px ${s.FONT}`, color: s.text, marginTop: 12, letterSpacing: -0.3 }}>
                   {membership.tier} Membership
                 </div>
                 <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginTop: 4 }}>
@@ -448,31 +645,29 @@ export default function Portal() {
             </div>
 
             {membership.nextBilling && (
-              <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginBottom: 20 }}>
+              <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginBottom: 22 }}>
                 Next billing: <strong>{fmtDate(membership.nextBilling)}</strong>
               </div>
             )}
 
             {membership.credits > 0 && (
               <div style={{
-                padding: '12px 16px', borderRadius: 10, background: 'rgba(255,255,255,0.7)',
-                font: `500 14px ${s.FONT}`, color: s.accent, marginBottom: 16,
+                padding: '14px 18px', borderRadius: 14, background: 'rgba(255,255,255,0.75)',
+                font: `500 14px ${s.FONT}`, color: s.accent, marginBottom: 20,
+                backdropFilter: 'blur(12px)',
               }}>
                 {fmt(membership.credits * 100)} membership credits available
               </div>
             )}
 
-            {/* Service allocations */}
-            <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 12 }}>
-              Included Services
-            </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <SectionLabel>Included Services</SectionLabel>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
               {(membership.wallet || []).map((w, i) => (
-                <div key={i} style={{ background: 'rgba(255,255,255,0.7)', borderRadius: 10, padding: '14px 16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                <div key={i} style={{ background: 'rgba(255,255,255,0.7)', borderRadius: 14, padding: '16px 18px', backdropFilter: 'blur(8px)' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                     <span style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{w.service}</span>
                     <span style={{ font: `600 13px ${s.MONO}`, color: w.remaining > 0 ? s.accent : s.text3 }}>
-                      {w.remaining} of {w.total} remaining
+                      {w.remaining} of {w.total}
                     </span>
                   </div>
                   <ProgressBar value={w.remaining} max={w.total} color={w.remaining > 0 ? s.accent : '#DDD'} />
@@ -484,18 +679,17 @@ export default function Portal() {
           {/* Packages */}
           {packages.length > 0 && (
             <div>
-              <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, margin: '20px 0 10px' }}>
-                My Packages
-              </div>
-              {packages.map(pkg => (
-                <Card key={pkg.id} style={{ padding: '18px 22px', marginBottom: 10 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
-                    <div style={{ font: `600 15px ${s.FONT}`, color: s.text }}>{pkg.name}</div>
+              <SectionLabel>My Packages</SectionLabel>
+              {packages.map((pkg, i) => (
+                <Card key={pkg.id} className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 4)}`}
+                  style={{ padding: '22px 24px', marginBottom: 12 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                    <div style={{ font: `500 16px ${s.FONT}`, color: s.text }}>{pkg.name}</div>
                     <Badge text={pkg.status} color={pkg.status === 'active' ? s.success : s.text3}
                       bg={pkg.status === 'active' ? '#F0FDF4' : '#F5F5F5'} />
                   </div>
-                  <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginBottom: 8 }}>
-                    {pkg.usedSessions} of {pkg.totalSessions} sessions used - Expires {fmtDate(pkg.expiresDate)}
+                  <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginBottom: 10 }}>
+                    {pkg.usedSessions} of {pkg.totalSessions} sessions used \u00B7 Expires {fmtDate(pkg.expiresDate)}
                   </div>
                   <ProgressBar value={pkg.usedSessions} max={pkg.totalSessions} color={s.accent} />
                 </Card>
@@ -509,35 +703,29 @@ export default function Portal() {
 
   const renderWallet = () => (
     <div>
-      <SectionTitle>My Wallet</SectionTitle>
+      <SectionTitle sub="Gift cards, credits & loyalty points">My Wallet</SectionTitle>
 
       {/* Summary cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, marginBottom: 24 }}>
-        <Card style={{ padding: '20px 18px' }}>
-          <div style={{ font: `400 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 6 }}>
-            Gift Cards
-          </div>
-          <div style={{ font: `600 24px ${s.FONT}`, color: s.text }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 14, marginBottom: 28 }}>
+        <Card hover className="portal-fadeInUp portal-stagger-1" style={{ padding: '24px 22px' }}>
+          <SectionLabel>Gift Cards</SectionLabel>
+          <div style={{ font: `300 28px ${s.FONT}`, color: s.text }}>
             {fmt(giftCards.reduce((sum, g) => sum + g.balance, 0))}
           </div>
         </Card>
-        <Card style={{ padding: '20px 18px' }}>
-          <div style={{ font: `400 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 6 }}>
-            Account Credits
-          </div>
-          <div style={{ font: `600 24px ${s.FONT}`, color: s.text }}>
+        <Card hover className="portal-fadeInUp portal-stagger-2" style={{ padding: '24px 22px' }}>
+          <SectionLabel>Account Credits</SectionLabel>
+          <div style={{ font: `300 28px ${s.FONT}`, color: s.text }}>
             {fmt(credits.reduce((sum, c) => sum + c.balance, 0))}
           </div>
         </Card>
-        <Card style={{ padding: '20px 18px' }}>
-          <div style={{ font: `400 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 6 }}>
-            Loyalty Points
-          </div>
-          <div style={{ font: `600 24px ${s.FONT}`, color: s.accent }}>
+        <Card hover className="portal-fadeInUp portal-stagger-3" style={{ padding: '24px 22px' }}>
+          <SectionLabel>Loyalty Points</SectionLabel>
+          <div style={{ font: `300 28px ${s.FONT}`, color: s.accent }}>
             {loyalty ? loyalty.points.toLocaleString() : '0'}
           </div>
           {loyalty && (
-            <div style={{ font: `400 11px ${s.FONT}`, color: s.text3, marginTop: 2 }}>
+            <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginTop: 4 }}>
               {loyalty.lifetimePoints?.toLocaleString()} lifetime
             </div>
           )}
@@ -546,25 +734,24 @@ export default function Portal() {
 
       {/* Gift Cards detail */}
       {giftCards.length > 0 && (
-        <div style={{ marginBottom: 24 }}>
-          <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-            Gift Cards
-          </div>
-          {giftCards.map(gc => (
-            <Card key={gc.id} style={{ padding: '16px 20px', marginBottom: 8 }}>
+        <div style={{ marginBottom: 28 }}>
+          <SectionLabel>Gift Cards</SectionLabel>
+          {giftCards.map((gc, i) => (
+            <Card key={gc.id} className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 4)}`}
+              style={{ padding: '20px 24px', marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>
                     Gift Card from {gc.purchasedBy}
                   </div>
                   {gc.recipientMessage && (
-                    <div style={{ font: `400 12px ${s.FONT}`, color: s.text2, fontStyle: 'italic', marginTop: 2 }}>
+                    <div style={{ font: `400 12px ${s.FONT}`, color: s.text2, fontStyle: 'italic', marginTop: 3 }}>
                       "{gc.recipientMessage}"
                     </div>
                   )}
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ font: `600 16px ${s.FONT}`, color: s.accent }}>{fmt(gc.balance)}</div>
+                  <div style={{ font: `500 17px ${s.FONT}`, color: s.accent }}>{fmt(gc.balance)}</div>
                   <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>of {fmt(gc.amount)}</div>
                 </div>
               </div>
@@ -575,18 +762,17 @@ export default function Portal() {
 
       {/* Credits detail */}
       {credits.length > 0 && (
-        <div style={{ marginBottom: 24 }}>
-          <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-            Account Credits
-          </div>
-          {credits.map(cr => (
-            <Card key={cr.id} style={{ padding: '16px 20px', marginBottom: 8 }}>
+        <div style={{ marginBottom: 28 }}>
+          <SectionLabel>Account Credits</SectionLabel>
+          {credits.map((cr, i) => (
+            <Card key={cr.id} className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 4)}`}
+              style={{ padding: '18px 24px', marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{cr.reason}</div>
                   <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{fmtDate(cr.createdAt)}</div>
                 </div>
-                <div style={{ font: `600 16px ${s.FONT}`, color: s.success }}>{fmt(cr.balance)}</div>
+                <div style={{ font: `500 17px ${s.FONT}`, color: s.success }}>{fmt(cr.balance)}</div>
               </div>
             </Card>
           ))}
@@ -595,33 +781,33 @@ export default function Portal() {
 
       {/* Loyalty history */}
       {loyalty && loyalty.transactions && (
-        <div>
-          <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-            Points Activity
-          </div>
-          {loyalty.transactions.slice().reverse().map((tx, i) => (
-            <div key={i} style={{
-              display: 'flex', justifyContent: 'space-between', padding: '10px 0',
-              borderBottom: i < loyalty.transactions.length - 1 ? '1px solid #F5F5F5' : 'none',
-            }}>
-              <div>
-                <div style={{ font: `400 13px ${s.FONT}`, color: s.text }}>{tx.note}</div>
-                <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{fmtDate(tx.date)}</div>
-              </div>
-              <span style={{
-                font: `600 13px ${s.MONO}`,
-                color: (tx.points || 0) > 0 ? s.success : s.danger,
+        <div className="portal-fadeInUp portal-stagger-4">
+          <SectionLabel>Points Activity</SectionLabel>
+          <Card style={{ padding: '20px 24px' }}>
+            {loyalty.transactions.slice().reverse().map((tx, i) => (
+              <div key={i} style={{
+                display: 'flex', justifyContent: 'space-between', padding: '12px 0',
+                borderBottom: i < loyalty.transactions.length - 1 ? '1px solid rgba(0,0,0,0.04)' : 'none',
               }}>
-                {(tx.points || 0) > 0 ? '+' : ''}{tx.points}
-              </span>
-            </div>
-          ))}
+                <div>
+                  <div style={{ font: `400 13px ${s.FONT}`, color: s.text }}>{tx.note}</div>
+                  <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{fmtDate(tx.date)}</div>
+                </div>
+                <span style={{
+                  font: `600 13px ${s.MONO}`,
+                  color: (tx.points || 0) > 0 ? s.success : s.danger,
+                }}>
+                  {(tx.points || 0) > 0 ? '+' : ''}{tx.points}
+                </span>
+              </div>
+            ))}
+          </Card>
         </div>
       )}
 
       {giftCards.length === 0 && credits.length === 0 && !loyalty && (
-        <Card style={{ padding: 40, textAlign: 'center' }}>
-          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>No wallet activity yet.</div>
+        <Card className="portal-fadeInUp" style={{ padding: '48px 28px', textAlign: 'center' }}>
+          <div style={{ font: `400 15px ${s.FONT}`, color: s.text3 }}>No wallet activity yet.</div>
         </Card>
       )}
     </div>
@@ -631,22 +817,23 @@ export default function Portal() {
     const pairKeys = Object.keys(photoPairs);
     return (
       <div>
-        <SectionTitle>Before & After</SectionTitle>
+        <SectionTitle sub="Track your transformation">Before & After</SectionTitle>
         {pairKeys.length === 0 ? (
-          <Card style={{ padding: 40, textAlign: 'center' }}>
-            <div style={{ font: `500 16px ${s.FONT}`, color: s.text, marginBottom: 8 }}>No photos yet</div>
-            <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>
+          <Card className="portal-fadeInUp" style={{ padding: '48px 32px', textAlign: 'center' }}>
+            <div style={{ font: `300 20px ${s.FONT}`, color: s.text, marginBottom: 10 }}>No photos yet</div>
+            <div style={{ font: `400 14px ${s.FONT}`, color: s.text3, maxWidth: 340, margin: '0 auto' }}>
               Your before and after photos will appear here after your treatments.
             </div>
           </Card>
-        ) : pairKeys.map(key => {
+        ) : pairKeys.map((key, ki) => {
           const pair = photoPairs[key];
           return (
-            <Card key={key} style={{ padding: '22px 24px', marginBottom: 14 }}>
-              <div style={{ font: `600 15px ${s.FONT}`, color: s.text, marginBottom: 4 }}>
+            <Card key={key} className={`portal-fadeInUp portal-stagger-${Math.min(ki + 1, 6)}`}
+              style={{ padding: '24px 26px', marginBottom: 16 }}>
+              <div style={{ font: `500 16px ${s.FONT}`, color: s.text, marginBottom: 4, letterSpacing: -0.2 }}>
                 {pair.serviceName}
               </div>
-              <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginBottom: 16 }}>
+              <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginBottom: 18 }}>
                 Angle: {pair.angle}
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
@@ -654,12 +841,11 @@ export default function Portal() {
                   const photo = pair[phase];
                   return (
                     <div key={phase}>
-                      <div style={{ font: `600 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 8 }}>
-                        {phase}
-                      </div>
+                      <SectionLabel>{phase}</SectionLabel>
                       {photo ? (
                         <div style={{
-                          height: 160, borderRadius: 12, background: '#F5F5F5', border: '1px solid #E5E5E5',
+                          height: 170, borderRadius: 14, background: 'rgba(0,0,0,0.03)',
+                          border: '1px solid rgba(0,0,0,0.06)',
                           display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                         }}>
                           <div style={{ font: `500 12px ${s.FONT}`, color: s.text3, marginBottom: 4 }}>
@@ -667,16 +853,17 @@ export default function Portal() {
                           </div>
                           <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{fmtDate(photo.date)}</div>
                           {photo.notes && (
-                            <div style={{ font: `400 11px ${s.FONT}`, color: s.text2, marginTop: 6, padding: '0 12px', textAlign: 'center' }}>
+                            <div style={{ font: `400 11px ${s.FONT}`, color: s.text2, marginTop: 8, padding: '0 14px', textAlign: 'center' }}>
                               {photo.notes}
                             </div>
                           )}
                         </div>
                       ) : (
                         <div style={{
-                          height: 160, borderRadius: 12, background: '#FAFAFA', border: '1px dashed #DDD',
+                          height: 170, borderRadius: 14, background: 'rgba(0,0,0,0.015)',
+                          border: '1px dashed rgba(0,0,0,0.1)',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
-                          font: `400 12px ${s.FONT}`, color: s.text3,
+                          font: `400 13px ${s.FONT}`, color: s.text3,
                         }}>
                           Not yet taken
                         </div>
@@ -694,57 +881,58 @@ export default function Portal() {
 
   const renderWaivers = () => (
     <div>
-      <SectionTitle>My Waivers</SectionTitle>
+      <SectionTitle sub="Review and sign your consent forms">My Waivers</SectionTitle>
       {waivers.length === 0 ? (
-        <Card style={{ padding: 40, textAlign: 'center' }}>
-          <div style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>No waivers assigned.</div>
+        <Card className="portal-fadeInUp" style={{ padding: '48px 28px', textAlign: 'center' }}>
+          <div style={{ font: `400 15px ${s.FONT}`, color: s.text3 }}>No waivers assigned.</div>
         </Card>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {waivers.map(w => {
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {waivers.map((w, i) => {
             const templateName = WAIVER_TEMPLATES[w.templateId] || w.templateId;
             const isPending = w.status === 'pending';
             return (
-              <Card key={w.id} style={{ padding: '18px 22px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+              <Card key={w.id} className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 8)}`}
+                style={{ padding: '20px 24px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
                   <div style={{
-                    width: 36, height: 36, borderRadius: '50%', flexShrink: 0,
+                    width: 40, height: 40, borderRadius: '50%', flexShrink: 0,
                     background: isPending ? '#FEF3C7' : '#F0FDF4',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    font: `500 14px ${s.FONT}`,
+                    font: `500 15px ${s.FONT}`,
                     color: isPending ? s.warning : s.success,
                   }}>
                     {isPending ? '!' : '\u2713'}
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{templateName}</div>
-                    <div style={{ font: `400 12px ${s.FONT}`, color: s.text3 }}>
+                  <div style={{ flex: 1, minWidth: 140 }}>
+                    <div style={{ font: `500 15px ${s.FONT}`, color: s.text }}>{templateName}</div>
+                    <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, marginTop: 2 }}>
                       {isPending ? 'Signature required' : `Signed ${fmtDate(w.signedAt)}`}
                     </div>
                   </div>
                   {isPending && (
                     signingWaiver === w.id ? (
-                      <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+                      <div style={{ display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap' }}>
                         <input
                           value={signName}
                           onChange={e => setSignName(e.target.value)}
                           placeholder="Type full name to sign"
-                          style={{ ...s.input, width: 200, padding: '8px 12px', fontSize: 13 }}
+                          style={{ ...s.input, width: 200, padding: '10px 14px', fontSize: 13, borderRadius: 14 }}
                         />
                         <button
                           onClick={() => handleSignWaiver(w.id)}
                           disabled={!signName.trim()}
                           style={{
-                            ...s.pillAccent, padding: '8px 16px', fontSize: 12,
+                            ...s.pillAccent, padding: '10px 18px', fontSize: 12,
                             opacity: signName.trim() ? 1 : 0.5,
                           }}
                         >Sign</button>
                         <button onClick={() => { setSigningWaiver(null); setSignName(''); }}
-                          style={{ ...s.pillGhost, padding: '8px 12px', fontSize: 12 }}>Cancel</button>
+                          style={{ ...s.pillGhost, padding: '10px 14px', fontSize: 12 }}>Cancel</button>
                       </div>
                     ) : (
                       <button onClick={() => setSigningWaiver(w.id)}
-                        style={{ ...s.pillAccent, padding: '8px 18px', fontSize: 12 }}>
+                        style={{ ...s.pillAccent, padding: '10px 22px', fontSize: 12 }}>
                         Sign Now
                       </button>
                     )
@@ -763,22 +951,26 @@ export default function Portal() {
 
   const renderReferrals = () => (
     <div>
-      <SectionTitle>Refer a Friend</SectionTitle>
-      <Card style={{ padding: '28px', marginBottom: 20 }}>
-        <div style={{ font: `500 16px ${s.FONT}`, color: s.text, marginBottom: 8 }}>
+      <SectionTitle sub="Give $50, get $50 for every friend who visits">Refer a Friend</SectionTitle>
+      <Card className="portal-fadeInUp" style={{ padding: '30px', marginBottom: 24 }}>
+        <div style={{ font: `300 20px ${s.FONT}`, color: s.text, marginBottom: 8, letterSpacing: -0.3 }}>
           Share your referral code
         </div>
-        <div style={{ font: `400 14px ${s.FONT}`, color: s.text2, marginBottom: 16 }}>
+        <div style={{ font: `400 14px ${s.FONT}`, color: s.text2, marginBottom: 20, lineHeight: 1.6 }}>
           Give your friends $50 off their first visit and earn $50 in credits for each referral.
         </div>
         <div style={{
-          display: 'flex', alignItems: 'center', gap: 12, padding: '14px 18px',
-          borderRadius: 12, background: s.accentLight, marginBottom: 16,
+          display: 'flex', alignItems: 'center', gap: 14, padding: '16px 20px',
+          borderRadius: 16, background: `${s.accent}08`, border: `1px solid ${s.accent}15`,
+          marginBottom: 16,
         }}>
-          <code style={{ font: `600 16px ${s.MONO}`, color: s.accent, flex: 1 }}>
+          <code style={{ font: `600 16px ${s.MONO}`, color: s.accent, flex: 1, letterSpacing: 0.5 }}>
             {referralCode}
           </code>
-          <button onClick={copyReferralLink} style={{ ...s.pillAccent, padding: '8px 18px', fontSize: 12 }}>
+          <button onClick={copyReferralLink} style={{
+            ...s.pillAccent, padding: '10px 22px', fontSize: 12,
+            minWidth: 100,
+          }}>
             {copied ? 'Copied!' : 'Copy Link'}
           </button>
         </div>
@@ -788,29 +980,27 @@ export default function Portal() {
       </Card>
 
       {/* Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 12, marginBottom: 24 }}>
-        <Card style={{ padding: '18px', textAlign: 'center' }}>
-          <div style={{ font: `600 24px ${s.FONT}`, color: s.text }}>{referrals.length}</div>
-          <div style={{ font: `400 12px ${s.FONT}`, color: s.text3 }}>Total Referrals</div>
-        </Card>
-        <Card style={{ padding: '18px', textAlign: 'center' }}>
-          <div style={{ font: `600 24px ${s.FONT}`, color: s.success }}>{creditedReferrals.length}</div>
-          <div style={{ font: `400 12px ${s.FONT}`, color: s.text3 }}>Completed</div>
-        </Card>
-        <Card style={{ padding: '18px', textAlign: 'center' }}>
-          <div style={{ font: `600 24px ${s.FONT}`, color: s.accent }}>${totalReferralCredits}</div>
-          <div style={{ font: `400 12px ${s.FONT}`, color: s.text3 }}>Credits Earned</div>
-        </Card>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 28 }}>
+        {[
+          { label: 'Total Referrals', value: referrals.length, color: s.text },
+          { label: 'Completed', value: creditedReferrals.length, color: s.success },
+          { label: 'Credits Earned', value: `$${totalReferralCredits}`, color: s.accent },
+        ].map((stat, i) => (
+          <Card key={i} hover className={`portal-fadeInUp portal-stagger-${i + 1}`}
+            style={{ padding: '22px 18px', textAlign: 'center' }}>
+            <div style={{ font: `300 28px ${s.FONT}`, color: stat.color, marginBottom: 4 }}>{stat.value}</div>
+            <div style={{ font: `400 12px ${s.FONT}`, color: s.text3, letterSpacing: 0.2 }}>{stat.label}</div>
+          </Card>
+        ))}
       </div>
 
       {/* Referral History */}
       {referrals.length > 0 && (
-        <div>
-          <div style={{ font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 10 }}>
-            Referral History
-          </div>
-          {referrals.map(r => (
-            <Card key={r.id} style={{ padding: '14px 20px', marginBottom: 8 }}>
+        <div className="portal-fadeInUp portal-stagger-4">
+          <SectionLabel>Referral History</SectionLabel>
+          {referrals.map((r, i) => (
+            <Card key={r.id} className={`portal-fadeInUp portal-stagger-${Math.min(i + 1, 6)}`}
+              style={{ padding: '18px 24px', marginBottom: 10 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div>
                   <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{r.friendName}</div>
@@ -831,8 +1021,8 @@ export default function Portal() {
 
   const renderInfo = () => (
     <div>
-      <SectionTitle>My Info</SectionTitle>
-      <Card style={{ padding: '28px' }}>
+      <SectionTitle sub="Manage your personal details">My Profile</SectionTitle>
+      <Card className="portal-fadeInUp" style={{ padding: '30px' }}>
         {!editInfo ? (
           <div>
             {[
@@ -844,15 +1034,17 @@ export default function Portal() {
               { label: 'Member Since', value: patient?.createdAt ? fmtDate(patient.createdAt) : '' },
             ].map((row, i) => (
               <div key={i} style={{
-                display: 'flex', justifyContent: 'space-between', padding: '14px 0',
-                borderBottom: i < 5 ? '1px solid #F5F5F5' : 'none',
+                display: 'flex', justifyContent: 'space-between', padding: '16px 0', alignItems: 'center',
+                borderBottom: i < 5 ? '1px solid rgba(0,0,0,0.04)' : 'none',
               }}>
-                <span style={{ font: `400 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3 }}>{row.label}</span>
+                <span style={{ fontFamily: s.MONO, fontSize: 10, textTransform: 'uppercase', letterSpacing: 2, color: s.text3, fontWeight: 500 }}>{row.label}</span>
                 <span style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{row.value}</span>
               </div>
             ))}
-            <div style={{ marginTop: 20 }}>
-              <button onClick={handleEditInfo} style={{ ...s.pillOutline, padding: '10px 24px' }}>
+            <div style={{ marginTop: 24 }}>
+              <button onClick={handleEditInfo} style={{
+                ...s.pillOutline, padding: '12px 28px', borderRadius: 100,
+              }}>
                 Edit Info
               </button>
             </div>
@@ -867,19 +1059,27 @@ export default function Portal() {
               { key: 'dob', label: 'Date of Birth', type: 'date' },
               { key: 'allergies', label: 'Allergies' },
             ].map(field => (
-              <div key={field.key} style={{ marginBottom: 16 }}>
-                <label style={s.label}>{field.label}</label>
+              <div key={field.key} style={{ marginBottom: 20 }}>
+                <label style={{
+                  display: 'block', fontFamily: s.MONO, fontSize: 10, textTransform: 'uppercase',
+                  letterSpacing: 2, color: s.text3, marginBottom: 8, fontWeight: 500,
+                }}>{field.label}</label>
                 <input
                   type={field.type || 'text'}
                   value={editForm[field.key] || ''}
                   onChange={e => setEditForm({ ...editForm, [field.key]: e.target.value })}
-                  style={s.input}
+                  style={{ ...s.input, borderRadius: 14, padding: '14px 18px' }}
                 />
               </div>
             ))}
-            <div style={{ display: 'flex', gap: 10, marginTop: 20 }}>
-              <button onClick={saveInfo} style={{ ...s.pillAccent, padding: '10px 28px' }}>Save</button>
-              <button onClick={() => setEditInfo(false)} style={{ ...s.pillGhost, padding: '10px 28px' }}>Cancel</button>
+            <div style={{ display: 'flex', gap: 12, marginTop: 24 }}>
+              <button onClick={saveInfo} style={{
+                ...s.pillAccent, padding: '12px 32px', borderRadius: 100,
+                boxShadow: `0 4px 20px ${s.accent}30`,
+              }}>Save</button>
+              <button onClick={() => setEditInfo(false)} style={{
+                ...s.pillGhost, padding: '12px 32px', borderRadius: 100,
+              }}>Cancel</button>
             </div>
           </div>
         )}
@@ -900,56 +1100,102 @@ export default function Portal() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: portalBg, fontFamily: s.FONT }}>
-      {/* Patient selector (dev tool) */}
+    <div style={{ minHeight: '100vh', background: '#F5F3F0', fontFamily: s.FONT, position: 'relative', overflow: 'hidden' }}>
+      {/* Background orbs */}
+      <div className="bg-orbs" style={{ position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 0 }}>
+        <div style={{
+          position: 'absolute', top: '8%', left: '12%', width: 320, height: 320,
+          borderRadius: '50%', background: `${s.accent}08`,
+          filter: 'blur(80px)', animation: 'portalOrb1 18s ease-in-out infinite',
+        }} />
+        <div style={{
+          position: 'absolute', bottom: '15%', right: '8%', width: 260, height: 260,
+          borderRadius: '50%', background: `${s.accent}06`,
+          filter: 'blur(60px)', animation: 'portalOrb2 22s ease-in-out infinite',
+        }} />
+        <div style={{
+          position: 'absolute', top: '50%', left: '55%', width: 200, height: 200,
+          borderRadius: '50%', background: `${s.accent}04`,
+          filter: 'blur(50px)', animation: 'portalOrb1 26s ease-in-out infinite reverse',
+        }} />
+      </div>
+
+      {/* Horizontal pill tabs — sticky */}
       <div style={{
-        background: '#111', padding: '8px 24px', display: 'flex', alignItems: 'center', gap: 12,
-        font: `400 12px ${s.MONO}`, color: '#888',
+        position: 'sticky', top: 0, zIndex: 100,
+        background: 'rgba(245,243,240,0.8)',
+        backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(0,0,0,0.04)',
       }}>
-        <span>Logged in as:</span>
+        <div className="portal-tabs" style={{
+          maxWidth: 800, margin: '0 auto', padding: '14px 24px',
+          display: 'flex', gap: 8, overflowX: 'auto', scrollbarWidth: 'none',
+        }}>
+          {navItems.map(item => {
+            const active = section === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setSection(item.id)}
+                style={{
+                  padding: '9px 20px', borderRadius: 100, border: 'none', cursor: 'pointer',
+                  font: `${active ? '600' : '400'} 13px ${s.FONT}`,
+                  color: active ? s.accentText : s.text2,
+                  background: active ? s.accent : 'rgba(255,255,255,0.5)',
+                  boxShadow: active ? `0 2px 12px ${s.accent}30` : '0 1px 3px rgba(0,0,0,0.04)',
+                  whiteSpace: 'nowrap', transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
+                  backdropFilter: active ? 'none' : 'blur(8px)',
+                  letterSpacing: active ? 0.3 : 0,
+                  flexShrink: 0,
+                }}
+                onMouseEnter={e => {
+                  if (!active) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.8)';
+                    e.currentTarget.style.color = s.text;
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!active) {
+                    e.currentTarget.style.background = 'rgba(255,255,255,0.5)';
+                    e.currentTarget.style.color = s.text2;
+                  }
+                }}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Content — centered, max 800px, generous spacing */}
+      <div style={{ maxWidth: 800, margin: '0 auto', padding: '36px 24px 80px', position: 'relative', zIndex: 1 }}>
+        {sections[section]?.()}
+      </div>
+
+      {/* Dev toolbar — floating pill bottom-right */}
+      <div style={{
+        position: 'fixed', bottom: 20, right: 20, zIndex: 200,
+        background: 'rgba(17,17,17,0.92)', backdropFilter: 'blur(12px)',
+        borderRadius: 100, padding: '8px 16px',
+        display: 'flex', alignItems: 'center', gap: 10,
+        boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+      }}>
+        <span style={{ font: `400 11px ${s.MONO}`, color: '#666' }}>as:</span>
         <select
           value={selectedPatientId}
           onChange={e => { setSelectedPatientId(e.target.value); setSection('home'); setEditInfo(false); }}
           style={{
-            background: '#222', color: '#fff', border: '1px solid #444', borderRadius: 6,
-            padding: '4px 8px', font: `400 12px ${s.MONO}`, outline: 'none',
+            background: 'transparent', color: '#ccc', border: 'none',
+            font: `400 11px ${s.MONO}`, outline: 'none', cursor: 'pointer',
           }}
         >
           {patients.map(p => (
-            <option key={p.id} value={p.id}>{p.id} - {p.firstName} {p.lastName}</option>
+            <option key={p.id} value={p.id} style={{ background: '#222' }}>
+              {p.firstName} {p.lastName}
+            </option>
           ))}
         </select>
-      </div>
-
-      {/* Top Nav */}
-      <div style={{
-        background: '#fff', borderBottom: '1px solid #EAEAEA', padding: '0 24px',
-        position: 'sticky', top: 0, zIndex: 100,
-      }}>
-        <div style={{ maxWidth: 900, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 0, overflowX: 'auto' }}>
-          {navItems.map(item => (
-            <button
-              key={item.id}
-              onClick={() => setSection(item.id)}
-              style={{
-                background: 'none', border: 'none', cursor: 'pointer', padding: '16px 14px',
-                font: `${section === item.id ? '600' : '400'} 13px ${s.FONT}`,
-                color: section === item.id ? s.accent : s.text2,
-                borderBottom: section === item.id ? `2px solid ${s.accent}` : '2px solid transparent',
-                whiteSpace: 'nowrap', transition: 'all 0.15s',
-              }}
-              onMouseEnter={e => { if (section !== item.id) e.currentTarget.style.color = s.text; }}
-              onMouseLeave={e => { if (section !== item.id) e.currentTarget.style.color = s.text2; }}
-            >
-              {item.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Content */}
-      <div style={{ maxWidth: 900, margin: '0 auto', padding: '28px 24px 60px' }}>
-        {sections[section]?.()}
       </div>
     </div>
   );
