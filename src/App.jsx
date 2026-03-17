@@ -20,6 +20,12 @@ const BeforeAfter = lazy(() => import('./pages/BeforeAfter'));
 const Charts = lazy(() => import('./pages/Charts'));
 const Waivers = lazy(() => import('./pages/Waivers'));
 const CheckIn = lazy(() => import('./pages/CheckIn'));
+const Referrals = lazy(() => import('./pages/Referrals'));
+const Memberships = lazy(() => import('./pages/Memberships'));
+const Reviews = lazy(() => import('./pages/Reviews'));
+const Waitlist = lazy(() => import('./pages/Waitlist'));
+const Aftercare = lazy(() => import('./pages/Aftercare'));
+const Wallet = lazy(() => import('./pages/Wallet'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Settings = lazy(() => import('./pages/Settings'));
 
@@ -34,19 +40,25 @@ export default function App() {
         <Suspense fallback={<Loader />}>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/checkin" element={<CheckIn />} />
             <Route path="/patients" element={<Patients />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/treatments" element={<Treatments />} />
             <Route path="/charts" element={<Charts />} />
             <Route path="/photos" element={<BeforeAfter />} />
             <Route path="/waivers" element={<Waivers />} />
-            <Route path="/checkin" element={<CheckIn />} />
+            <Route path="/memberships" element={<Memberships />} />
+            <Route path="/wallet" element={<Wallet />} />
+            <Route path="/referrals" element={<Referrals />} />
             <Route path="/inventory" element={<Inventory />} />
             <Route path="/retention" element={<Retention />} />
+            <Route path="/aftercare" element={<Aftercare />} />
+            <Route path="/waitlist" element={<Waitlist />} />
+            <Route path="/reviews" element={<Reviews />} />
+            <Route path="/inbox" element={<Inbox />} />
             <Route path="/email" element={<Email />} />
             <Route path="/texts" element={<TextMessages />} />
             <Route path="/social" element={<SocialMedia />} />
-            <Route path="/inbox" element={<Inbox />} />
             <Route path="/reports" element={<Reports />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>

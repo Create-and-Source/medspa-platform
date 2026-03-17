@@ -1,5 +1,5 @@
-// Instagram DM Inbox — multi-staff shared inbox with conversation assignment
-// Solves: multiple providers sharing one IG login, losing track of who messaged whom
+// Unified DM Inbox — Instagram, Facebook, TikTok — multi-staff shared inbox
+// Solves: multiple providers sharing one login, losing track of who messaged whom
 import { useState, useEffect, useRef } from 'react';
 import { useStyles } from '../theme';
 import { getPatients, getProviders, getSettings, subscribe } from '../data/store';
@@ -49,6 +49,22 @@ function initInbox() {
     ]},
     { id: 'DM-7', handle: '@scottsdale.harper', name: 'Harper Anderson', avatar: 'HA', patientId: null, platform: 'facebook', unread: 1, lastActivity: ago(20), messages: [
       { id: 'm18', from: 'them', text: 'Hi, I saw your ad on Facebook. Do you accept insurance for any treatments?', time: ago(20), read: false },
+    ]},
+    { id: 'DM-8', handle: '@grace.skinjourney', name: 'Grace Taylor', avatar: 'GT', patientId: null, platform: 'tiktok', unread: 2, lastActivity: ago(3), messages: [
+      { id: 'm19', from: 'them', text: 'OMG I just saw your Botox reel!! How old do you have to be to get it? Im 24', time: ago(10), read: false },
+      { id: 'm20', from: 'them', text: 'also is baby botox a thing?? My friend said you guys do it', time: ago(3), read: false },
+    ]},
+    { id: 'DM-9', handle: '@chloe.wellness', name: 'Chloe Martinez', avatar: 'CM', patientId: 'PAT-1014', platform: 'tiktok', unread: 1, lastActivity: ago(12), messages: [
+      { id: 'm21', from: 'them', text: 'I saw your weight loss transformation video. Is that semaglutide? How much is it per month?', time: ago(45), read: true },
+      { id: 'm22', from: 'us', text: 'Hi Chloe! Yes, we offer both semaglutide and tirzepatide programs starting at $500/month. Includes weekly injections, provider check-ins, and nutrition guidance. Want to book a free consult?', time: ago(30), read: true, sentBy: 'PRV-1' },
+      { id: 'm23', from: 'them', text: 'yes please! do you have anything next week?', time: ago(12), read: false },
+    ]},
+    { id: 'DM-10', handle: '@riley.az', name: 'Riley Thompson', avatar: 'RT', patientId: null, platform: 'facebook', unread: 1, lastActivity: ago(35), messages: [
+      { id: 'm24', from: 'them', text: 'Hi! I want to get my mom a gift card for her birthday. Do you sell them online?', time: ago(35), read: false },
+    ]},
+    { id: 'DM-11', handle: '@scottsdale.aria', name: 'Aria Hernandez', avatar: 'AH', patientId: 'PAT-1017', platform: 'instagram', unread: 0, lastActivity: ago(180), messages: [
+      { id: 'm25', from: 'them', text: 'Just wanted to say THANK YOU! My skin has never looked better after the IPL series. Everyone keeps asking what I did 😍', time: ago(240), read: true },
+      { id: 'm26', from: 'us', text: 'Aria that makes our day!! Your skin really does look amazing. Would you be open to us sharing your before/after on our page? We would tag you of course!', time: ago(180), read: true, sentBy: 'PRV-3' },
     ]},
   ]);
 
@@ -168,9 +184,9 @@ export default function Inbox() {
     <div>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16, flexWrap: 'wrap', gap: 8 }}>
         <div>
-          <h1 style={{ font: `600 26px ${s.FONT}`, color: s.text, marginBottom: 4 }}>Inbox</h1>
+          <h1 style={{ font: `600 26px ${s.FONT}`, color: s.text, marginBottom: 4 }}>DM Inbox</h1>
           <p style={{ font: `400 14px ${s.FONT}`, color: s.text2 }}>
-            Shared DM inbox — {totalUnread} unread, {unassignedCount} unassigned
+            Instagram + Facebook + TikTok — {totalUnread} unread, {unassignedCount} unassigned
           </p>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -251,6 +267,8 @@ export default function Inbox() {
                       <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
                         <span style={{ font: `400 10px ${s.FONT}`, color: s.text3 }}>{c.handle}</span>
                         {c.platform === 'facebook' && <span style={{ padding: '1px 5px', borderRadius: 4, background: '#E7F3FF', color: '#1877F2', font: `500 8px ${s.FONT}` }}>FB</span>}
+                        {c.platform === 'tiktok' && <span style={{ padding: '1px 5px', borderRadius: 4, background: '#FFF0F5', color: '#FE2C55', font: `500 8px ${s.FONT}` }}>TT</span>}
+                        {c.platform === 'instagram' && <span style={{ padding: '1px 5px', borderRadius: 4, background: '#FEF3F8', color: '#E1306C', font: `500 8px ${s.FONT}` }}>IG</span>}
                         {assigned && (
                           <span style={{ padding: '1px 6px', borderRadius: 4, background: '#F0F0F0', font: `500 9px ${s.FONT}`, color: s.text2 }}>
                             {assignedProv?.name?.split(' ')[0] || 'Assigned'}

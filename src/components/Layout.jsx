@@ -15,10 +15,18 @@ const NAV_ITEMS = [
     { path: '/charts', label: 'Clinical Charts', icon: 'clipboard' },
     { path: '/photos', label: 'Before & After', icon: 'heart' },
     { path: '/waivers', label: 'Consent & Waivers', icon: 'clipboard' },
+    { path: '/aftercare', label: 'Aftercare', icon: 'heart' },
+  ]},
+  { section: 'Billing', items: [
+    { path: '/memberships', label: 'Memberships', icon: 'users' },
+    { path: '/wallet', label: 'Patient Wallet', icon: 'package' },
+    { path: '/referrals', label: 'Referrals', icon: 'share' },
   ]},
   { section: 'Operations', items: [
     { path: '/inventory', label: 'Inventory', icon: 'package' },
     { path: '/retention', label: 'Retention', icon: 'heart' },
+    { path: '/waitlist', label: 'Waitlist', icon: 'calendar' },
+    { path: '/reviews', label: 'Reviews', icon: 'heart' },
   ]},
   { section: 'Marketing', items: [
     { path: '/inbox', label: 'DM Inbox', icon: 'message' },
