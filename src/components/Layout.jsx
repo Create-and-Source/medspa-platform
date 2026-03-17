@@ -256,7 +256,7 @@ export default function Layout({ children }) {
       {mobileOpen && <Sidebar mobile />}
 
       {/* Main content */}
-      <div style={{ marginLeft: sidebarWidth, minHeight: '100vh', transition: 'margin-left 0.25s cubic-bezier(0.16,1,0.3,1)', position: 'relative', zIndex: 1 }}>
+      <div className="layout-main" style={{ marginLeft: sidebarWidth, minHeight: '100vh', transition: 'margin-left 0.25s cubic-bezier(0.16,1,0.3,1)', position: 'relative', zIndex: 1 }}>
         {/* Topbar — glassmorphism */}
         <div style={{
           position: 'sticky', top: 0, zIndex: 50,
@@ -291,13 +291,13 @@ export default function Layout({ children }) {
                 {typeof navigator !== 'undefined' && navigator.platform?.includes('Mac') ? '\u2318K' : 'Ctrl K'}
               </span>
             </button>
-            <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
-            <span style={{ font: "400 12px 'JetBrains Mono', monospace", color: '#AAA', letterSpacing: 0.5 }}>
+            <div className="topbar-divider" style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
+            <span className="topbar-date" style={{ font: "400 12px 'JetBrains Mono', monospace", color: '#AAA', letterSpacing: 0.5 }}>
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
             </span>
-            <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
+            <div className="topbar-divider" style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
             <NotificationBell />
-            <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
+            <div className="topbar-divider" style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
             <button onClick={() => window.location.href = '/'} style={{
               padding: '6px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
               background: 'rgba(255,255,255,0.5)', font: "400 11px 'Inter', sans-serif", color: '#AAA',
@@ -324,22 +324,23 @@ export default function Layout({ children }) {
         @media (max-width: 860px) {
           .sidebar-desktop { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
-          div[style*="marginLeft"] { margin-left: 0 !important; }
+          .layout-main { margin-left: 0 !important; }
         }
         @media (max-width: 768px) {
           .layout-content {
-            padding: 16px 14px !important;
+            padding: 14px 12px !important;
           }
           .layout-topbar {
-            padding: 0 14px !important;
+            padding: 0 10px !important;
+            height: 46px !important;
           }
           .mobile-menu-btn {
             flex-shrink: 0 !important;
-            margin-right: 8px !important;
+            margin-right: 4px !important;
           }
-          .cmd-k-label {
-            display: none !important;
-          }
+          .cmd-k-label { display: none !important; }
+          .topbar-date { display: none !important; }
+          .topbar-divider { display: none !important; }
         }
       `}</style>
     </div>
