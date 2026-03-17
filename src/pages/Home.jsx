@@ -40,10 +40,12 @@ export default function Home() {
         filter: 'blur(80px)', pointerEvents: 'none',
       }} />
 
-      {/* Nav */}
+      {/* Nav — fixed at top */}
       <nav style={{
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        padding: '20px 40px', position: 'relative', zIndex: 10,
+        padding: '16px 32px', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+        background: 'rgba(10,10,10,0.8)', backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+        borderBottom: '1px solid rgba(255,255,255,0.05)',
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
@@ -74,7 +76,7 @@ export default function Home() {
 
       {/* Hero — compact, elegant */}
       <div style={{
-        textAlign: 'center', padding: '60px 24px 40px', position: 'relative', zIndex: 10,
+        textAlign: 'center', padding: '100px 24px 40px', position: 'relative', zIndex: 10,
       }}>
         <div style={{
           font: `500 10px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 3,
