@@ -1,4 +1,4 @@
-import{E as e,G as t,H as n,W as r,j as i,n as a,q as o,v as s,x as c}from"./store-Cft_wK8K.js";var l=o(t(),1),u=r(),d={appointment:{name:`Appointment Reminder`,icon:`📅`,desc:`Remind patients of upcoming visits`,subject:`Your Appointment is Coming Up!`,body:`Hi [Patient],
+import{E as e,G as t,H as n,W as r,j as i,n as a,q as o,v as s,x as c}from"./store-CTGwobvr.js";var l=o(t(),1),u=r(),d={appointment:{name:`Appointment Reminder`,icon:`📅`,desc:`Remind patients of upcoming visits`,subject:`Your Appointment is Coming Up!`,body:`Hi [Patient],
 
 This is a friendly reminder about your upcoming appointment:
 

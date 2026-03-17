@@ -258,5 +258,50 @@ export function initStore() {
     phone: '(480) 555-0100',
   });
 
+  // Seed Sent Emails
+  set('ms_emails', [
+    { id: 'EM-1', subject: 'March Newsletter — New Spring Treatments', body: 'Hi there, here is what is new this month...', audience: 'All Patients', status: 'Sent', recipientCount: 30, sentDate: d(-3) + 'T10:00:00Z' },
+    { id: 'EM-2', subject: 'Exclusive: 20% Off Botox This Week Only', body: 'Special offer for our valued patients...', audience: 'Members', status: 'Sent', recipientCount: 12, sentDate: d(-7) + 'T14:00:00Z' },
+    { id: 'EM-3', subject: 'Your Appointment is Tomorrow!', body: 'Hi [Patient], reminder about your upcoming visit...', audience: 'Recent Visitors', status: 'Sent', recipientCount: 8, sentDate: d(-1) + 'T09:00:00Z' },
+    { id: 'EM-4', subject: 'We Miss You — Come Back & Save', body: 'It has been a while since your last visit...', audience: 'Lapsed Patients', status: 'Sent', recipientCount: 15, sentDate: d(-14) + 'T11:00:00Z' },
+    { id: 'EM-5', subject: 'Welcome to the Family!', body: 'Thank you for becoming a member...', audience: 'Members', status: 'Sent', recipientCount: 3, sentDate: d(-21) + 'T16:00:00Z' },
+  ]);
+
+  // Seed Sent Text Messages
+  set('ms_texts', [
+    { id: 'TXT-1', message: 'Hi! Reminder: your Botox appointment is tomorrow at 2pm. Reply C to confirm or R to reschedule.', audience: 'upcoming', recipientCount: 6, template: 'reminder', status: 'Sent', sentDate: d(-1) + 'T08:00:00Z' },
+    { id: 'TXT-2', message: 'Hi! How are you feeling after your microneedling yesterday? Any questions? Reply here or call us.', audience: 'all', recipientCount: 4, template: 'followup', status: 'Sent', sentDate: d(-2) + 'T10:00:00Z' },
+    { id: 'TXT-3', message: 'Spring Special: 20% off all HydraFacials this month! Book now — reply BOOK or call us.', audience: 'all', recipientCount: 30, template: 'promo', status: 'Sent', sentDate: d(-5) + 'T12:00:00Z' },
+    { id: 'TXT-4', message: 'Thanks for visiting us! Loved your experience? Leave us a quick review: [Google link]', audience: 'all', recipientCount: 8, template: 'review', status: 'Sent', sentDate: d(-3) + 'T15:00:00Z' },
+    { id: 'TXT-5', message: 'Hi! It has been a while — we would love to see you. Enjoy $50 off your next visit. Reply BOOK to schedule.', audience: 'lapsed', recipientCount: 12, template: 'reactivation', status: 'Sent', sentDate: d(-10) + 'T11:00:00Z' },
+  ]);
+
+  // Seed Social Media Posts
+  set('ms_social_posts', [
+    { id: 'SP-1', contentType: 'service', platforms: ['instagram', 'facebook'], posts: [{ platform: 'instagram', text: 'Discover the art of Botox\n\nPrecision. Subtlety. Confidence.\n\nBook your consultation — link in bio\n\n#MedSpa #Botox #Aesthetics' }, { platform: 'facebook', text: 'Botox treatments starting at $14/unit. Natural results that let you be you.' }], status: 'published', publishedAt: d(-2) + 'T10:00:00Z', createdAt: d(-2) + 'T09:00:00Z' },
+    { id: 'SP-2', contentType: 'before-after', platforms: ['instagram'], posts: [{ platform: 'instagram', text: 'The results speak for themselves\n\nBefore → After\nJuvederm Filler — 1 session\n\n#BeforeAndAfter #MedSpa #Results' }], status: 'published', publishedAt: d(-5) + 'T14:00:00Z', createdAt: d(-5) + 'T13:00:00Z' },
+    { id: 'SP-3', contentType: 'promo', platforms: ['instagram', 'facebook', 'tiktok'], posts: [{ platform: 'instagram', text: 'SPRING GLOW SPECIAL\n\n20% off HydraFacials all month\n\nLink in bio\n\n#MedSpa #SpecialOffer' }, { platform: 'facebook', text: 'Spring into glowing skin — 20% off HydraFacials!' }, { platform: 'tiktok', text: 'POV: You just got a HydraFacial and your skin is GLOWING' }], status: 'scheduled', scheduledAt: d(2) + 'T10:00:00Z', createdAt: d(-1) + 'T16:00:00Z' },
+    { id: 'SP-4', contentType: 'education', platforms: ['instagram', 'linkedin'], posts: [{ platform: 'instagram', text: 'DID YOU KNOW?\n\nBotox takes 3-5 days to kick in and peaks at 2 weeks.\n\n#SkincareTips #MedSpa' }, { platform: 'linkedin', text: 'Patient education: Understanding the Botox timeline helps set expectations and improve satisfaction.' }], status: 'draft', createdAt: d(0) + 'T08:00:00Z' },
+    { id: 'SP-5', contentType: 'team', platforms: ['instagram'], posts: [{ platform: 'instagram', text: 'Meet Dr. Sarah Mitchell\n\nOur Medical Director brings 15 years of aesthetic expertise.\n\n#MeetTheTeam #MedSpa' }], status: 'published', publishedAt: d(-8) + 'T11:00:00Z', createdAt: d(-8) + 'T10:00:00Z' },
+  ]);
+
+  // Seed Check-Ins (for today's appointments)
+  const todayAppts = appts.filter(a => a.date === today.toISOString().slice(0, 10));
+  const checkins = [];
+  todayAppts.slice(0, Math.min(5, todayAppts.length)).forEach((a, i) => {
+    const statuses = ['checked-in', 'with-provider', 'complete', 'checked-in', 'with-provider'];
+    const minutesAgo = [45, 30, 60, 15, 8];
+    checkins.push({
+      id: `CK-${3000 + i}`,
+      appointmentId: a.id,
+      patientId: a.patientId,
+      patientName: a.patientName,
+      checkedInAt: new Date(today - minutesAgo[i] * 60000).toISOString(),
+      verifiedInfo: { phone: '(480) 555-0100', dob: '1990-01-01', allergies: 'None', medications: 'None', pregnant: false },
+      status: statuses[i],
+    });
+  });
+  set('ms_checkins', checkins);
+
   localStorage.setItem('ms_initialized', 'true');
 }
