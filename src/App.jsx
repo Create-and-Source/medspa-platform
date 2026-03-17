@@ -28,6 +28,7 @@ const Aftercare = lazy(() => import('./pages/Aftercare'));
 const Wallet = lazy(() => import('./pages/Wallet'));
 const Reports = lazy(() => import('./pages/Reports'));
 const Settings = lazy(() => import('./pages/Settings'));
+const Portal = lazy(() => import('./pages/Portal'));
 
 function Loader() {
   return <div style={{ padding: 60, textAlign: 'center', color: '#999', font: "400 14px 'Inter', sans-serif" }}>Loading...</div>;
@@ -36,34 +37,39 @@ function Loader() {
 export default function App() {
   return (
     <ThemeProvider>
-      <Layout>
-        <Suspense fallback={<Loader />}>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/checkin" element={<CheckIn />} />
-            <Route path="/patients" element={<Patients />} />
-            <Route path="/schedule" element={<Schedule />} />
-            <Route path="/treatments" element={<Treatments />} />
-            <Route path="/charts" element={<Charts />} />
-            <Route path="/photos" element={<BeforeAfter />} />
-            <Route path="/waivers" element={<Waivers />} />
-            <Route path="/memberships" element={<Memberships />} />
-            <Route path="/wallet" element={<Wallet />} />
-            <Route path="/referrals" element={<Referrals />} />
-            <Route path="/inventory" element={<Inventory />} />
-            <Route path="/retention" element={<Retention />} />
-            <Route path="/aftercare" element={<Aftercare />} />
-            <Route path="/waitlist" element={<Waitlist />} />
-            <Route path="/reviews" element={<Reviews />} />
-            <Route path="/inbox" element={<Inbox />} />
-            <Route path="/email" element={<Email />} />
-            <Route path="/texts" element={<TextMessages />} />
-            <Route path="/social" element={<SocialMedia />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/settings" element={<Settings />} />
-          </Routes>
-        </Suspense>
-      </Layout>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path="/portal" element={<Portal />} />
+          <Route path="/*" element={
+            <Layout>
+              <Routes>
+                <Route path="/" element={<Dashboard />} />
+                <Route path="/checkin" element={<CheckIn />} />
+                <Route path="/patients" element={<Patients />} />
+                <Route path="/schedule" element={<Schedule />} />
+                <Route path="/treatments" element={<Treatments />} />
+                <Route path="/charts" element={<Charts />} />
+                <Route path="/photos" element={<BeforeAfter />} />
+                <Route path="/waivers" element={<Waivers />} />
+                <Route path="/memberships" element={<Memberships />} />
+                <Route path="/wallet" element={<Wallet />} />
+                <Route path="/referrals" element={<Referrals />} />
+                <Route path="/inventory" element={<Inventory />} />
+                <Route path="/retention" element={<Retention />} />
+                <Route path="/aftercare" element={<Aftercare />} />
+                <Route path="/waitlist" element={<Waitlist />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/inbox" element={<Inbox />} />
+                <Route path="/email" element={<Email />} />
+                <Route path="/texts" element={<TextMessages />} />
+                <Route path="/social" element={<SocialMedia />} />
+                <Route path="/reports" element={<Reports />} />
+                <Route path="/settings" element={<Settings />} />
+              </Routes>
+            </Layout>
+          } />
+        </Routes>
+      </Suspense>
     </ThemeProvider>
   );
 }
