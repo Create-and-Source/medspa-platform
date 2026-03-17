@@ -192,7 +192,7 @@ export default function Dashboard() {
   return (
     <div>
       {/* ═══ GRADIENT WELCOME HERO ═══ */}
-      <div style={{
+      <div className="dash-hero" style={{
         ...glass,
         padding: '28px 32px',
         marginBottom: 28,
@@ -209,7 +209,7 @@ export default function Dashboard() {
             </h1>
             <p style={{ font: `400 13px ${s.FONT}`, color: s.text2, margin: 0 }}>{dateStr}</p>
           </div>
-          <div style={{
+          <div className="dash-hero-right" style={{
             display: 'flex', alignItems: 'center', gap: 12,
           }}>
             <button onClick={() => setShowTour(true)} style={{
@@ -234,7 +234,7 @@ export default function Dashboard() {
       </div>
 
       {/* ═══ KPI CARDS ═══ */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 28 }}>
+      <div className="dash-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 28 }}>
         {kpis.map((k, idx) => (
           <div key={k.label} className="dash-card-hover" onClick={() => nav(k.path)} style={{
             ...glass, padding: '24px 22px', cursor: 'pointer',
@@ -448,6 +448,42 @@ export default function Dashboard() {
         }
         @media (max-width: 768px) {
           .dashboard-main-grid { grid-template-columns: 1fr !important; }
+          .dash-hero {
+            padding: 20px 18px !important;
+          }
+          .dash-hero h1 {
+            font-size: 22px !important;
+          }
+          .dash-hero-right {
+            display: none !important;
+          }
+          .dash-kpi-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+          }
+          .dash-kpi-card {
+            padding: 16px 14px !important;
+          }
+          .dash-kpi-card .dash-kpi-value {
+            font-size: 24px !important;
+          }
+          .dash-kpi-card .dash-kpi-sub {
+            font-size: 11px !important;
+          }
+          .dash-quick-actions {
+            grid-template-columns: 1fr !important;
+          }
+          .dash-appt-item {
+            padding: 12px 14px !important;
+          }
+          .dash-sparkline-section {
+            display: none !important;
+          }
+        }
+        @media (max-width: 400px) {
+          .dash-kpi-grid {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
 
