@@ -1,7 +1,9 @@
-// Public-facing home/landing page for the medspa — the "cover" for demos
+// Home — the "cover" page. Shows the brand then lets you explore the platform
 import { useNavigate } from 'react-router-dom';
 import { useStyles, useTheme } from '../theme';
-import { getSettings } from '../data/store';
+import { getSettings, getPatients, getAppointments, getServices, getInventory, getRetentionAlerts } from '../data/store';
+
+const fmt = (cents) => `$${(cents / 100).toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
 
 export default function Home() {
   const s = useStyles();
@@ -11,19 +13,30 @@ export default function Home() {
   const name = settings.businessName || 'Your MedSpa';
   const tagline = settings.tagline || 'Where Science Meets Beauty';
 
+  // Pull real data for the dashboard preview
+  const patients = getPatients();
+  const appointments = getAppointments();
+  const services = getServices();
+  const inventory = getInventory();
+  const alerts = getRetentionAlerts();
+
+  const today = new Date().toISOString().slice(0, 10);
+  const todayAppts = appointments.filter(a => a.date === today);
+  const thisMonth = today.slice(0, 7);
+  const monthAppts = appointments.filter(a => a.date?.startsWith(thisMonth) && a.status === 'completed');
+  const monthRevenue = monthAppts.reduce((sum, a) => {
+    const svc = services.find(sv => sv.id === a.serviceId);
+    return sum + (svc?.price || 0);
+  }, 0);
+  const pendingAlerts = alerts.filter(a => a.status === 'pending').length;
+
   return (
-    <div style={{ minHeight: '100vh', background: '#0A0A0A', color: '#fff', overflow: 'hidden', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', background: '#0A0A0A', color: '#fff', overflow: 'hidden' }}>
       {/* Ambient glow */}
       <div style={{
-        position: 'absolute', top: '20%', left: '50%', transform: 'translateX(-50%)',
-        width: 600, height: 600, borderRadius: '50%',
-        background: `radial-gradient(circle, ${theme.accent}15 0%, transparent 70%)`,
-        filter: 'blur(60px)', pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute', bottom: '-10%', right: '-5%',
-        width: 400, height: 400, borderRadius: '50%',
-        background: `radial-gradient(circle, ${theme.accent}10 0%, transparent 70%)`,
+        position: 'fixed', top: '10%', left: '50%', transform: 'translateX(-50%)',
+        width: 800, height: 800, borderRadius: '50%',
+        background: `radial-gradient(circle, ${theme.accent}12 0%, transparent 60%)`,
         filter: 'blur(80px)', pointerEvents: 'none',
       }} />
 
@@ -42,129 +55,176 @@ export default function Home() {
           </div>
           <span style={{ font: `600 16px ${s.FONT}`, color: '#fff' }}>{name}</span>
         </div>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <button onClick={() => nav('/book')} style={{
-            padding: '9px 22px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.15)',
-            background: 'transparent', color: '#fff', font: `500 13px ${s.FONT}`, cursor: 'pointer',
-            transition: 'all 0.2s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
-          >Book Online</button>
+            padding: '8px 20px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.12)',
+            background: 'transparent', color: 'rgba(255,255,255,0.7)', font: `400 13px ${s.FONT}`, cursor: 'pointer',
+          }}>Book</button>
           <button onClick={() => nav('/portal')} style={{
-            padding: '9px 22px', borderRadius: 100, border: 'none',
-            background: 'rgba(255,255,255,0.1)', color: '#fff', font: `500 13px ${s.FONT}`, cursor: 'pointer',
-            backdropFilter: 'blur(8px)', transition: 'all 0.2s',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-          >Member Portal</button>
-          <button onClick={() => nav('/')} style={{
-            padding: '9px 22px', borderRadius: 100, border: 'none',
+            padding: '8px 20px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.12)',
+            background: 'transparent', color: 'rgba(255,255,255,0.7)', font: `400 13px ${s.FONT}`, cursor: 'pointer',
+          }}>Portal</button>
+          <button onClick={() => nav('/admin')} style={{
+            padding: '8px 20px', borderRadius: 100, border: 'none',
             background: theme.accent, color: theme.accentText, font: `500 13px ${s.FONT}`, cursor: 'pointer',
-            boxShadow: `0 2px 16px ${theme.accent}40`, transition: 'all 0.2s',
-          }}>Staff Login</button>
+            boxShadow: `0 2px 16px ${theme.accent}40`,
+          }}>Open Dashboard</button>
         </div>
       </nav>
 
-      {/* Hero */}
+      {/* Hero — compact, elegant */}
       <div style={{
-        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        minHeight: 'calc(100vh - 280px)', textAlign: 'center', position: 'relative', zIndex: 10,
-        padding: '0 24px',
+        textAlign: 'center', padding: '60px 24px 40px', position: 'relative', zIndex: 10,
       }}>
         <div style={{
-          font: `500 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 3,
-          color: theme.accent, marginBottom: 20,
+          font: `500 10px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 3,
+          color: theme.accent, marginBottom: 16,
         }}>{tagline}</div>
-
         <h1 style={{
-          font: `300 64px ${s.FONT}`, color: '#fff', marginBottom: 20,
-          letterSpacing: '-1.5px', lineHeight: 1.1, maxWidth: 700,
+          font: `300 48px ${s.FONT}`, color: '#fff', marginBottom: 12,
+          letterSpacing: '-1px', lineHeight: 1.1,
         }}>
-          Your Beauty,{' '}
-          <span style={{ fontWeight: 600 }}>Our Science</span>
+          The platform that runs your <span style={{ fontWeight: 600 }}>medspa</span>
         </h1>
-
         <p style={{
-          font: `300 18px ${s.FONT}`, color: 'rgba(255,255,255,0.55)',
-          maxWidth: 520, lineHeight: 1.6, marginBottom: 40,
+          font: `300 16px ${s.FONT}`, color: 'rgba(255,255,255,0.4)',
+          maxWidth: 480, margin: '0 auto 32px', lineHeight: 1.6,
         }}>
-          Premium aesthetic treatments tailored to your unique goals. From injectables to body contouring — experience the difference of personalized care.
+          Scheduling, clinical charts, DM inbox, patient portal, memberships, marketing — all in one beautiful platform.
         </p>
-
-        <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap', justifyContent: 'center' }}>
-          <button onClick={() => nav('/book')} style={{
-            padding: '14px 36px', borderRadius: 100, border: 'none',
-            background: theme.accent, color: theme.accentText,
-            font: `600 15px ${s.FONT}`, cursor: 'pointer',
-            boxShadow: `0 4px 24px ${theme.accent}40`,
-            transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = `0 8px 32px ${theme.accent}50`; }}
-          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = `0 4px 24px ${theme.accent}40`; }}
-          >Book a Consultation</button>
-          <button onClick={() => nav('/portal')} style={{
-            padding: '14px 36px', borderRadius: 100, cursor: 'pointer',
-            background: 'rgba(255,255,255,0.06)', color: '#fff',
-            border: '1px solid rgba(255,255,255,0.12)', font: `500 15px ${s.FONT}`,
-            backdropFilter: 'blur(8px)', transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.1)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.06)'; }}
-          >Member Login</button>
-        </div>
+        <button onClick={() => nav('/admin')} style={{
+          padding: '14px 40px', borderRadius: 100, border: 'none',
+          background: theme.accent, color: theme.accentText,
+          font: `600 15px ${s.FONT}`, cursor: 'pointer',
+          boxShadow: `0 4px 24px ${theme.accent}40`,
+          transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
+        >Explore the Dashboard</button>
       </div>
 
-      {/* Services Preview */}
+      {/* Live Dashboard Preview — real data from localStorage */}
       <div style={{
-        padding: '60px 40px', position: 'relative', zIndex: 10,
+        maxWidth: 1000, margin: '0 auto', padding: '0 24px 60px',
+        position: 'relative', zIndex: 10,
       }}>
-        <div style={{ textAlign: 'center', marginBottom: 36 }}>
-          <div style={{ font: `500 10px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 2, color: theme.accent, marginBottom: 8 }}>Our Services</div>
-          <h2 style={{ font: `300 28px ${s.FONT}`, color: '#fff', letterSpacing: '-0.5px' }}>Comprehensive Aesthetic Care</h2>
+        {/* Fake browser chrome */}
+        <div style={{
+          background: 'rgba(255,255,255,0.06)', borderRadius: '16px 16px 0 0',
+          padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 8,
+          borderBottom: '1px solid rgba(255,255,255,0.06)',
+        }}>
+          <div style={{ display: 'flex', gap: 6 }}>
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FF5F57' }} />
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#FFBD2E' }} />
+            <div style={{ width: 10, height: 10, borderRadius: '50%', background: '#28C840' }} />
+          </div>
+          <div style={{
+            flex: 1, background: 'rgba(255,255,255,0.06)', borderRadius: 8, padding: '5px 14px',
+            font: `400 11px ${s.MONO}`, color: 'rgba(255,255,255,0.3)', textAlign: 'center',
+          }}>yourmedspa.com/admin</div>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: 12, maxWidth: 900, margin: '0 auto' }}>
-          {[
-            { name: 'Injectables', desc: 'Botox, Fillers, Sculptra' },
-            { name: 'Skin', desc: 'Microneedling, Peels, IPL' },
-            { name: 'Laser', desc: 'Hair Removal, Resurfacing' },
-            { name: 'Body', desc: 'Contouring, CoolSculpting' },
-            { name: 'Surgical', desc: 'Awake Lipo, BodyTite' },
-            { name: 'Wellness', desc: 'Weight Loss, IV, HRT' },
-          ].map(svc => (
-            <div key={svc.name} onClick={() => nav('/book')} style={{
-              padding: '24px 20px', borderRadius: 16, cursor: 'pointer',
-              background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.06)',
-              backdropFilter: 'blur(8px)', transition: 'all 0.25s cubic-bezier(0.16,1,0.3,1)',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = `${theme.accent}30`; e.currentTarget.style.transform = 'translateY(-2px)'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)'; e.currentTarget.style.transform = 'translateY(0)'; }}
-            >
-              <div style={{ font: `600 15px ${s.FONT}`, color: '#fff', marginBottom: 4 }}>{svc.name}</div>
-              <div style={{ font: `400 12px ${s.FONT}`, color: 'rgba(255,255,255,0.4)' }}>{svc.desc}</div>
+
+        {/* Dashboard content */}
+        <div onClick={() => nav('/admin')} style={{
+          background: '#F5F3F0', borderRadius: '0 0 16px 16px', padding: '24px 28px',
+          cursor: 'pointer', transition: 'all 0.3s',
+          boxShadow: '0 20px 80px rgba(0,0,0,0.4)',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-4px)'; e.currentTarget.style.boxShadow = '0 30px 100px rgba(0,0,0,0.5)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 20px 80px rgba(0,0,0,0.4)'; }}
+        >
+          {/* Mini dashboard header */}
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ font: `600 18px ${s.FONT}`, color: '#111', marginBottom: 2 }}>Dashboard</div>
+            <div style={{ font: `400 12px ${s.FONT}`, color: '#999' }}>
+              {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} overview
             </div>
-          ))}
+          </div>
+
+          {/* KPI cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
+            {[
+              { label: "Today's Appts", value: todayAppts.length },
+              { label: 'Monthly Revenue', value: fmt(monthRevenue) },
+              { label: 'Active Patients', value: patients.length },
+              { label: 'Retention Alerts', value: pendingAlerts },
+            ].map(k => (
+              <div key={k.label} style={{
+                padding: '14px 12px', borderRadius: 12,
+                background: 'rgba(255,255,255,0.7)', backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.6)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
+              }}>
+                <div style={{ font: `500 8px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1.2, color: '#999', marginBottom: 4 }}>{k.label}</div>
+                <div style={{ font: `600 20px ${s.FONT}`, color: '#111' }}>{k.value}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Mini appointment list */}
+          <div style={{
+            padding: '12px 14px', borderRadius: 12,
+            background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.6)',
+          }}>
+            <div style={{ font: `600 11px ${s.FONT}`, color: '#111', marginBottom: 8 }}>Upcoming</div>
+            {appointments.filter(a => a.date >= today && a.status !== 'completed').sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`)).slice(0, 3).map(a => (
+              <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid rgba(0,0,0,0.04)' }}>
+                <span style={{ font: `400 11px ${s.FONT}`, color: '#555' }}>{a.patientName}</span>
+                <span style={{ font: `500 10px ${s.MONO}`, color: '#999' }}>{a.time}</span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: 14, font: `500 12px ${s.FONT}`, color: theme.accent }}>
+            Click anywhere to explore the full dashboard →
+          </div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div style={{ padding: '40px', textAlign: 'center', position: 'relative', zIndex: 10, borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        <div style={{ font: `400 13px ${s.FONT}`, color: 'rgba(255,255,255,0.3)', marginBottom: 8 }}>
-          {name} — {settings.phone || ''} — {settings.email || ''}
-        </div>
-        <div style={{ display: 'flex', gap: 20, justifyContent: 'center' }}>
-          <button onClick={() => nav('/book')} style={{ background: 'none', border: 'none', font: `400 12px ${s.FONT}`, color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Book Online</button>
-          <button onClick={() => nav('/portal')} style={{ background: 'none', border: 'none', font: `400 12px ${s.FONT}`, color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Member Portal</button>
-          <button onClick={() => nav('/')} style={{ background: 'none', border: 'none', font: `400 12px ${s.FONT}`, color: 'rgba(255,255,255,0.4)', cursor: 'pointer' }}>Staff</button>
-        </div>
+      {/* Feature pills */}
+      <div style={{
+        display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center',
+        padding: '0 24px 40px', position: 'relative', zIndex: 10,
+      }}>
+        {['22 Admin Pages', 'Patient Portal', 'DM Inbox', 'Clinical Charts', 'Online Booking', 'Memberships', 'Aftercare', 'Referrals', 'White-Label Branding'].map(f => (
+          <span key={f} style={{
+            padding: '6px 14px', borderRadius: 100, font: `400 11px ${s.FONT}`,
+            color: 'rgba(255,255,255,0.35)', border: '1px solid rgba(255,255,255,0.08)',
+          }}>{f}</span>
+        ))}
+      </div>
+
+      {/* Quick links */}
+      <div style={{
+        display: 'flex', gap: 12, justifyContent: 'center', padding: '20px 24px 40px',
+        position: 'relative', zIndex: 10,
+      }}>
+        {[
+          { label: 'Admin Dashboard', path: '/admin' },
+          { label: 'Patient Portal', path: '/portal' },
+          { label: 'Online Booking', path: '/book' },
+        ].map(l => (
+          <button key={l.label} onClick={() => nav(l.path)} style={{
+            padding: '12px 28px', borderRadius: 14, cursor: 'pointer',
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+            font: `500 13px ${s.FONT}`, color: 'rgba(255,255,255,0.6)',
+            backdropFilter: 'blur(8px)', transition: 'all 0.2s',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; e.currentTarget.style.borderColor = `${theme.accent}30`; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.04)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.08)'; }}
+          >{l.label}</button>
+        ))}
       </div>
 
       <style>{`
         @media (max-width: 640px) {
-          h1 { font-size: 36px !important; }
-          nav { padding: 16px 20px !important; }
-          nav > div:last-child { flex-wrap: wrap; }
+          h1 { font-size: 32px !important; }
+          nav { padding: 16px 20px !important; flex-wrap: wrap; gap: 8px; }
+        }
+        @media (max-width: 768px) {
+          div[style*="gridTemplateColumns: 'repeat(4"] { grid-template-columns: repeat(2, 1fr) !important; }
         }
       `}</style>
     </div>

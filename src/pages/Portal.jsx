@@ -1197,14 +1197,10 @@ export default function Portal() {
           ))}
         </select>
         <div style={{ width: 1, height: 16, background: '#444' }} />
-        <button onClick={() => window.location.href = '/admin'} style={{
-          background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 100,
-          padding: '4px 12px', font: `500 11px ${s.FONT}`, color: '#999', cursor: 'pointer',
-        }}>Staff</button>
         <button onClick={() => window.location.href = '/'} style={{
           background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: 100,
-          padding: '4px 12px', font: `500 11px ${s.FONT}`, color: '#999', cursor: 'pointer',
-        }}>Home</button>
+          padding: '4px 12px', font: `400 11px ${s.FONT}`, color: '#888', cursor: 'pointer',
+        }}>← Home</button>
       </div>
     </div>
   );

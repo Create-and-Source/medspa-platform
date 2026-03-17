@@ -260,22 +260,14 @@ export default function Layout({ children }) {
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
             </span>
             <div style={{ width: 1, height: 20, background: 'rgba(0,0,0,0.08)' }} />
-            <button onClick={() => window.location.href = '/portal'} style={{
-              padding: '6px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
-              background: 'rgba(255,255,255,0.5)', font: "500 11px 'Inter', sans-serif", color: '#666',
-              cursor: 'pointer', backdropFilter: 'blur(8px)', transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = theme.accent + '40'; e.currentTarget.style.color = theme.accent; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.08)'; e.currentTarget.style.color = '#666'; }}
-            >Member Portal</button>
             <button onClick={() => window.location.href = '/'} style={{
               padding: '6px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
-              background: 'rgba(255,255,255,0.5)', font: "500 11px 'Inter', sans-serif", color: '#666',
+              background: 'rgba(255,255,255,0.5)', font: "400 11px 'Inter', sans-serif", color: '#AAA',
               cursor: 'pointer', backdropFilter: 'blur(8px)', transition: 'all 0.2s',
             }}
-            onMouseEnter={e => { e.currentTarget.style.borderColor = theme.accent + '40'; e.currentTarget.style.color = theme.accent; }}
-            onMouseLeave={e => { e.currentTarget.style.borderColor = 'rgba(0,0,0,0.08)'; e.currentTarget.style.color = '#666'; }}
-            >Home</button>
+            onMouseEnter={e => { e.currentTarget.style.color = '#666'; }}
+            onMouseLeave={e => { e.currentTarget.style.color = '#AAA'; }}
+            >← Home</button>
           </div>
         </div>
 

@@ -389,23 +389,11 @@ export default function BookOnline() {
               {tagline}
             </p>
           )}
-          <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-            <button onClick={() => window.location.href = '/'} style={{
-              padding: '5px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
-              background: 'rgba(255,255,255,0.5)', font: `500 11px ${s.FONT}`, color: '#888',
-              cursor: 'pointer', backdropFilter: 'blur(8px)',
-            }}>Home</button>
-            <button onClick={() => window.location.href = '/portal'} style={{
-              padding: '5px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
-              background: 'rgba(255,255,255,0.5)', font: `500 11px ${s.FONT}`, color: '#888',
-              cursor: 'pointer', backdropFilter: 'blur(8px)',
-            }}>Portal</button>
-            <button onClick={() => window.location.href = '/admin'} style={{
-              padding: '5px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
-              background: 'rgba(255,255,255,0.5)', font: `500 11px ${s.FONT}`, color: '#888',
-              cursor: 'pointer', backdropFilter: 'blur(8px)',
-            }}>Staff</button>
-          </div>
+          <button onClick={() => window.location.href = '/'} style={{
+            marginTop: 12, padding: '5px 14px', borderRadius: 100, border: '1px solid rgba(0,0,0,0.08)',
+            background: 'rgba(255,255,255,0.5)', font: `400 11px ${s.FONT}`, color: '#AAA',
+            cursor: 'pointer', backdropFilter: 'blur(8px)',
+          }}>← Home</button>
         </div>
 
         {/* Step indicator */}
