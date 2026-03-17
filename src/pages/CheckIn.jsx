@@ -203,15 +203,26 @@ export default function CheckIn() {
               </div>
             </div>
 
-            <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, cursor: 'pointer' }}>
-              <input type="checkbox" checked={verifyForm.pregnant} onChange={e => setVerifyForm({ ...verifyForm, pregnant: e.target.checked })} style={{ accentColor: s.danger, width: 18, height: 18 }} />
-              <span style={{ font: `400 13px ${s.FONT}`, color: s.text }}>Patient is or may be pregnant</span>
-            </label>
-            {verifyForm.pregnant && (
-              <div style={{ padding: '10px 14px', background: '#FEF2F2', borderRadius: 8, marginTop: 8, font: `500 12px ${s.FONT}`, color: s.danger }}>
-                ALERT: Confirm treatment safety with provider before proceeding.
-              </div>
-            )}
+            {/* Only show pregnancy check for contraindicated services */}
+            {(() => {
+              const svc = services.find(sv => sv.id === showVerify?.serviceId);
+              const safeInPregnancy = ['Consultation', 'Virtual Consultation', 'Red Light Therapy'];
+              const showPregnancy = svc && !safeInPregnancy.includes(svc.name);
+              if (!showPregnancy) return null;
+              return (
+                <>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 16, cursor: 'pointer' }}>
+                    <input type="checkbox" checked={verifyForm.pregnant} onChange={e => setVerifyForm({ ...verifyForm, pregnant: e.target.checked })} style={{ accentColor: s.danger, width: 18, height: 18 }} />
+                    <span style={{ font: `400 13px ${s.FONT}`, color: s.text }}>Patient is or may be pregnant</span>
+                  </label>
+                  {verifyForm.pregnant && (
+                    <div style={{ padding: '10px 14px', background: '#FEF2F2', borderRadius: 8, marginTop: 8, font: `500 12px ${s.FONT}`, color: s.danger }}>
+                      ALERT: {svc?.name} may be contraindicated during pregnancy. Confirm treatment safety with provider before proceeding.
+                    </div>
+                  )}
+                </>
+              );
+            })()}
 
             <div style={{ display: 'flex', gap: 10, marginTop: 24, justifyContent: 'flex-end' }}>
               <button onClick={() => setShowVerify(null)} style={s.pillGhost}>Cancel</button>

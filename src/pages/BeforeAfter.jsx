@@ -4,7 +4,17 @@ import { useState, useEffect, useRef } from 'react';
 import { useStyles } from '../theme';
 import { getPhotos, addPhoto, deletePhoto, getPatients, getServices, getProviders, subscribe } from '../data/store';
 
-const ANGLES = ['Front', 'Left 45°', 'Right 45°', 'Left Profile', 'Right Profile', 'Close-up'];
+const FACE_ANGLES = ['Front', 'Left 45°', 'Right 45°', 'Left Profile', 'Right Profile', 'Close-up'];
+const BODY_ANGLES = ['Front', 'Back', 'Left Side', 'Right Side', 'Detail Left', 'Detail Right'];
+const SCALP_ANGLES = ['Top View', 'Front Hairline', 'Left Temple', 'Right Temple', 'Back'];
+const getAngles = (serviceId, services) => {
+  const svc = services?.find(s => s.id === serviceId);
+  const cat = svc?.category || '';
+  if (['Body', 'Surgical'].includes(cat)) return BODY_ANGLES;
+  if (svc?.name?.includes('Hair Restoration')) return SCALP_ANGLES;
+  return FACE_ANGLES;
+};
+const ANGLES = [...new Set([...FACE_ANGLES, ...BODY_ANGLES, ...SCALP_ANGLES])];
 const LIGHTING = ['Clinical (white)', 'Natural', 'Ring Light'];
 
 function initPhotos() {
@@ -215,7 +225,7 @@ export default function BeforeAfter() {
               <div>
                 <label style={s.label}>Angle</label>
                 <select value={form.angle} onChange={e => setForm({ ...form, angle: e.target.value })} style={{ ...s.input, cursor: 'pointer' }}>
-                  {ANGLES.map(a => <option key={a} value={a}>{a}</option>)}
+                  {getAngles(form.serviceId, services).map(a => <option key={a} value={a}>{a}</option>)}
                 </select>
               </div>
               <div>

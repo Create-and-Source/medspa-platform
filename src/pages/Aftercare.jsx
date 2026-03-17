@@ -57,6 +57,47 @@ const TEMPLATES = [
       { delay: 42, label: '6 Weeks', subject: 'Next Laser Session', body: 'Time for your next laser hair removal session! Treatments are spaced 4-6 weeks apart to catch hair in the active growth phase. Book now to stay on track.' },
     ],
   },
+  {
+    id: 'tmpl-weight-loss', service: 'Medical Weight Loss', messages: [
+      { delay: 0, label: 'Day 1', subject: 'Welcome to Your Weight Loss Program', body: 'Welcome! Take your first injection as instructed. Common side effects include mild nausea — eat small, protein-rich meals. Stay hydrated (64oz+ water daily). Avoid fatty or greasy foods.' },
+      { delay: 7, label: 'Week 1', subject: 'How Are You Feeling?', body: 'Checking in on your first week! Any nausea should be improving. Focus on 80-100g of protein daily to preserve muscle. Track your meals if possible.' },
+      { delay: 28, label: 'Month 1', subject: 'One Month Check-In', body: 'Congratulations on completing your first month! Time for your follow-up appointment — we will check your weight, adjust your dose, and review how you are feeling. Book your visit.' },
+      { delay: 84, label: '3 Months', subject: 'Lab Work Reminder', body: 'Time for your quarterly labs! We need to check your CMP, lipid panel, and A1C. Schedule your blood work before your next appointment.' },
+    ],
+  },
+  {
+    id: 'tmpl-lipo', service: 'Awake Liposuction', messages: [
+      { delay: 0, label: 'Immediate', subject: 'Post-Liposuction Recovery Instructions', body: 'Wear your compression garment 24/7 (except showering). Take prescribed pain medication as directed. Walk lightly today — movement helps prevent blood clots. Expect drainage from incision sites for 24-48 hours.' },
+      { delay: 1, label: 'Day 1', subject: 'Day After Surgery Check-In', body: 'How are you feeling? Swelling and bruising are completely normal. Continue wearing your compression garment. Take short walks every 2-3 hours. Stay hydrated. Call us immediately if you have fever over 101, severe pain, or signs of infection.' },
+      { delay: 7, label: 'Week 1', subject: 'One Week Post-Op', body: 'You should be feeling better each day. Keep wearing your compression garment. Light activity is okay but no gym or heavy lifting for 4 weeks. Bruising will take 2-3 weeks to fully resolve. Your follow-up appointment is coming up.' },
+      { delay: 21, label: 'Week 3', subject: 'Recovery Progress', body: 'Swelling is reducing but final results take 3-6 months. You can increase activity gradually. Start gentle scar care (silicone sheets or cream) on healed incisions. Maintain a stable weight — the removed fat cells are gone permanently.' },
+      { delay: 90, label: '3 Months', subject: 'Results Check-In', body: 'Your results should be really showing now! Schedule your 3-month follow-up so we can assess your results and take after photos. If you are interested in additional contouring, we can discuss options.' },
+    ],
+  },
+  {
+    id: 'tmpl-body-contouring', service: 'Body Contouring', messages: [
+      { delay: 0, label: 'Immediate', subject: 'After Your Body Contouring Session', body: 'You may feel tingling, numbness, or mild discomfort in the treated area — this is normal. Drink plenty of water to help your body flush the treated fat cells. Light walking is encouraged.' },
+      { delay: 3, label: 'Day 3', subject: 'Swelling Update', body: 'Some swelling is normal and may peak around now. This is temporary. Continue hydrating and staying active with light walks. Avoid alcohol as it slows the elimination process.' },
+      { delay: 14, label: 'Week 2', subject: 'Progress Check', body: 'You may start noticing subtle changes. Remember — full results take 8-12 weeks as your body naturally eliminates the treated fat cells. Stay active and maintain your current weight.' },
+      { delay: 60, label: '8 Weeks', subject: 'Results Are Showing!', body: 'You should be seeing significant improvement! Take comparison photos and let us know how you feel. If you want to enhance your results with an additional session, now is a great time to book.' },
+    ],
+  },
+  {
+    id: 'tmpl-hrt', service: 'Hormone Replacement (HRT)', messages: [
+      { delay: 0, label: 'Day 1', subject: 'After Your HRT Treatment', body: 'Your hormone pellets have been inserted. Keep the insertion site clean and dry for 24 hours. Avoid submerging in water (pools, baths) for 5 days. Mild soreness at the site is normal.' },
+      { delay: 14, label: 'Week 2', subject: 'Hormones Adjusting', body: 'Your hormones are starting to optimize. You may notice improved energy, mood, or sleep. Some patients experience a brief adjustment period — this is normal. Report any unusual symptoms.' },
+      { delay: 60, label: 'Month 2', subject: 'How Are You Feeling?', body: 'You should be feeling the full benefits now. Schedule your follow-up labs so we can check your hormone levels and ensure everything is optimized. Book your lab appointment.' },
+      { delay: 90, label: '3 Months', subject: 'Re-Pellet Reminder', body: 'It is almost time for your next pellet insertion. Most patients need re-pelting every 3-4 months for women and 4-6 months for men. Book your appointment to maintain your levels.' },
+    ],
+  },
+  {
+    id: 'tmpl-hair-restoration', service: 'Hair Restoration', messages: [
+      { delay: 0, label: 'Immediate', subject: 'After Your PRP Hair Treatment', body: 'Mild redness and tenderness at injection sites is normal. Avoid washing your hair for 24 hours. No hats or helmets for 48 hours. Avoid strenuous exercise for 24 hours.' },
+      { delay: 14, label: 'Week 2', subject: 'Shedding Phase Starting', body: 'You may notice increased hair shedding — this is actually a GOOD sign. The PRP is pushing old hairs out to make room for new, stronger growth. This phase lasts 2-4 weeks.' },
+      { delay: 60, label: 'Month 2', subject: 'New Growth Beginning', body: 'The shedding phase should be ending and you may start to see baby hairs emerging. Be patient — significant visible results take 3-6 months. Your next PRP session is coming up.' },
+      { delay: 120, label: '4 Months', subject: 'Results Are Growing In!', body: 'You should be seeing noticeable new growth and improved density. Take comparison photos. Book your next session to continue building on your results.' },
+    ],
+  },
 ];
 
 function initAftercare() {

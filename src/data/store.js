@@ -100,12 +100,14 @@ export function initStore() {
   if (alreadyInit) return;
   const t = (h, m) => `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 
-  // Providers
+  // Providers (6 providers covering all 32 services)
   set('ms_providers', [
-    { id: 'PRV-1', name: 'Dr. Sarah Mitchell', title: 'Medical Director', specialties: ['Botox', 'Fillers', 'PDO Threads'], color: '#111' },
-    { id: 'PRV-2', name: 'Jessica Park, NP', title: 'Nurse Practitioner', specialties: ['Botox', 'Fillers', 'Chemical Peels', 'Laser'], color: '#666' },
-    { id: 'PRV-3', name: 'Emily Chen, RN', title: 'Aesthetic Nurse', specialties: ['Microneedling', 'IPL', 'HydraFacial', 'Laser'], color: '#999' },
-    { id: 'PRV-4', name: 'Dr. Marcus Webb', title: 'Cosmetic Surgeon', specialties: ['Body Contouring', 'Fat Transfer', 'PDO Threads'], color: '#444' },
+    { id: 'PRV-1', name: 'Dr. Sarah Mitchell', title: 'Medical Director', specialties: ['Botox', 'Juvederm Filler', 'Sculptra', 'PDO Threads', 'Kybella', 'Morpheus8', 'PRP / PRF Facial', 'Lip Filler'], color: '#111' },
+    { id: 'PRV-2', name: 'Jessica Park, NP', title: 'Nurse Practitioner', specialties: ['Botox', 'Juvederm Filler', 'Chemical Peel', 'Laser Hair Removal', 'HydraFacial', 'IPL Photofacial', 'Red Light Therapy', 'Bridal Glow Package'], color: '#666' },
+    { id: 'PRV-3', name: 'Emily Chen, RN', title: 'Aesthetic Nurse', specialties: ['RF Microneedling', 'Morpheus8', 'IPL Photofacial', 'Laser Skin Resurfacing', 'Tattoo Removal', 'HydraFacial', 'Chemical Peel', 'Cellulite Treatment'], color: '#999' },
+    { id: 'PRV-4', name: 'Dr. Marcus Webb', title: 'Cosmetic Surgeon', specialties: ['Awake Liposuction', 'Fat Transfer / BBL', 'BodyTite / FaceTite', 'Body Contouring', 'CoolSculpting', 'EmSculpt NEO', 'PDO Threads'], color: '#444' },
+    { id: 'PRV-5', name: 'Dr. Amara Okonkwo', title: 'Wellness Physician', specialties: ['Medical Weight Loss', 'IV Therapy', 'Hormone Replacement (HRT)', 'Hair Restoration', 'O-Shot / P-Shot', 'Vampire Breast Lift', 'PRP / PRF Facial'], color: '#2563EB' },
+    { id: 'PRV-6', name: 'Taylor Reeves', title: 'Master Aesthetician', specialties: ['HydraFacial', 'Chemical Peel', 'Cellulite Treatment', 'Muscle Sculpting', 'Red Light Therapy', 'Ultrasonic Cavitation', 'Virtual Consultation'], color: '#7C3AED' },
   ]);
 
   // Services

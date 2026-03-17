@@ -249,7 +249,11 @@ export default function Schedule() {
                 <label style={s.label}>Provider</label>
                 <select value={form.providerId} onChange={e => setForm({ ...form, providerId: e.target.value })} style={{ ...s.input, cursor: 'pointer' }}>
                   <option value="">Select...</option>
-                  {providers.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  {(() => {
+                    const svc = services.find(sv => sv.id === form.serviceId);
+                    const filtered = svc ? providers.filter(p => p.specialties?.some(sp => svc.name.includes(sp) || sp.includes(svc.name) || svc.category === 'Consultation')) : providers;
+                    return (filtered.length > 0 ? filtered : providers).map(p => <option key={p.id} value={p.id}>{p.name}</option>);
+                  })()}
                 </select>
               </div>
               <div>
