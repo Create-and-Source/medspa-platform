@@ -46,35 +46,37 @@ export default function Dashboard() {
     .sort((a, b) => `${a.date}${a.time}`.localeCompare(`${b.date}${b.time}`))
     .slice(0, 8);
 
-  const KPI = ({ label, value, sub, onClick }) => (
+  const KPI = ({ label, value, sub, onClick, idx = 0 }) => (
     <div onClick={onClick} style={{
-      ...s.cardStyle, padding: '24px 20px', cursor: onClick ? 'pointer' : 'default',
-      transition: 'all 0.15s',
+      ...s.cardStyle, padding: '28px 24px', cursor: onClick ? 'pointer' : 'default',
+      animation: `fadeInUp 0.5s cubic-bezier(0.16,1,0.3,1) ${idx * 80}ms backwards`,
+      position: 'relative', overflow: 'hidden',
     }}
-    onMouseEnter={e => onClick && (e.currentTarget.style.boxShadow = s.shadowMd)}
-    onMouseLeave={e => onClick && (e.currentTarget.style.boxShadow = s.shadow)}
+    onMouseEnter={e => { e.currentTarget.style.boxShadow = s.shadowMd; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+    onMouseLeave={e => { e.currentTarget.style.boxShadow = s.shadow; e.currentTarget.style.transform = 'translateY(0)'; }}
     >
-      <div style={{ font: `400 11px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1, color: s.text3, marginBottom: 8 }}>{label}</div>
-      <div style={{ font: `600 32px ${s.FONT}`, color: s.text, marginBottom: 4 }}>{value}</div>
+      <div style={{ position: 'absolute', top: -20, right: -20, width: 80, height: 80, borderRadius: '50%', background: `${s.accent}08` }} />
+      <div style={{ font: `500 10px ${s.MONO}`, textTransform: 'uppercase', letterSpacing: 1.5, color: s.text3, marginBottom: 10 }}>{label}</div>
+      <div style={{ font: `600 34px ${s.FONT}`, color: s.text, marginBottom: 6, letterSpacing: '-0.5px' }}>{value}</div>
       {sub && <div style={{ font: `400 13px ${s.FONT}`, color: s.text2 }}>{sub}</div>}
     </div>
   );
 
   return (
     <div>
-      <div style={{ marginBottom: 28 }}>
-        <h1 style={{ font: `600 26px ${s.FONT}`, color: s.text, marginBottom: 4 }}>Dashboard</h1>
-        <p style={{ font: `400 14px ${s.FONT}`, color: s.text2 }}>
+      <div style={{ marginBottom: 32, animation: 'fadeIn 0.4s cubic-bezier(0.16,1,0.3,1)' }}>
+        <h1 style={{ font: `600 28px ${s.FONT}`, color: s.text, marginBottom: 6, letterSpacing: '-0.3px' }}>Dashboard</h1>
+        <p style={{ font: `400 14px ${s.FONT}`, color: s.text3 }}>
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })} overview
         </p>
       </div>
 
       {/* KPIs */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 16, marginBottom: 28 }}>
-        <KPI label="Today's Appointments" value={todayAppts.length} sub={`${confirmedToday} confirmed, ${pendingToday} pending`} onClick={() => nav('/schedule')} />
-        <KPI label="Monthly Revenue" value={fmt(monthRevenue)} sub={`${monthAppts.length} completed treatments`} onClick={() => nav('/reports')} />
-        <KPI label="Active Patients" value={patients.length} sub={`${newPatientsMonth} new this month`} onClick={() => nav('/patients')} />
-        <KPI label="Retention Alerts" value={pendingAlerts.length} sub={pendingAlerts.length > 0 ? `${pendingAlerts.filter(a => a.priority === 'high').length} high priority` : 'All caught up'} onClick={() => nav('/retention')} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 16, marginBottom: 32 }}>
+        <KPI label="Today's Appointments" value={todayAppts.length} sub={`${confirmedToday} confirmed, ${pendingToday} pending`} onClick={() => nav('/schedule')} idx={0} />
+        <KPI label="Monthly Revenue" value={fmt(monthRevenue)} sub={`${monthAppts.length} completed treatments`} onClick={() => nav('/reports')} idx={1} />
+        <KPI label="Active Patients" value={patients.length} sub={`${newPatientsMonth} new this month`} onClick={() => nav('/patients')} idx={2} />
+        <KPI label="Retention Alerts" value={pendingAlerts.length} sub={pendingAlerts.length > 0 ? `${pendingAlerts.filter(a => a.priority === 'high').length} high priority` : 'All caught up'} onClick={() => nav('/retention')} idx={3} />
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>

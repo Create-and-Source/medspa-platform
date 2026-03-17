@@ -223,7 +223,10 @@ export default function Layout({ children }) {
   );
 
   return (
-    <div style={{ minHeight: '100vh', background: '#FAFAFA' }}>
+    <div style={{ minHeight: '100vh', background: '#F5F3F0', position: 'relative' }}>
+      {/* Animated background orbs */}
+      <div className="bg-orbs" />
+
       {/* Desktop sidebar */}
       <div className="sidebar-desktop" style={{ display: 'block' }}>
         <Sidebar />
@@ -231,18 +234,20 @@ export default function Layout({ children }) {
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', zIndex: 199 }}
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', backdropFilter: 'blur(4px)', zIndex: 199 }}
           onClick={() => setMobileOpen(false)} />
       )}
       {mobileOpen && <Sidebar mobile />}
 
       {/* Main content */}
-      <div style={{ marginLeft: sidebarWidth, minHeight: '100vh', transition: 'margin-left 0.2s ease' }}>
-        {/* Topbar */}
+      <div style={{ marginLeft: sidebarWidth, minHeight: '100vh', transition: 'margin-left 0.25s cubic-bezier(0.16,1,0.3,1)', position: 'relative', zIndex: 1 }}>
+        {/* Topbar — glassmorphism */}
         <div style={{
           position: 'sticky', top: 0, zIndex: 50,
-          background: 'rgba(250,250,250,0.85)', backdropFilter: 'blur(12px)',
-          borderBottom: '1px solid #F0F0F0', padding: '0 32px', height: 56,
+          background: 'rgba(245,243,240,0.6)',
+          backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(0,0,0,0.04)',
+          padding: '0 32px', height: 56,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
         }}>
           <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)} style={{
@@ -252,14 +257,14 @@ export default function Layout({ children }) {
           </button>
           <div />
           <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
-            <span style={{ font: "400 13px 'Inter', sans-serif", color: '#999' }}>
+            <span style={{ font: "400 12px 'JetBrains Mono', monospace", color: '#AAA', letterSpacing: 0.5 }}>
               {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
             </span>
           </div>
         </div>
 
         {/* Page content */}
-        <div style={{ padding: '28px 32px', maxWidth: 1400, animation: 'fadeIn 0.3s ease' }}>
+        <div style={{ padding: '32px 36px', maxWidth: 1400, animation: 'fadeIn 0.4s cubic-bezier(0.16,1,0.3,1)' }}>
           {children}
         </div>
       </div>
