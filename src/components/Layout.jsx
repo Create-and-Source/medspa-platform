@@ -119,20 +119,21 @@ export default function Layout({ children }) {
     background: isActive ? theme.accentLight : 'transparent',
   });
 
-  // Dark sidebar uses accent color
-  const sidebarBg = theme.accent;
-  const sidebarText = theme.accentText;
-  const sidebarMuted = theme.accentText + '88';
-  const sidebarBorder = theme.accentText + '15';
-  const sidebarHover = theme.accentText + '12';
-  const sidebarActive = theme.accentText + '22';
+  // Dark sidebar — always dark with accent as highlight color
+  const sidebarBg = '#111111';
+  const sidebarText = '#FFFFFF';
+  const sidebarMuted = '#888888';
+  const sidebarBorder = '#222222';
+  const sidebarHover = '#1A1A1A';
+  const sidebarActive = theme.accent + '30';
+  const sidebarAccent = theme.accent;
 
   const linkStyleNew = (isActive) => ({
     display: 'flex', alignItems: 'center', gap: 12, padding: collapsed ? '10px 0' : '10px 16px',
     justifyContent: collapsed ? 'center' : 'flex-start',
     borderRadius: 8, textDecoration: 'none', transition: 'all 0.15s',
     font: `${isActive ? '500' : '400'} 13px 'Inter', sans-serif`,
-    color: isActive ? '#FFFFFF' : sidebarMuted,
+    color: isActive ? sidebarAccent : '#AAAAAA',
     background: isActive ? sidebarActive : 'transparent',
   });
 
@@ -152,10 +153,9 @@ export default function Layout({ children }) {
         display: 'flex', alignItems: 'center', gap: 12, minHeight: 68,
       }}>
         <div style={{
-          width: 34, height: 34, borderRadius: 10, background: theme.accentText + '20',
+          width: 34, height: 34, borderRadius: 10, background: sidebarAccent,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          color: '#FFFFFF', font: "700 14px 'Inter', sans-serif", flexShrink: 0,
-          border: `1.5px solid ${theme.accentText}30`,
+          color: theme.accentText, font: "700 14px 'Inter', sans-serif", flexShrink: 0,
         }}>
           {(settings.businessName || 'M')[0]}
         </div>
@@ -204,7 +204,7 @@ export default function Layout({ children }) {
           background: 'transparent', border: 'none', borderRadius: 8, cursor: 'pointer',
           font: "400 13px 'Inter', sans-serif", color: sidebarMuted, transition: 'all 0.15s',
         }}>
-          <span style={{ width: 18, height: 18, borderRadius: '50%', background: theme.accentText + '30', border: `2px solid ${theme.accentText}40`, flexShrink: 0 }} />
+          <span style={{ width: 18, height: 18, borderRadius: '50%', background: sidebarAccent, flexShrink: 0 }} />
           {!collapsed && 'Brand Color'}
         </button>
         {!mobile && (

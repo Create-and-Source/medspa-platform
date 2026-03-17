@@ -89,10 +89,15 @@ export function updateSettings(updates) { set('ms_settings', { ...getSettings(),
 
 // ── Init seed data ──
 export function initStore() {
-  if (localStorage.getItem('ms_initialized')) return;
+  const alreadyInit = localStorage.getItem('ms_initialized');
 
   const today = new Date();
   const d = (offset) => { const dt = new Date(today); dt.setDate(dt.getDate() + offset); return dt.toISOString().slice(0, 10); };
+
+  // Always seed missing keys (even if already initialized)
+  seedIfEmpty(d, today);
+
+  if (alreadyInit) return;
   const t = (h, m) => `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
 
   // Providers
@@ -239,7 +244,7 @@ export function initStore() {
         daysSince,
         lastService: svc,
         suggestedAction: daysSince > 100 ? `${svc} follow-up overdue — send re-engagement` : `Time for ${svc} maintenance`,
-        priority: daysSince > 100 ? 'high' : 'medium',
+        priority: 'high',
         status: 'pending',
         contacted: false,
       });
@@ -258,8 +263,15 @@ export function initStore() {
     phone: '(480) 555-0100',
   });
 
+  localStorage.setItem('ms_initialized', 'true');
+}
+
+// Seeds data for keys that are empty — runs every load to fill gaps
+function seedIfEmpty(d, today) {
+  if (get('ms_emails', []).length > 0 && get('ms_texts', []).length > 0 && get('ms_social_posts', []).length > 0 && get('ms_checkins', []).length > 0) return;
+
   // Seed Sent Emails
-  set('ms_emails', [
+  if (get('ms_emails', []).length === 0) set('ms_emails', [
     { id: 'EM-1', subject: 'March Newsletter — New Spring Treatments', body: 'Hi there, here is what is new this month...', audience: 'All Patients', status: 'Sent', recipientCount: 30, sentDate: d(-3) + 'T10:00:00Z' },
     { id: 'EM-2', subject: 'Exclusive: 20% Off Botox This Week Only', body: 'Special offer for our valued patients...', audience: 'Members', status: 'Sent', recipientCount: 12, sentDate: d(-7) + 'T14:00:00Z' },
     { id: 'EM-3', subject: 'Your Appointment is Tomorrow!', body: 'Hi [Patient], reminder about your upcoming visit...', audience: 'Recent Visitors', status: 'Sent', recipientCount: 8, sentDate: d(-1) + 'T09:00:00Z' },
@@ -268,7 +280,7 @@ export function initStore() {
   ]);
 
   // Seed Sent Text Messages
-  set('ms_texts', [
+  if (get('ms_texts', []).length === 0) set('ms_texts', [
     { id: 'TXT-1', message: 'Hi! Reminder: your Botox appointment is tomorrow at 2pm. Reply C to confirm or R to reschedule.', audience: 'upcoming', recipientCount: 6, template: 'reminder', status: 'Sent', sentDate: d(-1) + 'T08:00:00Z' },
     { id: 'TXT-2', message: 'Hi! How are you feeling after your microneedling yesterday? Any questions? Reply here or call us.', audience: 'all', recipientCount: 4, template: 'followup', status: 'Sent', sentDate: d(-2) + 'T10:00:00Z' },
     { id: 'TXT-3', message: 'Spring Special: 20% off all HydraFacials this month! Book now — reply BOOK or call us.', audience: 'all', recipientCount: 30, template: 'promo', status: 'Sent', sentDate: d(-5) + 'T12:00:00Z' },
@@ -277,7 +289,7 @@ export function initStore() {
   ]);
 
   // Seed Social Media Posts
-  set('ms_social_posts', [
+  if (get('ms_social_posts', []).length === 0) set('ms_social_posts', [
     { id: 'SP-1', contentType: 'service', platforms: ['instagram', 'facebook'], posts: [{ platform: 'instagram', text: 'Discover the art of Botox\n\nPrecision. Subtlety. Confidence.\n\nBook your consultation — link in bio\n\n#MedSpa #Botox #Aesthetics' }, { platform: 'facebook', text: 'Botox treatments starting at $14/unit. Natural results that let you be you.' }], status: 'published', publishedAt: d(-2) + 'T10:00:00Z', createdAt: d(-2) + 'T09:00:00Z' },
     { id: 'SP-2', contentType: 'before-after', platforms: ['instagram'], posts: [{ platform: 'instagram', text: 'The results speak for themselves\n\nBefore → After\nJuvederm Filler — 1 session\n\n#BeforeAndAfter #MedSpa #Results' }], status: 'published', publishedAt: d(-5) + 'T14:00:00Z', createdAt: d(-5) + 'T13:00:00Z' },
     { id: 'SP-3', contentType: 'promo', platforms: ['instagram', 'facebook', 'tiktok'], posts: [{ platform: 'instagram', text: 'SPRING GLOW SPECIAL\n\n20% off HydraFacials all month\n\nLink in bio\n\n#MedSpa #SpecialOffer' }, { platform: 'facebook', text: 'Spring into glowing skin — 20% off HydraFacials!' }, { platform: 'tiktok', text: 'POV: You just got a HydraFacial and your skin is GLOWING' }], status: 'scheduled', scheduledAt: d(2) + 'T10:00:00Z', createdAt: d(-1) + 'T16:00:00Z' },
@@ -286,6 +298,8 @@ export function initStore() {
   ]);
 
   // Seed Check-Ins (for today's appointments)
+  if (get('ms_checkins', []).length > 0) return;
+  const appts = get('ms_appointments', []);
   const todayAppts = appts.filter(a => a.date === today.toISOString().slice(0, 10));
   const checkins = [];
   todayAppts.slice(0, Math.min(5, todayAppts.length)).forEach((a, i) => {
@@ -302,6 +316,4 @@ export function initStore() {
     });
   });
   set('ms_checkins', checkins);
-
-  localStorage.setItem('ms_initialized', 'true');
 }
