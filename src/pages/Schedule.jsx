@@ -133,7 +133,7 @@ export default function Schedule() {
             const hourAppts = dayAppts.filter(a => parseInt(a.time.split(':')[0]) === h);
             return (
               <div key={h} style={{ display: 'flex', borderBottom: '1px solid rgba(0,0,0,0.03)', minHeight: 72 }}>
-                <div style={{ width: 80, padding: '12px 16px', font: `400 12px ${s.MONO}`, color: s.text3, borderRight: '1px solid rgba(0,0,0,0.03)', flexShrink: 0 }}>
+                <div className="schedule-time-col" style={{ width: 80, padding: '12px 16px', font: `400 12px ${s.MONO}`, color: s.text3, borderRight: '1px solid rgba(0,0,0,0.03)', flexShrink: 0 }}>
                   {h > 12 ? h - 12 : h}:00 {h >= 12 ? 'PM' : 'AM'}
                 </div>
                 <div style={{ flex: 1, padding: '8px 12px', cursor: 'pointer' }} onClick={() => openNew(currentDate, `${String(h).padStart(2, '0')}:00`)}>
@@ -147,7 +147,7 @@ export default function Schedule() {
 
       {/* Week View */}
       {view === 'week' && (
-        <div style={{ ...s.tableWrap, overflowX: 'auto' }}>
+        <div className="schedule-week-wrap" style={{ ...s.tableWrap, overflowX: 'auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', minWidth: 800 }}>
             {weekDays.map(day => {
               const isToday = day === new Date().toISOString().slice(0, 10);
@@ -223,6 +223,27 @@ export default function Schedule() {
           </table>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .schedule-week-wrap {
+            -webkit-overflow-scrolling: touch;
+          }
+          .schedule-week-wrap::after {
+            content: 'Scroll to see full week →';
+            display: block;
+            text-align: center;
+            font: 400 11px 'Inter', sans-serif;
+            color: #999;
+            padding: 8px 0 4px;
+          }
+          .schedule-time-col {
+            width: 56px !important;
+            padding: 10px 6px !important;
+            font-size: 10px !important;
+          }
+        }
+      `}</style>
 
       {/* Booking Modal */}
       {showForm && (

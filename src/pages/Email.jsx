@@ -232,7 +232,7 @@ export default function Email() {
 
       {/* Sent Tab */}
       {tab === 'sent' && (
-        <div style={s.tableWrap}>
+        <div className="email-sent-table" style={s.tableWrap}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #E5E5E5' }}>
@@ -269,6 +269,14 @@ export default function Email() {
           </table>
         </div>
       )}
+      <style>{`
+        @media (max-width: 768px) {
+          .email-sent-table {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -243,7 +243,7 @@ export default function Patients() {
       </div>
 
       {/* ═══ MAIN CONTENT ═══ */}
-      <div style={{ display: 'grid', gridTemplateColumns: detail ? '1fr 380px' : '1fr', gap: 20 }}>
+      <div className="patients-main-grid" style={{ display: 'grid', gridTemplateColumns: detail ? '1fr 380px' : '1fr', gap: 20 }}>
 
         {/* ═══ CARD VIEW ═══ */}
         {viewMode === 'cards' && (
@@ -382,7 +382,7 @@ export default function Patients() {
 
         {/* ═══ DETAIL PANEL ═══ */}
         {detail && (
-          <div style={{
+          <div className="patients-detail-panel" style={{
             alignSelf: 'start', position: 'sticky', top: 80, overflow: 'hidden',
             ...glass, borderRadius: 20, padding: 0,
             animation: 'patSlideIn 0.35s cubic-bezier(0.16,1,0.3,1) both',
@@ -495,6 +495,27 @@ export default function Patients() {
           </div>
         )}
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .patients-main-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .patients-detail-panel {
+            position: fixed !important;
+            top: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 85vw !important;
+            max-width: 380px !important;
+            z-index: 200 !important;
+            border-radius: 20px 0 0 20px !important;
+            overflow-y: auto !important;
+            box-shadow: -8px 0 40px rgba(0,0,0,0.15) !important;
+            animation: slideIn 0.3s cubic-bezier(0.16,1,0.3,1) both !important;
+          }
+        }
+      `}</style>
 
       {/* ═══ ADD/EDIT MODAL ═══ */}
       {showForm && (

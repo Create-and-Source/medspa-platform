@@ -248,7 +248,7 @@ export default function Layout({ children }) {
           borderBottom: '1px solid rgba(0,0,0,0.04)',
           padding: '0 32px', height: 56,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        }}>
+        }} className="layout-topbar">
           <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)} style={{
             display: 'none', background: 'none', border: 'none', cursor: 'pointer', color: '#666',
           }}>
@@ -272,7 +272,7 @@ export default function Layout({ children }) {
         </div>
 
         {/* Page content */}
-        <div style={{ padding: '32px 36px', maxWidth: 1400, animation: 'fadeIn 0.4s cubic-bezier(0.16,1,0.3,1)' }}>
+        <div className="layout-content" style={{ padding: '32px 36px', maxWidth: 1400, animation: 'fadeIn 0.4s cubic-bezier(0.16,1,0.3,1)' }}>
           {children}
         </div>
       </div>
@@ -285,6 +285,18 @@ export default function Layout({ children }) {
           .sidebar-desktop { display: none !important; }
           .mobile-menu-btn { display: flex !important; }
           div[style*="marginLeft"] { margin-left: 0 !important; }
+        }
+        @media (max-width: 768px) {
+          .layout-content {
+            padding: 16px 14px !important;
+          }
+          .layout-topbar {
+            padding: 0 14px !important;
+          }
+          .mobile-menu-btn {
+            flex-shrink: 0 !important;
+            margin-right: 8px !important;
+          }
         }
       `}</style>
     </div>

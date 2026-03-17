@@ -538,7 +538,7 @@ export default function Charts() {
             <h2 style={{ font: `600 22px ${s.FONT}`, color: s.text, marginBottom: 20 }}>{activeId ? 'Edit Chart' : 'New Clinical Chart'}</h2>
 
             {/* Patient / Service / Provider */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 20 }}>
+            <div className="charts-meta-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 20 }}>
               <div>
                 <label style={s.label}>Patient</label>
                 <select value={form.patientId} onChange={e => setForm({ ...form, patientId: e.target.value })} style={{ ...s.input, cursor: 'pointer' }}>
@@ -563,7 +563,7 @@ export default function Charts() {
             </div>
 
             {/* Vitals */}
-            <div style={{ display: 'flex', gap: 14, marginBottom: 20 }}>
+            <div className="charts-vitals-row" style={{ display: 'flex', gap: 14, marginBottom: 20 }}>
               {[['bp', 'Blood Pressure'], ['pulse', 'Pulse'], ['temp', 'Temp (F)']].map(([key, label]) => (
                 <div key={key} style={{ flex: 1 }}>
                   <label style={s.label}>{label}</label>
@@ -576,7 +576,7 @@ export default function Charts() {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: currentMapType === 'none' ? '1fr 320px' : '1fr 320px', gap: 20 }}>
+            <div className="charts-editor-grid" style={{ display: 'grid', gridTemplateColumns: currentMapType === 'none' ? '1fr 320px' : '1fr 320px', gap: 20 }}>
               {/* SOAP Notes */}
               <div>
                 {[
@@ -666,6 +666,20 @@ export default function Charts() {
           </div>
         </div>
       )}
+
+      <style>{`
+        @media (max-width: 768px) {
+          .charts-editor-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .charts-meta-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .charts-vitals-row {
+            flex-wrap: wrap !important;
+          }
+        }
+      `}</style>
 
       {/* Zone Edit Popover */}
       {editingZone && (

@@ -55,7 +55,7 @@ export default function Home() {
           </div>
           <span style={{ font: `600 16px ${s.FONT}`, color: '#fff' }}>{name}</span>
         </div>
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+        <div className="home-nav-btns" style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
           <button onClick={() => nav('/book')} style={{
             padding: '8px 20px', borderRadius: 100, border: '1px solid rgba(255,255,255,0.12)',
             background: 'transparent', color: 'rgba(255,255,255,0.7)', font: `400 13px ${s.FONT}`, cursor: 'pointer',
@@ -144,7 +144,7 @@ export default function Home() {
           </div>
 
           {/* KPI cards */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
+          <div className="home-kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 10, marginBottom: 16 }}>
             {[
               { label: "Today's Appts", value: todayAppts.length },
               { label: 'Monthly Revenue', value: fmt(monthRevenue) },
@@ -224,7 +224,16 @@ export default function Home() {
           nav { padding: 16px 20px !important; flex-wrap: wrap; gap: 8px; }
         }
         @media (max-width: 768px) {
-          div[style*="gridTemplateColumns: 'repeat(4"] { grid-template-columns: repeat(2, 1fr) !important; }
+          .home-kpi-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+          }
+          .home-nav-btns {
+            flex-wrap: wrap !important;
+          }
+          .home-nav-btns button {
+            padding: 6px 14px !important;
+            font-size: 12px !important;
+          }
         }
       `}</style>
     </div>

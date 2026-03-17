@@ -95,7 +95,7 @@ export default function TextMessages() {
       </div>
 
       {tab === 'compose' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24 }}>
+        <div className="texts-compose-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24 }}>
           {/* Left: Compose */}
           <div>
             {/* Send mode toggle */}
@@ -238,6 +238,16 @@ export default function TextMessages() {
           ))}
         </div>
       )}
+      <style>{`
+        @media (max-width: 768px) {
+          .texts-compose-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .texts-compose-grid > div:last-child {
+            order: -1;
+          }
+        }
+      `}</style>
     </div>
   );
 }

@@ -200,9 +200,9 @@ export default function Inbox() {
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 0, height: 'calc(100vh - 180px)', ...s.cardStyle, overflow: 'hidden' }}>
+      <div className="inbox-grid" style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: 0, height: 'calc(100vh - 180px)', ...s.cardStyle, overflow: 'hidden' }}>
         {/* Left: Conversation List */}
-        <div style={{ borderRight: '1px solid #E5E5E5', display: 'flex', flexDirection: 'column' }}>
+        <div className={`inbox-list-panel${active ? ' inbox-has-active' : ''}`} style={{ borderRight: '1px solid #E5E5E5', display: 'flex', flexDirection: 'column' }}>
           {/* Search + Filter */}
           <div style={{ padding: '12px', borderBottom: '1px solid #F0F0F0' }}>
             <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search conversations..." style={{ ...s.input, padding: '8px 12px', fontSize: 12, marginBottom: 8 }} />
@@ -291,10 +291,11 @@ export default function Inbox() {
 
         {/* Right: Message Thread */}
         {active ? (
-          <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <div className="inbox-thread-panel" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             {/* Thread Header */}
             <div style={{ padding: '14px 20px', borderBottom: '1px solid #F0F0F0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <button className="inbox-back-btn" onClick={() => setActiveId(null)} style={{ display: 'none', background: 'none', border: 'none', cursor: 'pointer', color: s.text2, font: `500 13px ${s.FONT}`, padding: '4px 0', marginRight: 4 }}>← Back</button>
                 <div style={{ width: 36, height: 36, borderRadius: '50%', background: s.accentLight, display: 'flex', alignItems: 'center', justifyContent: 'center', font: `500 12px ${s.FONT}`, color: s.accent }}>{active.avatar}</div>
                 <div>
                   <div style={{ font: `600 14px ${s.FONT}`, color: s.text }}>{active.name}</div>
@@ -363,6 +364,27 @@ export default function Inbox() {
           </div>
         )}
       </div>
+
+      <style>{`
+        @media (max-width: 768px) {
+          .inbox-grid {
+            grid-template-columns: 1fr !important;
+            height: calc(100vh - 160px) !important;
+          }
+          .inbox-list-panel {
+            border-right: none !important;
+          }
+          .inbox-list-panel.inbox-has-active {
+            display: none !important;
+          }
+          .inbox-thread-panel {
+            grid-column: 1 !important;
+          }
+          .inbox-back-btn {
+            display: inline-flex !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

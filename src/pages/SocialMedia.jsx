@@ -234,7 +234,7 @@ export default function SocialMedia() {
 
           {/* Step 2: Write */}
           {step === 2 && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
+            <div className="social-write-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 20 }}>
               <div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
                   <h3 style={{ font: `600 15px ${s.FONT}`, color: s.text }}>Post Copy</h3>
@@ -272,7 +272,7 @@ export default function SocialMedia() {
 
           {/* Step 3: Preview & Publish */}
           {step === 3 && (
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24 }}>
+            <div className="social-publish-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 340px', gap: 24 }}>
               <div>
                 <h3 style={{ font: `600 15px ${s.FONT}`, color: s.text, marginBottom: 14 }}>Publish</h3>
                 {posts.map(p => {
@@ -377,6 +377,16 @@ export default function SocialMedia() {
           ))}
         </div>
       )}
+      <style>{`
+        @media (max-width: 768px) {
+          .social-write-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .social-publish-grid {
+            grid-template-columns: 1fr !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

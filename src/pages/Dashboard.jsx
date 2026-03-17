@@ -253,7 +253,7 @@ export default function Dashboard() {
       </div>
 
       {/* ═══ MAIN GRID: Appointments + Sparkline / Low Stock + Quick Actions ═══ */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 20 }}>
+      <div className="dashboard-main-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 20 }}>
 
         {/* LEFT: Upcoming Appointments */}
         <div style={{
@@ -434,7 +434,10 @@ export default function Dashboard() {
 
       <style>{`
         @media (max-width: 860px) {
-          div[style*="1.1fr 0.9fr"] { grid-template-columns: 1fr !important; }
+          .dashboard-main-grid { grid-template-columns: 1fr !important; }
+        }
+        @media (max-width: 768px) {
+          .dashboard-main-grid { grid-template-columns: 1fr !important; }
         }
       `}</style>
     </div>
