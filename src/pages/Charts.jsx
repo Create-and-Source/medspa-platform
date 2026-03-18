@@ -7,6 +7,13 @@ const CHARTS_KEY = 'ms_charts';
 function getCharts() { try { return JSON.parse(localStorage.getItem(CHARTS_KEY)) || []; } catch { return []; } }
 function saveCharts(c) { localStorage.setItem(CHARTS_KEY, JSON.stringify(c)); }
 
+function getInjectableInventory() {
+  try {
+    const all = JSON.parse(localStorage.getItem('ms_inventory') || '[]');
+    return all.filter(i => i.category === 'Injectables');
+  } catch { return []; }
+}
+
 // ── Zone definitions ──────────────────────────────────────────────────────────
 
 const FACE_ZONES = [
@@ -93,6 +100,40 @@ function getMapLabel(mapType) {
   if (mapType === 'body') return 'Treatment Zones';
   if (mapType === 'scalp') return 'Scalp Map';
   return null;
+}
+
+// ── Zone annotation helpers ───────────────────────────────────────────────────
+
+// Returns true if annotation is a structured object (new format)
+function isStructuredAnnotation(val) {
+  return val && typeof val === 'object' && !Array.isArray(val);
+}
+
+// Format annotation as compact pill text for the map dot
+function formatAnnotationPill(val) {
+  if (!val) return '';
+  if (isStructuredAnnotation(val)) {
+    const dose = val.dose != null ? val.dose : '';
+    const unitAbbrev = { units: 'u', mL: 'mL', cc: 'cc', syringes: 'syr' }[val.unit] || val.unit || '';
+    const prodShort = val.product ? val.product.split(' ')[0] : '';
+    return dose !== '' ? `${dose}${unitAbbrev} ${prodShort}`.trim() : prodShort;
+  }
+  // Legacy string — show as-is
+  return String(val);
+}
+
+// Format annotation as full display string for the list/table
+function formatAnnotationDisplay(val) {
+  if (!val) return '';
+  if (isStructuredAnnotation(val)) {
+    const parts = [];
+    if (val.dose != null && val.dose !== '') parts.push(`${val.dose} ${val.unit || ''}`);
+    if (val.product) parts.push(val.product);
+    if (val.lotNumber) parts.push(`Lot: ${val.lotNumber}`);
+    if (val.notes) parts.push(`(${val.notes})`);
+    return parts.join(' · ') || '—';
+  }
+  return String(val);
 }
 
 // ── SVG outlines ──────────────────────────────────────────────────────────────
@@ -213,6 +254,341 @@ function VitalsPanel({ form, setForm, s }) {
   );
 }
 
+// ── Zone Annotation Popover (structured form) ────────────────────────────────
+
+function ZoneAnnotationPopover({ zoneId, zoneLabel, currentValue, onSave, onClose, s, mapType }) {
+  const injectables = getInjectableInventory();
+
+  // Parse existing value to pre-populate form
+  const parseInitial = () => {
+    if (!currentValue) return { product: '', productId: '', dose: '', unit: 'units', lotNumber: '', notes: '' };
+    if (isStructuredAnnotation(currentValue)) {
+      return {
+        product: currentValue.product || '',
+        productId: currentValue.productId || '',
+        dose: currentValue.dose != null ? String(currentValue.dose) : '',
+        unit: currentValue.unit || 'units',
+        lotNumber: currentValue.lotNumber || '',
+        notes: currentValue.notes || '',
+      };
+    }
+    // Legacy string — put it in notes
+    return { product: '', productId: '', dose: '', unit: 'units', lotNumber: '', notes: String(currentValue) };
+  };
+
+  const [fields, setFields] = useState(parseInitial);
+
+  const handleProductChange = (e) => {
+    const id = e.target.value;
+    if (!id) {
+      setFields(f => ({ ...f, product: '', productId: '', lotNumber: '' }));
+      return;
+    }
+    const item = injectables.find(i => i.id === id);
+    setFields(f => ({
+      ...f,
+      productId: id,
+      product: item ? item.name : '',
+      lotNumber: item?.lotNumber || f.lotNumber,
+    }));
+  };
+
+  const handleSave = () => {
+    const dose = fields.dose !== '' ? parseFloat(fields.dose) : null;
+    if (!fields.product && dose === null && !fields.notes.trim()) {
+      onClose();
+      return;
+    }
+    onSave({
+      product: fields.product,
+      productId: fields.productId,
+      dose: dose,
+      unit: fields.unit,
+      lotNumber: fields.lotNumber,
+      notes: fields.notes,
+    });
+  };
+
+  const handleClear = () => {
+    onSave(null);
+  };
+
+  return (
+    <div
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 400 }}
+      onClick={onClose}
+    >
+      <div
+        style={{ background: '#fff', borderRadius: 14, padding: 24, width: 340, boxShadow: s.shadowLg }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div style={{ font: `600 14px ${s.FONT}`, color: s.text, marginBottom: 16 }}>{zoneLabel}</div>
+
+        {/* Product dropdown */}
+        <div style={{ marginBottom: 12 }}>
+          <label style={{ ...s.label, fontSize: 11 }}>Product</label>
+          <select
+            value={fields.productId}
+            onChange={handleProductChange}
+            style={{ ...s.input, cursor: 'pointer' }}
+          >
+            <option value="">Select injectable...</option>
+            {injectables.map(item => (
+              <option key={item.id} value={item.id}>{item.name}</option>
+            ))}
+            {injectables.length === 0 && <option disabled>No injectables in inventory</option>}
+          </select>
+        </div>
+
+        {/* Dose + Unit row */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10, marginBottom: 12 }}>
+          <div>
+            <label style={{ ...s.label, fontSize: 11 }}>Dose</label>
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              value={fields.dose}
+              onChange={e => setFields(f => ({ ...f, dose: e.target.value }))}
+              style={s.input}
+              placeholder="e.g., 12"
+            />
+          </div>
+          <div>
+            <label style={{ ...s.label, fontSize: 11 }}>Unit</label>
+            <select
+              value={fields.unit}
+              onChange={e => setFields(f => ({ ...f, unit: e.target.value }))}
+              style={{ ...s.input, cursor: 'pointer' }}
+            >
+              <option value="units">units</option>
+              <option value="mL">mL</option>
+              <option value="cc">cc</option>
+              <option value="syringes">syringes</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Lot # */}
+        <div style={{ marginBottom: 12 }}>
+          <label style={{ ...s.label, fontSize: 11 }}>Lot #</label>
+          <input
+            value={fields.lotNumber}
+            onChange={e => setFields(f => ({ ...f, lotNumber: e.target.value }))}
+            style={s.input}
+            placeholder="Auto-filled from product"
+          />
+        </div>
+
+        {/* Notes */}
+        <div style={{ marginBottom: 16 }}>
+          <label style={{ ...s.label, fontSize: 11 }}>Notes (optional)</label>
+          <input
+            value={fields.notes}
+            onChange={e => setFields(f => ({ ...f, notes: e.target.value }))}
+            style={s.input}
+            placeholder="Additional details..."
+          />
+        </div>
+
+        <div style={{ display: 'flex', gap: 8 }}>
+          <button onClick={handleClear} style={{ ...s.pillGhost, padding: '6px 12px', fontSize: 11, color: s.danger, flex: 'none' }}>Clear</button>
+          <button onClick={onClose} style={{ ...s.pillGhost, padding: '6px 12px', fontSize: 12, flex: 1 }}>Cancel</button>
+          <button onClick={handleSave} style={{ ...s.pillAccent, padding: '6px 16px', fontSize: 12, flex: 1 }}>Save</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Treatment Summary ────────────────────────────────────────────────────────
+
+function TreatmentSummary({ injectionMap, zones, s }) {
+  const annotated = Object.entries(injectionMap).filter(([, v]) => v);
+  if (annotated.length === 0) return null;
+
+  // Compute totals per product (only structured annotations)
+  const productTotals = {};
+  annotated.forEach(([, val]) => {
+    if (isStructuredAnnotation(val) && val.product && val.dose != null) {
+      const key = `${val.product}|||${val.unit}`;
+      productTotals[key] = (productTotals[key] || 0) + Number(val.dose);
+    }
+  });
+
+  return (
+    <div style={{ marginTop: 16, borderTop: '1px solid #E5E5E5', paddingTop: 14 }}>
+      <div style={{ font: `600 12px ${s.FONT}`, color: s.text, marginBottom: 10 }}>Treatment Summary</div>
+
+      {/* Zone table */}
+      <div style={{ background: '#FAFAFA', borderRadius: 10, border: '1px solid #E5E5E5', overflow: 'hidden', marginBottom: 10 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', font: `400 11px ${s.FONT}` }}>
+          <thead>
+            <tr style={{ background: '#F0F0F0' }}>
+              <th style={{ textAlign: 'left', padding: '6px 10px', color: s.text2, fontWeight: 600, fontSize: 10 }}>Zone</th>
+              <th style={{ textAlign: 'left', padding: '6px 10px', color: s.text2, fontWeight: 600, fontSize: 10 }}>Product</th>
+              <th style={{ textAlign: 'right', padding: '6px 10px', color: s.text2, fontWeight: 600, fontSize: 10 }}>Dose</th>
+              <th style={{ textAlign: 'left', padding: '6px 10px', color: s.text2, fontWeight: 600, fontSize: 10 }}>Lot #</th>
+            </tr>
+          </thead>
+          <tbody>
+            {annotated.map(([zoneId, val]) => {
+              const zone = zones.find(z => z.id === zoneId);
+              if (isStructuredAnnotation(val)) {
+                return (
+                  <tr key={zoneId} style={{ borderTop: '1px solid #E8E8E8' }}>
+                    <td style={{ padding: '5px 10px', color: s.text }}>{zone?.label || zoneId}</td>
+                    <td style={{ padding: '5px 10px', color: s.text }}>{val.product || '—'}</td>
+                    <td style={{ padding: '5px 10px', color: s.accent, textAlign: 'right', fontFamily: s.MONO }}>
+                      {val.dose != null ? `${val.dose} ${val.unit || ''}` : '—'}
+                    </td>
+                    <td style={{ padding: '5px 10px', color: s.text2, fontFamily: s.MONO, fontSize: 10 }}>{val.lotNumber || '—'}</td>
+                  </tr>
+                );
+              }
+              // Legacy string row
+              return (
+                <tr key={zoneId} style={{ borderTop: '1px solid #E8E8E8' }}>
+                  <td style={{ padding: '5px 10px', color: s.text }}>{zone?.label || zoneId}</td>
+                  <td colSpan={3} style={{ padding: '5px 10px', color: s.text2, fontFamily: s.MONO, fontSize: 10 }}>{String(val)}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Totals per product */}
+      {Object.keys(productTotals).length > 0 && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {Object.entries(productTotals).map(([key, total]) => {
+            const [product, unit] = key.split('|||');
+            return (
+              <span key={key} style={{
+                padding: '3px 10px', borderRadius: 100, background: '#EEF6FF',
+                font: `500 10px ${s.MONO}`, color: s.accent,
+                border: '1px solid #DBEAFE',
+              }}>
+                {product}: {total} {unit} total
+              </span>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Co-Sign Modal ─────────────────────────────────────────────────────────────
+
+function CoSignModal({ onConfirm, onClose, s, providers }) {
+  const mdProviders = providers.filter(p => {
+    const name = (p.name || '').toLowerCase();
+    const title = (p.title || '').toLowerCase();
+    return name.includes('dr.') || title.includes('md') || title.includes('medical director') || title.includes('surgeon') || title.includes('physician');
+  });
+
+  const [reviewerId, setReviewerId] = useState(mdProviders[0]?.id || '');
+  const [reviewNotes, setReviewNotes] = useState('');
+
+  const handleConfirm = () => {
+    const reviewer = providers.find(p => p.id === reviewerId);
+    if (!reviewer) return;
+    onConfirm({
+      reviewedBy: reviewerId,
+      reviewedByName: reviewer.name,
+      reviewedAt: new Date().toISOString(),
+      reviewNotes,
+    });
+  };
+
+  return (
+    <div
+      style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 500 }}
+      onClick={onClose}
+    >
+      <div
+        style={{ background: '#fff', borderRadius: 14, padding: 28, width: 380, boxShadow: s.shadowLg }}
+        onClick={e => e.stopPropagation()}
+      >
+        <div style={{ font: `600 16px ${s.FONT}`, color: s.text, marginBottom: 6 }}>Medical Director Co-Sign</div>
+        <div style={{ font: `400 13px ${s.FONT}`, color: s.text2, marginBottom: 20 }}>
+          Review and co-sign this chart on behalf of the Medical Director.
+        </div>
+
+        <div style={{ marginBottom: 14 }}>
+          <label style={{ ...s.label, fontSize: 11 }}>Reviewing Provider</label>
+          <select
+            value={reviewerId}
+            onChange={e => setReviewerId(e.target.value)}
+            style={{ ...s.input, cursor: 'pointer' }}
+          >
+            {mdProviders.map(p => (
+              <option key={p.id} value={p.id}>{p.name} — {p.title}</option>
+            ))}
+            {mdProviders.length === 0 && <option disabled>No MD-level providers found</option>}
+          </select>
+        </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <label style={{ ...s.label, fontSize: 11 }}>Review Notes (optional)</label>
+          <textarea
+            value={reviewNotes}
+            onChange={e => setReviewNotes(e.target.value)}
+            rows={3}
+            style={{ ...s.input, resize: 'vertical', lineHeight: 1.6 }}
+            placeholder="Clinical comments, recommendations, or observations..."
+          />
+        </div>
+
+        <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+          <button onClick={onClose} style={s.pillGhost}>Cancel</button>
+          <button
+            onClick={handleConfirm}
+            disabled={!reviewerId || mdProviders.length === 0}
+            style={{ ...s.pillAccent, opacity: (!reviewerId || mdProviders.length === 0) ? 0.5 : 1 }}
+          >
+            Co-Sign & Approve
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Status badge helpers ──────────────────────────────────────────────────────
+
+function StatusBadge({ status, s }) {
+  const config = {
+    draft:          { bg: '#FFF7ED', color: '#D97706', label: 'Draft' },
+    pending_review: { bg: '#EFF6FF', color: '#2563EB', label: 'Pending Review' },
+    signed:         { bg: '#F0FDF4', color: '#16A34A', label: 'Signed' },
+    co_signed:      { bg: '#F0FDF4', color: '#16A34A', label: 'Co-Signed' },
+  };
+  const c = config[status] || config.draft;
+  return (
+    <span style={{
+      padding: '3px 10px', borderRadius: 100, font: `500 10px ${s.FONT}`, textTransform: 'uppercase',
+      background: c.bg, color: c.color, display: 'inline-flex', alignItems: 'center', gap: 4,
+    }}>
+      {status === 'co_signed' && <span style={{ fontSize: 10 }}>✦</span>}
+      {c.label}
+    </span>
+  );
+}
+
+function avatarBg(status) {
+  if (status === 'signed' || status === 'co_signed') return '#F0FDF4';
+  if (status === 'pending_review') return '#EFF6FF';
+  return '#FFF7ED';
+}
+
+function avatarColor(status, s) {
+  if (status === 'signed' || status === 'co_signed') return s.success;
+  if (status === 'pending_review') return '#2563EB';
+  return s.warning;
+}
+
 // ── Seed data ─────────────────────────────────────────────────────────────────
 
 function initCharts() {
@@ -234,6 +610,7 @@ function initCharts() {
       vitals: { bp: '118/76', pulse: '72', temp: '98.6' },
       medications: 'None',
       status: 'signed',
+      reviewRequired: false,
       createdAt: '2026-03-10T10:30:00Z',
     },
     {
@@ -248,6 +625,7 @@ function initCharts() {
       vitals: { bp: '124/80', pulse: '76', temp: '98.4' },
       medications: 'Lisinopril 10mg daily',
       status: 'signed',
+      reviewRequired: false,
       createdAt: '2026-03-11T11:00:00Z',
     },
     {
@@ -262,6 +640,7 @@ function initCharts() {
       vitals: { bp: '122/78', pulse: '68', temp: '98.4' },
       medications: 'Tretinoin 0.025% (paused 1 week pre-treatment)',
       status: 'signed',
+      reviewRequired: false,
       createdAt: '2026-03-12T14:00:00Z',
     },
     {
@@ -276,6 +655,7 @@ function initCharts() {
       vitals: { bp: '110/70', pulse: '74', temp: '98.6' },
       medications: 'Valacyclovir 500mg BID (prophylaxis)',
       status: 'signed',
+      reviewRequired: false,
       createdAt: '2026-03-13T09:00:00Z',
     },
     {
@@ -289,7 +669,8 @@ function initCharts() {
       injectionMap: { 'jawline-l': '4 cog threads', 'jawline-r': '4 cog threads', 'marionette-l': '2 smooth', 'marionette-r': '2 smooth', 'temple-l': 'entry point', 'temple-r': 'entry point' },
       vitals: { bp: '128/82', pulse: '70', temp: '98.6' },
       medications: 'Levothyroxine 50mcg daily',
-      status: 'signed',
+      status: 'pending_review',
+      reviewRequired: true,
       createdAt: '2026-03-14T13:00:00Z',
     },
     {
@@ -303,7 +684,12 @@ function initCharts() {
       injectionMap: { 'flank-l': '650cc aspirate', 'flank-r': '700cc aspirate', abdomen: '450cc aspirate' },
       vitals: { bp: '120/74', pulse: '68', temp: '98.6' },
       medications: 'Oral contraceptive (Yaz)',
-      status: 'signed',
+      status: 'co_signed',
+      reviewRequired: true,
+      reviewedBy: 'PRV-1',
+      reviewedByName: 'Dr. Sarah Mitchell',
+      reviewedAt: '2026-03-14T10:00:00Z',
+      reviewNotes: 'Procedure performed per protocol. Aspirate volumes within safe limits. Approved.',
       createdAt: '2026-03-14T08:00:00Z',
     },
     {
@@ -319,6 +705,7 @@ function initCharts() {
       vitals: { bp: '126/80', pulse: '76', temp: '98.6' },
       medications: 'Semaglutide 0.5mg weekly (increasing to 1.0mg), Metformin 500mg BID',
       status: 'signed',
+      reviewRequired: false,
       createdAt: '2026-03-15T10:00:00Z',
     },
     {
@@ -333,6 +720,7 @@ function initCharts() {
       vitals: { bp: '116/72', pulse: '82', temp: '98.6' },
       medications: 'None',
       status: 'draft',
+      reviewRequired: false,
       createdAt: '2026-03-15T14:00:00Z',
     },
   ]);
@@ -353,14 +741,18 @@ export default function Charts() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [editingZone, setEditingZone] = useState(null);
-  const [zoneValue, setZoneValue] = useState('');
-  const [form, setForm] = useState({
+  const [showCoSign, setShowCoSign] = useState(false);
+  const [coSignTargetId, setCoSignTargetId] = useState(null);
+
+  const emptyForm = {
     patientId: '', serviceId: '', providerId: '',
     subjective: '', objective: '', assessment: '', plan: '',
     injectionMap: {}, vitals: { bp: '', pulse: '', temp: '' },
     medications: '', status: 'draft', mapType: 'face',
     measurements: { weight: '', bmi: '', waistCircumference: '', measurementNotes: '' },
-  });
+    reviewRequired: false,
+  };
+  const [form, setForm] = useState(emptyForm);
 
   const patients = getPatients();
   const services = getServices();
@@ -374,6 +766,9 @@ export default function Charts() {
   const currentZones = getZonesForType(currentMapType);
   const currentMapLabel = getMapLabel(currentMapType);
 
+  // Selected patient for allergy warning
+  const selectedPatient = patients.find(p => p.id === form.patientId);
+
   const filtered = charts.filter(c => {
     if (search) {
       const q = search.toLowerCase();
@@ -385,13 +780,7 @@ export default function Charts() {
 
   const openNew = () => {
     setActiveId(null);
-    setForm({
-      patientId: '', serviceId: '', providerId: '',
-      subjective: '', objective: '', assessment: '', plan: '',
-      injectionMap: {}, vitals: { bp: '', pulse: '', temp: '' },
-      medications: '', status: 'draft', mapType: 'face',
-      measurements: { weight: '', bmi: '', waistCircumference: '', measurementNotes: '' },
-    });
+    setForm(emptyForm);
     setShowNew(true);
   };
 
@@ -404,21 +793,28 @@ export default function Charts() {
       medications: chart.medications || '', status: chart.status,
       mapType: chart.mapType || getMapType(chart.serviceId, services),
       measurements: chart.measurements || { weight: '', bmi: '', waistCircumference: '', measurementNotes: '' },
+      reviewRequired: chart.reviewRequired || false,
     });
     setShowNew(true);
   };
 
-  const handleSave = (sign = false) => {
+  const handleSave = (action = 'draft') => {
+    // action: 'draft' | 'sign' | 'submit_review'
     const pat = patients.find(p => p.id === form.patientId);
     const svc = services.find(sv => sv.id === form.serviceId);
     const mapType = getMapType(form.serviceId, services);
+
+    let newStatus = 'draft';
+    if (action === 'sign') newStatus = 'signed';
+    else if (action === 'submit_review') newStatus = 'pending_review';
+
     const data = {
       ...form,
       mapType,
       patientName: pat ? `${pat.firstName} ${pat.lastName}` : 'Unknown',
       serviceName: svc?.name || 'Service',
       date: new Date().toISOString().slice(0, 10),
-      status: sign ? 'signed' : 'draft',
+      status: newStatus,
     };
 
     const all = getCharts();
@@ -435,26 +831,43 @@ export default function Charts() {
     setShowNew(false);
   };
 
-  const addInjectionPoint = (zoneId) => {
-    setEditingZone(zoneId);
-    setZoneValue(form.injectionMap[zoneId] || '');
+  const handleCoSign = (chartId, coSignData) => {
+    const all = getCharts();
+    const idx = all.findIndex(c => c.id === chartId);
+    if (idx >= 0) {
+      all[idx] = { ...all[idx], status: 'co_signed', ...coSignData };
+    }
+    saveCharts(all);
+    refresh();
+    setShowCoSign(false);
+    setCoSignTargetId(null);
   };
 
-  const saveZone = () => {
-    if (editingZone) {
-      const map = { ...form.injectionMap };
-      if (zoneValue.trim()) map[editingZone] = zoneValue.trim();
-      else delete map[editingZone];
-      setForm({ ...form, injectionMap: map });
+  const addInjectionPoint = (zoneId) => {
+    setEditingZone(zoneId);
+  };
+
+  const saveZone = (zoneId, value) => {
+    const map = { ...form.injectionMap };
+    if (value !== null) {
+      // value is either a structured object or null
+      if (isStructuredAnnotation(value) && !value.product && value.dose === null && !value.notes) {
+        delete map[zoneId];
+      } else if (value !== null) {
+        map[zoneId] = value;
+      }
+    } else {
+      delete map[zoneId];
     }
+    setForm({ ...form, injectionMap: map });
     setEditingZone(null);
   };
 
-  // Get the zone label for the editing popover
-  const getEditingZoneLabel = () => {
-    if (!editingZone) return '';
+  // Get the zone for the editing popover
+  const getEditingZone = () => {
+    if (!editingZone) return null;
     const allZones = [...FACE_ZONES, ...BODY_ZONES, ...SCALP_ZONES];
-    return allZones.find(z => z.id === editingZone)?.label || editingZone;
+    return allZones.find(z => z.id === editingZone) || { id: editingZone, label: editingZone };
   };
 
   // Summary line for chart list cards
@@ -467,6 +880,12 @@ export default function Charts() {
     if (mt === 'scalp') return `${count} scalp zones`;
     return `${count} injection sites`;
   };
+
+  const editingZoneObj = getEditingZone();
+
+  // Determine primary action button label + action
+  const primaryActionLabel = form.reviewRequired ? 'Submit for Review' : 'Sign & Lock';
+  const primaryAction = form.reviewRequired ? 'submit_review' : 'sign';
 
   return (
     <div>
@@ -482,7 +901,13 @@ export default function Charts() {
       <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search patient or service..." style={{ ...s.input, maxWidth: 260 }} />
         <div style={{ display: 'flex', gap: 6 }}>
-          {[['all', 'All'], ['draft', 'Drafts'], ['signed', 'Signed']].map(([id, label]) => (
+          {[
+            ['all', 'All'],
+            ['draft', 'Drafts'],
+            ['pending_review', 'Pending Review'],
+            ['signed', 'Signed'],
+            ['co_signed', 'Co-Signed'],
+          ].map(([id, label]) => (
             <button key={id} onClick={() => setStatusFilter(id)} style={{
               ...s.pill, padding: '7px 14px', fontSize: 12,
               background: statusFilter === id ? s.accent : 'transparent',
@@ -499,29 +924,41 @@ export default function Charts() {
           const prov = providers.find(p => p.id === chart.providerId);
           const zoneSummary = getChartZoneSummary(chart);
           return (
-            <div key={chart.id} onClick={() => openChart(chart)} style={{
+            <div key={chart.id} style={{
               ...s.cardStyle, padding: '18px 22px', cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               transition: 'all 0.15s',
             }}
             onMouseEnter={e => e.currentTarget.style.boxShadow = s.shadowMd}
             onMouseLeave={e => e.currentTarget.style.boxShadow = s.shadow}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-                <div style={{ width: 42, height: 42, borderRadius: '50%', background: chart.status === 'signed' ? '#F0FDF4' : '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center', font: `500 12px ${s.FONT}`, color: chart.status === 'signed' ? s.success : s.warning }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: 14, flex: 1 }}
+                onClick={() => openChart(chart)}
+              >
+                <div style={{ width: 42, height: 42, borderRadius: '50%', background: avatarBg(chart.status), display: 'flex', alignItems: 'center', justifyContent: 'center', font: `500 12px ${s.FONT}`, color: avatarColor(chart.status, s), flexShrink: 0 }}>
                   {chart.patientName?.split(' ').map(n => n[0]).join('')}
                 </div>
                 <div>
                   <div style={{ font: `500 14px ${s.FONT}`, color: s.text }}>{chart.patientName} — {chart.serviceName}</div>
-                  <div style={{ font: `400 12px ${s.FONT}`, color: s.text2 }}>{prov?.name?.split(',')[0] || 'Provider'} · {chart.date}</div>
+                  <div style={{ font: `400 12px ${s.FONT}`, color: s.text2 }}>
+                    {prov?.name?.split(',')[0] || 'Provider'} · {chart.date}
+                    {chart.status === 'co_signed' && chart.reviewedByName && (
+                      <span style={{ color: '#16A34A', marginLeft: 6 }}>· Co-signed by {chart.reviewedByName}</span>
+                    )}
+                  </div>
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 {zoneSummary && <span style={{ padding: '3px 8px', borderRadius: 100, background: '#F5F5F5', font: `400 10px ${s.MONO}`, color: s.text2 }}>{zoneSummary}</span>}
-                <span style={{
-                  padding: '3px 10px', borderRadius: 100, font: `500 10px ${s.FONT}`, textTransform: 'uppercase',
-                  background: chart.status === 'signed' ? '#F0FDF4' : '#FFF7ED',
-                  color: chart.status === 'signed' ? s.success : s.warning,
-                }}>{chart.status}</span>
+                <StatusBadge status={chart.status} s={s} />
+                {chart.status === 'pending_review' && (
+                  <button
+                    onClick={e => { e.stopPropagation(); setCoSignTargetId(chart.id); setShowCoSign(true); }}
+                    style={{ ...s.pillAccent, padding: '5px 12px', fontSize: 11, flexShrink: 0 }}
+                  >
+                    Co-Sign
+                  </button>
+                )}
               </div>
             </div>
           );
@@ -536,6 +973,21 @@ export default function Charts() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 300 }} onClick={() => setShowNew(false)}>
           <div style={{ background: '#fff', borderRadius: 16, padding: 32, maxWidth: 900, width: '95%', boxShadow: s.shadowLg, maxHeight: '92vh', overflowY: 'auto' }} onClick={e => e.stopPropagation()}>
             <h2 style={{ font: `600 22px ${s.FONT}`, color: s.text, marginBottom: 20 }}>{activeId ? 'Edit Chart' : 'New Clinical Chart'}</h2>
+
+            {/* Allergy warning banner */}
+            {selectedPatient?.allergies && (
+              <div style={{
+                background: '#FEF2F2', border: '1px solid #FECACA', borderRadius: 10,
+                padding: '12px 16px', marginBottom: 20,
+                display: 'flex', alignItems: 'flex-start', gap: 10,
+              }}>
+                <span style={{ fontSize: 18, flexShrink: 0 }}>⚠</span>
+                <div>
+                  <div style={{ font: `600 13px ${s.FONT}`, color: '#B91C1C', marginBottom: 2 }}>Known Allergies</div>
+                  <div style={{ font: `400 13px ${s.FONT}`, color: '#DC2626' }}>{selectedPatient.allergies}</div>
+                </div>
+              </div>
+            )}
 
             {/* Patient / Service / Provider */}
             <div className="charts-meta-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 14, marginBottom: 20 }}>
@@ -611,21 +1063,28 @@ export default function Charts() {
 
                       {/* Zone points */}
                       {currentZones.map(zone => {
-                        const hasValue = form.injectionMap[zone.id];
+                        const val = form.injectionMap[zone.id];
+                        const hasValue = Boolean(val);
+                        const pillText = hasValue ? formatAnnotationPill(val) : '';
                         return (
                           <div key={zone.id} onClick={() => addInjectionPoint(zone.id)} style={{
                             position: 'absolute', left: `${zone.x}%`, top: `${zone.y}%`,
                             transform: 'translate(-50%, -50%)', cursor: 'pointer', zIndex: 10,
                           }}>
                             <div style={{
-                              width: hasValue ? 24 : 14, height: hasValue ? 24 : 14, borderRadius: '50%',
+                              width: hasValue ? 'auto' : 14,
+                              minWidth: hasValue ? 24 : 14,
+                              height: hasValue ? 20 : 14,
+                              borderRadius: hasValue ? 100 : '50%',
                               background: hasValue ? s.accent : 'rgba(0,0,0,0.08)',
                               border: hasValue ? 'none' : '1.5px dashed #CCC',
                               display: 'flex', alignItems: 'center', justifyContent: 'center',
-                              font: `600 8px ${s.MONO}`, color: s.accentText,
+                              padding: hasValue ? '0 5px' : 0,
+                              font: `600 7px ${s.MONO}`, color: s.accentText,
                               transition: 'all 0.15s',
+                              whiteSpace: 'nowrap',
                             }}>
-                              {hasValue && form.injectionMap[zone.id]}
+                              {hasValue && pillText}
                             </div>
                           </div>
                         );
@@ -637,31 +1096,40 @@ export default function Charts() {
                       {currentMapType === 'scalp' && 'Click zones to add treatment details'}
                     </div>
 
-                    {/* Active zones list */}
-                    {Object.keys(form.injectionMap).length > 0 && (
-                      <div style={{ marginTop: 10 }}>
-                        {Object.entries(form.injectionMap).map(([zoneId, val]) => {
-                          const zone = currentZones.find(z => z.id === zoneId);
-                          if (!zone) return null;
-                          return (
-                            <div key={zoneId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '4px 0', font: `400 11px ${s.FONT}`, color: s.text2 }}>
-                              <span>{zone?.label}</span>
-                              <span style={{ font: `500 11px ${s.MONO}`, color: s.accent }}>{val}</span>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
+                    {/* Treatment summary (edit mode) */}
+                    <TreatmentSummary
+                      injectionMap={form.injectionMap}
+                      zones={currentZones}
+                      s={s}
+                    />
                   </>
                 )}
               </div>
             </div>
 
+            {/* MD Review checkbox */}
+            <div style={{ marginTop: 20, padding: '14px 16px', background: '#FAFAFA', borderRadius: 10, border: '1px solid #E5E5E5' }}>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', font: `400 13px ${s.FONT}`, color: s.text }}>
+                <input
+                  type="checkbox"
+                  checked={form.reviewRequired}
+                  onChange={e => setForm({ ...form, reviewRequired: e.target.checked })}
+                  style={{ width: 16, height: 16, cursor: 'pointer', accentColor: s.accent }}
+                />
+                <span>Requires Medical Director review</span>
+                {form.reviewRequired && (
+                  <span style={{ padding: '2px 8px', borderRadius: 100, background: '#EFF6FF', font: `500 10px ${s.FONT}`, color: '#2563EB', border: '1px solid #BFDBFE' }}>
+                    Will submit for MD co-sign
+                  </span>
+                )}
+              </label>
+            </div>
+
             {/* Actions */}
-            <div style={{ display: 'flex', gap: 10, marginTop: 24, justifyContent: 'flex-end' }}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 20, justifyContent: 'flex-end' }}>
               <button onClick={() => setShowNew(false)} style={s.pillGhost}>Cancel</button>
-              <button onClick={() => handleSave(false)} style={s.pillOutline}>Save Draft</button>
-              <button onClick={() => handleSave(true)} style={s.pillAccent}>Sign & Lock</button>
+              <button onClick={() => handleSave('draft')} style={s.pillOutline}>Save Draft</button>
+              <button onClick={() => handleSave(primaryAction)} style={s.pillAccent}>{primaryActionLabel}</button>
             </div>
           </div>
         </div>
@@ -681,18 +1149,28 @@ export default function Charts() {
         }
       `}</style>
 
-      {/* Zone Edit Popover */}
-      {editingZone && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 400 }} onClick={() => setEditingZone(null)}>
-          <div style={{ background: '#fff', borderRadius: 12, padding: 24, width: 280, boxShadow: s.shadowLg }} onClick={e => e.stopPropagation()}>
-            <div style={{ font: `600 14px ${s.FONT}`, color: s.text, marginBottom: 12 }}>{getEditingZoneLabel()}</div>
-            <input value={zoneValue} onChange={e => setZoneValue(e.target.value)} style={s.input} placeholder={currentMapType === 'face' ? 'e.g., 10u Botox' : currentMapType === 'body' ? 'e.g., 500cc aspirate' : 'e.g., PRP 3cc'} autoFocus onKeyDown={e => e.key === 'Enter' && saveZone()} />
-            <div style={{ display: 'flex', gap: 8, marginTop: 12 }}>
-              <button onClick={() => { setZoneValue(''); saveZone(); }} style={{ ...s.pillGhost, padding: '6px 12px', fontSize: 11, color: s.danger }}>Clear</button>
-              <button onClick={saveZone} style={{ ...s.pillAccent, padding: '6px 16px', fontSize: 12 }}>Save</button>
-            </div>
-          </div>
-        </div>
+      {/* Zone Annotation Popover (structured form) */}
+      {editingZone && editingZoneObj && (
+        <ZoneAnnotationPopover
+          key={editingZone}
+          zoneId={editingZone}
+          zoneLabel={editingZoneObj.label}
+          currentValue={form.injectionMap[editingZone]}
+          onSave={(val) => saveZone(editingZone, val)}
+          onClose={() => setEditingZone(null)}
+          s={s}
+          mapType={currentMapType}
+        />
+      )}
+
+      {/* Co-Sign Modal */}
+      {showCoSign && coSignTargetId && (
+        <CoSignModal
+          providers={providers}
+          onConfirm={(data) => handleCoSign(coSignTargetId, data)}
+          onClose={() => { setShowCoSign(false); setCoSignTargetId(null); }}
+          s={s}
+        />
       )}
     </div>
   );
