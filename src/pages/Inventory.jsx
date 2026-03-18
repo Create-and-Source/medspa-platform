@@ -2,6 +2,13 @@ import { useState, useEffect } from 'react';
 import { useStyles } from '../theme';
 import { getInventory, addInventoryItem, updateInventoryItem, adjustStock, getLocations, subscribe } from '../data/store';
 
+// Format a quantity: show decimals only when needed (e.g. 47 → "47", 47.5 → "47.5")
+const fmtQty = (q) => {
+  const n = parseFloat(q);
+  if (isNaN(n)) return '0';
+  return n % 1 === 0 ? String(n) : n.toFixed(2).replace(/\.?0+$/, '');
+};
+
 const fmt = (cents) => `$${(cents / 100).toFixed(2)}`;
 
 export default function Inventory() {
@@ -17,7 +24,7 @@ export default function Inventory() {
   const [showAdjust, setShowAdjust] = useState(null);
   const [adjustQty, setAdjustQty] = useState(0);
   const [adjustReason, setAdjustReason] = useState('');
-  const [form, setForm] = useState({ name: '', category: 'Injectables', sku: '', quantity: 0, reorderAt: 5, unitCost: 0, location: 'LOC-1', expirationDate: '' });
+  const [form, setForm] = useState({ name: '', category: 'Injectables', sku: '', lotNumber: '', ndc: '', quantity: 0, reorderAt: 5, unitCost: 0, location: 'LOC-1', expirationDate: '' });
 
   const inventory = getInventory();
   const locations = getLocations();
@@ -59,7 +66,7 @@ export default function Inventory() {
 
   const openEdit = (item) => {
     setEditItem(item);
-    setForm({ name: item.name, category: item.category, sku: item.sku || '', quantity: item.quantity, reorderAt: item.reorderAt, unitCost: item.unitCost || 0, location: item.location, expirationDate: item.expirationDate || '' });
+    setForm({ name: item.name, category: item.category, sku: item.sku || '', lotNumber: item.lotNumber || '', ndc: item.ndc || '', quantity: item.quantity, reorderAt: item.reorderAt, unitCost: item.unitCost || 0, location: item.location, expirationDate: item.expirationDate || '' });
     setShowForm(true);
   };
 
@@ -77,7 +84,7 @@ export default function Inventory() {
           <h1 style={{ font: `600 26px ${s.FONT}`, color: s.text, marginBottom: 4 }}>Inventory</h1>
           <p style={{ font: `400 14px ${s.FONT}`, color: s.text2 }}>{inventory.length} items — Track injectables, products, and supplies</p>
         </div>
-        <button onClick={() => { setEditItem(null); setForm({ name: '', category: 'Injectables', sku: '', quantity: 0, reorderAt: 5, unitCost: 0, location: 'LOC-1', expirationDate: '' }); setShowForm(true); }} style={s.pillAccent}>
+        <button onClick={() => { setEditItem(null); setForm({ name: '', category: 'Injectables', sku: '', lotNumber: '', ndc: '', quantity: 0, reorderAt: 5, unitCost: 0, location: 'LOC-1', expirationDate: '' }); setShowForm(true); }} style={s.pillAccent}>
           + Add Item
         </button>
       </div>
@@ -132,12 +139,13 @@ export default function Inventory() {
                     <td style={{ padding: '14px', font: `500 13px ${s.FONT}`, color: s.text }}>
                       {item.name}
                       {loc && <div style={{ font: `400 11px ${s.FONT}`, color: s.text3 }}>{loc.name}</div>}
+                      {item.lotNumber && <div style={{ font: `400 11px ${s.MONO}`, color: s.text3, marginTop: 2 }}>Lot: {item.lotNumber}</div>}
                     </td>
                     <td style={{ padding: '14px', font: `400 12px ${s.MONO}`, color: s.text3 }}>{item.sku || '—'}</td>
                     <td style={{ padding: '14px' }}>
                       <span style={{ padding: '3px 10px', borderRadius: 100, font: `500 11px ${s.FONT}`, background: '#F5F5F5', color: s.text2 }}>{item.category}</span>
                     </td>
-                    <td style={{ padding: '14px', font: `600 14px ${s.MONO}`, color: s.text }}>{item.quantity}</td>
+                    <td style={{ padding: '14px', font: `600 14px ${s.MONO}`, color: s.text }}>{fmtQty(item.quantity)}</td>
                     <td style={{ padding: '14px' }}>
                       <span style={{ padding: '3px 10px', borderRadius: 100, font: `500 10px ${s.FONT}`, textTransform: 'uppercase', background: sl.bg, color: sl.color }}>{sl.label}</span>
                     </td>
@@ -165,11 +173,11 @@ export default function Inventory() {
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 300 }} onClick={() => setShowAdjust(null)}>
           <div style={{ background: '#fff', borderRadius: 16, padding: 32, maxWidth: 400, width: '90%', boxShadow: s.shadowLg }} onClick={e => e.stopPropagation()}>
             <h2 style={{ font: `600 18px ${s.FONT}`, color: s.text, marginBottom: 8 }}>Adjust Stock</h2>
-            <p style={{ font: `400 14px ${s.FONT}`, color: s.text2, marginBottom: 20 }}>{showAdjust.name} — Current: {showAdjust.quantity}</p>
+            <p style={{ font: `400 14px ${s.FONT}`, color: s.text2, marginBottom: 20 }}>{showAdjust.name} — Current: {fmtQty(showAdjust.quantity)}</p>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-              <button onClick={() => setAdjustQty(adjustQty - 1)} style={{ ...s.pillGhost, width: 40, height: 40, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>−</button>
-              <input type="number" value={adjustQty} onChange={e => setAdjustQty(parseInt(e.target.value) || 0)} style={{ ...s.input, width: 80, textAlign: 'center', font: `600 18px ${s.MONO}` }} />
-              <button onClick={() => setAdjustQty(adjustQty + 1)} style={{ ...s.pillGhost, width: 40, height: 40, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>+</button>
+              <button onClick={() => setAdjustQty(parseFloat((adjustQty - 1).toFixed(2)))} style={{ ...s.pillGhost, width: 40, height: 40, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>−</button>
+              <input type="number" step="any" value={adjustQty} onChange={e => setAdjustQty(parseFloat(e.target.value) || 0)} style={{ ...s.input, width: 80, textAlign: 'center', font: `600 18px ${s.MONO}` }} />
+              <button onClick={() => setAdjustQty(parseFloat((adjustQty + 1).toFixed(2)))} style={{ ...s.pillGhost, width: 40, height: 40, padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>+</button>
             </div>
             <div style={{ marginBottom: 20 }}>
               <label style={s.label}>Reason</label>
@@ -186,7 +194,7 @@ export default function Inventory() {
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
               <button onClick={() => setShowAdjust(null)} style={s.pillGhost}>Cancel</button>
               <button onClick={handleAdjust} style={{ ...s.pillAccent, background: adjustQty > 0 ? s.success : adjustQty < 0 ? s.danger : s.accent }}>
-                {adjustQty > 0 ? `Add ${adjustQty}` : adjustQty < 0 ? `Remove ${Math.abs(adjustQty)}` : 'No Change'}
+                {adjustQty > 0 ? `Add ${fmtQty(adjustQty)}` : adjustQty < 0 ? `Remove ${fmtQty(Math.abs(adjustQty))}` : 'No Change'}
               </button>
             </div>
           </div>
@@ -214,12 +222,22 @@ export default function Inventory() {
                 <input value={form.sku} onChange={e => setForm({ ...form, sku: e.target.value })} style={s.input} />
               </div>
               <div>
+                <label style={s.label}>Lot Number</label>
+                <input value={form.lotNumber} onChange={e => setForm({ ...form, lotNumber: e.target.value })} style={s.input} placeholder="e.g., BTX-2026-0312" />
+              </div>
+              {form.category === 'Injectables' && (
+                <div style={{ gridColumn: '1 / -1' }}>
+                  <label style={s.label}>NDC (National Drug Code)</label>
+                  <input value={form.ndc} onChange={e => setForm({ ...form, ndc: e.target.value })} style={s.input} placeholder="e.g., 0023-1145-01" />
+                </div>
+              )}
+              <div>
                 <label style={s.label}>Quantity</label>
-                <input type="number" value={form.quantity} onChange={e => setForm({ ...form, quantity: parseInt(e.target.value) || 0 })} style={s.input} />
+                <input type="number" step="any" value={form.quantity} onChange={e => setForm({ ...form, quantity: parseFloat(e.target.value) || 0 })} style={s.input} />
               </div>
               <div>
                 <label style={s.label}>Reorder At</label>
-                <input type="number" value={form.reorderAt} onChange={e => setForm({ ...form, reorderAt: parseInt(e.target.value) || 0 })} style={s.input} />
+                <input type="number" step="any" value={form.reorderAt} onChange={e => setForm({ ...form, reorderAt: parseFloat(e.target.value) || 0 })} style={s.input} />
               </div>
               <div>
                 <label style={s.label}>Unit Cost (cents)</label>

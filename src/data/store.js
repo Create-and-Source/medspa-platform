@@ -34,15 +34,20 @@ export function getInventory() { return get('ms_inventory', []); }
 export function addInventoryItem(item) { const all = getInventory(); item.id = `INV-${Date.now()}`; item.createdAt = new Date().toISOString(); all.unshift(item); set('ms_inventory', all); return item; }
 export function updateInventoryItem(id, updates) { set('ms_inventory', getInventory().map(i => i.id === id ? { ...i, ...updates } : i)); }
 export function adjustStock(id, qty, reason) {
+  const delta = parseFloat(qty) || 0;
   const all = getInventory().map(i => {
     if (i.id === id) {
       const log = i.adjustmentLog || [];
-      log.push({ qty, reason, date: new Date().toISOString() });
-      return { ...i, quantity: Math.max(0, i.quantity + qty), adjustmentLog: log };
+      log.push({ qty: delta, reason, date: new Date().toISOString() });
+      return { ...i, quantity: Math.max(0, parseFloat(i.quantity) + delta), adjustmentLog: log };
     }
     return i;
   });
   set('ms_inventory', all);
+}
+
+export function getInjectableInventory() {
+  return getInventory().filter(i => i.category === 'Injectables');
 }
 
 // ── Emails ──
@@ -286,12 +291,12 @@ export function initStore() {
 
   // Inventory (injectables + products)
   set('ms_inventory', [
-    { id: 'INV-1', name: 'Botox (100u vial)', category: 'Injectables', sku: 'BTX-100', quantity: 24, reorderAt: 10, unitCost: 42000, location: 'LOC-1', expirationDate: d(180), adjustmentLog: [] },
-    { id: 'INV-2', name: 'Juvederm Ultra XC', category: 'Injectables', sku: 'JUV-UXC', quantity: 18, reorderAt: 8, unitCost: 28000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
-    { id: 'INV-3', name: 'Juvederm Voluma XC', category: 'Injectables', sku: 'JUV-VXC', quantity: 12, reorderAt: 6, unitCost: 32000, location: 'LOC-1', expirationDate: d(300), adjustmentLog: [] },
-    { id: 'INV-4', name: 'Sculptra (2 vial kit)', category: 'Injectables', sku: 'SLP-2V', quantity: 8, reorderAt: 4, unitCost: 45000, location: 'LOC-1', expirationDate: d(540), adjustmentLog: [] },
-    { id: 'INV-5', name: 'PDO Threads - Smooth (20pk)', category: 'Injectables', sku: 'PDO-SM20', quantity: 6, reorderAt: 3, unitCost: 18000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
-    { id: 'INV-6', name: 'PDO Threads - Cog (10pk)', category: 'Injectables', sku: 'PDO-CG10', quantity: 4, reorderAt: 2, unitCost: 35000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
+    { id: 'INV-1', name: 'Botox (100u vial)', category: 'Injectables', sku: 'BTX-100', lotNumber: 'BTX-2026-0312', ndc: '0023-1145-01', quantity: 24, reorderAt: 10, unitCost: 42000, location: 'LOC-1', expirationDate: d(180), adjustmentLog: [] },
+    { id: 'INV-2', name: 'Juvederm Ultra XC', category: 'Injectables', sku: 'JUV-UXC', lotNumber: 'JUV-2026-0115', ndc: '0023-3829-02', quantity: 18, reorderAt: 8, unitCost: 28000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
+    { id: 'INV-3', name: 'Juvederm Voluma XC', category: 'Injectables', sku: 'JUV-VXC', lotNumber: 'JUV-2026-0201', ndc: '0023-3830-02', quantity: 12, reorderAt: 6, unitCost: 32000, location: 'LOC-1', expirationDate: d(300), adjustmentLog: [] },
+    { id: 'INV-4', name: 'Sculptra (2 vial kit)', category: 'Injectables', sku: 'SLP-2V', lotNumber: 'SLP-2025-1108', ndc: '0023-3828-01', quantity: 8, reorderAt: 4, unitCost: 45000, location: 'LOC-1', expirationDate: d(540), adjustmentLog: [] },
+    { id: 'INV-5', name: 'PDO Threads - Smooth (20pk)', category: 'Injectables', sku: 'PDO-SM20', lotNumber: 'PDO-2026-0220', ndc: '', quantity: 6, reorderAt: 3, unitCost: 18000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
+    { id: 'INV-6', name: 'PDO Threads - Cog (10pk)', category: 'Injectables', sku: 'PDO-CG10', lotNumber: 'PDO-2026-0221', ndc: '', quantity: 4, reorderAt: 2, unitCost: 35000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
     { id: 'INV-7', name: 'Semaglutide 2.4mg/0.75ml', category: 'Wellness', sku: 'SEM-24', quantity: 30, reorderAt: 10, unitCost: 25000, location: 'LOC-1', expirationDate: d(90), adjustmentLog: [] },
     { id: 'INV-8', name: 'Tirzepatide 5mg/0.5ml', category: 'Wellness', sku: 'TRZ-5', quantity: 20, reorderAt: 8, unitCost: 30000, location: 'LOC-1', expirationDate: d(90), adjustmentLog: [] },
     { id: 'INV-9', name: 'Lidocaine 2% (50ml)', category: 'Supplies', sku: 'LID-50', quantity: 40, reorderAt: 15, unitCost: 1500, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
@@ -299,8 +304,8 @@ export function initStore() {
     { id: 'INV-11', name: 'EltaMD UV Clear SPF 46', category: 'Retail', sku: 'EM-UVC', quantity: 25, reorderAt: 10, unitCost: 2400, location: 'LOC-1', expirationDate: d(730), adjustmentLog: [] },
     { id: 'INV-12', name: 'Latisse 5ml', category: 'Retail', sku: 'LAT-5', quantity: 12, reorderAt: 5, unitCost: 9000, location: 'LOC-1', expirationDate: d(365), adjustmentLog: [] },
     { id: 'INV-13', name: 'Microneedling Tips (box of 10)', category: 'Supplies', sku: 'MN-T10', quantity: 8, reorderAt: 4, unitCost: 12000, location: 'LOC-1', expirationDate: d(730), adjustmentLog: [] },
-    { id: 'INV-14', name: 'Botox (100u vial)', category: 'Injectables', sku: 'BTX-100-F', quantity: 16, reorderAt: 8, unitCost: 42000, location: 'LOC-2', expirationDate: d(180), adjustmentLog: [] },
-    { id: 'INV-15', name: 'Juvederm Ultra XC', category: 'Injectables', sku: 'JUV-UXC-F', quantity: 10, reorderAt: 5, unitCost: 28000, location: 'LOC-2', expirationDate: d(365), adjustmentLog: [] },
+    { id: 'INV-14', name: 'Botox (100u vial)', category: 'Injectables', sku: 'BTX-100-F', lotNumber: 'BTX-2026-0308', ndc: '0023-1145-01', quantity: 16, reorderAt: 8, unitCost: 42000, location: 'LOC-2', expirationDate: d(180), adjustmentLog: [] },
+    { id: 'INV-15', name: 'Juvederm Ultra XC', category: 'Injectables', sku: 'JUV-UXC-F', lotNumber: 'JUV-2026-0118', ndc: '0023-3829-02', quantity: 10, reorderAt: 5, unitCost: 28000, location: 'LOC-2', expirationDate: d(365), adjustmentLog: [] },
   ]);
 
   // Retention Alerts (auto-generated from patient data)
